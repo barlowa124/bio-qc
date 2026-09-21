@@ -2,7 +2,7 @@
 
 ## A Manufacturing-Readiness State Map with 30-Gene qPCR QC Panel
 
-**Rao Lab, North Carolina State University**
+**barlowa124** — developed independently while affiliated with the Rao Lab, North Carolina State University; the lab is not an author
 
 ---
 

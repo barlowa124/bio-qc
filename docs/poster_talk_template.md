@@ -7,7 +7,7 @@
 ### Title (top center, 60pt bold)
 **A 30-Gene qPCR Panel Predicts Manufacturing-Readiness States in Cultivated Muscle Tissue**
 
-*Rao Lab* | [Institution] | [Email] | [GitHub: barlowa124/cultivated-meat-multiomic]
+*barlowa124* | [Institution] | [Email] | [GitHub: barlowa124/cultivated-meat-multiomic]
 
 ---
 

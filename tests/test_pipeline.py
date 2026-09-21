@@ -118,10 +118,6 @@ def test_qc_panel_exists():
     assert (PROJ / "p3_qc_panel/output/qc_panel_239.json").exists()
 
 
-def test_manuscript_exists():
-    assert (PROJ / "manuscript_draft.md").exists()
-
-
 def test_readme_exists():
     assert (PROJ / "README.md").exists()
     text = (PROJ / "README.md").read_text()

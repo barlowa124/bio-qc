@@ -1,31 +1,30 @@
-"""
-# Model Card: 30-Gene QC Panel for Cultivated Meat Manufacturing-Readiness
+# Model Card: 30-Gene Expression Panel Classifier (methods demonstration)
 
 ## Model Overview
-**Name:** Cultivated Meat 30-Gene qPCR Panel State Classifier  
+**Name:** 30-Gene Expression Panel State Classifier  
 **Version:** 1.0.0  
 **Date:** 2026-05-15  
-**Developer:** Rao Lab  
+**Developer:** barlowa124 (developed independently while affiliated with the Rao Lab, NC State; the lab is not an author)  
 **License:** MIT  
 **Repository:** https://github.com/barlowa124/cultivated-meat-multiomic
 
 ## Intended Use
-- **Primary use:** Predict manufacturing-readiness state of cultivated muscle tissue from 30-gene qPCR expression values
-- **States:** expansion_competent, committed, terminal
-- **Users:** Bioprocess engineers, QA/QC scientists in cultivated meat manufacturing
-- **Out-of-scope:** Not intended for human diagnostics, genetic screening, or food safety pathogen detection
+- **Primary use:** Methods demonstration — predict cluster labels over 30 normalized gene-expression values, showing the pipeline runs end to end
+- **States:** expansion_competent, committed, terminal (k-means cluster labels)
+- **Users:** Anyone evaluating the pipeline methodology
+- **Out-of-scope:** Cultivated-meat QC, manufacturing-readiness assessment, any manufacturing decision, human diagnostics, genetic screening, food-safety pathogen detection
 
 ## Model Architecture
-- **Type:** Logistic Regression (primary) + Deep Neural Network (validation)
+- **Type:** Logistic Regression (primary) + Deep Neural Network (comparison)
 - **Input:** 30 normalized gene expression values (log TPM)
 - **Output:** Class label + probability distribution over 3 states + confidence score
 - **DNN architecture:** 30 → 64 (ReLU, dropout 0.2) → 32 (ReLU, dropout 0.2) → 3 (softmax)
 - **Training:** 5-fold stratified cross-validation
 
 ## Training Data
-- **Source:** scFEA pseudobulk TPM + MetaFlux metabolic flux (239 samples)
+- **Source:** Pseudo-bulk TPM + METAFlux metabolic flux derived from public human melanoma scRNA-seq datasets GSE115978 (Jerby-Arnon et al. 2018) and GSE72056 (Tirosh et al. 2016); 239 pseudo-bulk profiles used as a stand-in expression dataset
 - **Labels:** K-means clustering (k=3) on PCA-reduced transcriptome + fluxome
-- **State map:** expansion_competent (61), committed (86), terminal (92)
+- **Cluster sizes:** expansion_competent (61), committed (86), terminal (92)
 - **Preprocessing:** log1p transformation, variance filtering (top 75%), StandardScaler
 
 ## Performance
@@ -35,15 +34,16 @@
 | CV Accuracy (DNN) | 96.2% ± 1.5% |
 | Bootstrap Accuracy | 96.3% ± 0.8% |
 | Bayesian Confidence | 97.9% |
-| Cross-species (bovine) | 92.0% |
+| Bovine cross-species comparison | 3-cluster structure recovered (GSE173199) |
 | Noise robustness (25% CV) | 94.2% |
 
+All accuracy figures describe classification of melanoma-derived pseudo-bulk profiles, not cultivated-meat cell states.
+
 ## Ethical Considerations & Limitations
-- **Species limitation:** Primary validation on bovine; porcine and human data are secondary
-- **Platform limitation:** Trained on pseudobulk RNA-seq; qPCR validation pending
-- **Batch effects:** Models trained on single dataset; external validation required
-- **Bias:** Training data may not represent all cell lines, media formulations, or bioreactor types
-- **Environmental:** Intended to reduce waste by predicting batch outcomes before harvest
+- **Domain mismatch:** Trained on human melanoma data; the panel is not a usable cultivated-meat QC assay
+- **Platform limitation:** Trained on pseudo-bulk RNA-seq; no qPCR validation exists
+- **Batch effects:** Models trained on a single dataset; external validation required
+- **Bias:** Training data may not represent any particular cell line, media formulation, or bioreactor type
 
 ## Explainability
 - SHAP-based gene importance: MALAT1, LMNA, CTSA, C1QBP most influential
@@ -57,16 +57,7 @@
 - **Artifacts:** `api/model.pkl`, `api/scaler.pkl`, `api/model_metadata.json`
 
 ## Maintenance
-- **Retraining frequency:** Every 6 months or upon accumulation of 50+ new labeled samples
-- **Monitoring:** Track prediction confidence distribution; flag drift if mean confidence < 90%
-- **Versioning:** Semantic versioning; major = architecture change, minor = retraining, patch = bugfix
-
-## Citation
-```
-Rao Lab (2026). A 30-gene qPCR panel predicts manufacturing-readiness states 
-in cultivated muscle tissue. GitHub: barlowa124/cultivated-meat-multiomic
-```
+- This is a demonstration artifact; no retraining or monitoring commitments apply
 
 ## Contact
 - **Issues:** https://github.com/barlowa124/cultivated-meat-multiomic/issues
-- **Email:** [lab email]

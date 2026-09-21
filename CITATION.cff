@@ -1,32 +1,19 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 type: software
-title: "Cultivated Meat Multi-Omic Analysis Pipeline: A 30-gene qPCR panel for manufacturing-readiness state prediction"
+title: "Multi-omic state-map pipeline: RNA + metabolic-flux clustering with cross-species validation (methods demonstration)"
 authors:
-  - family-names: "Rao"
-    given-names: "[PI Name]"
-    orcid: "https://orcid.org/0000-0000-0000-0000"
+  - family-names: "barlowa124"
 repository-code: "https://github.com/barlowa124/cultivated-meat-multiomic"
 license: MIT
 version: 1.0.0
 date-released: 2026-05-15
 keywords:
-  - cultivated meat
-  - cell-based meat
-  - quality control
-  - qPCR
   - transcriptomics
+  - metabolic flux
+  - RNA-seq
+  - single-cell
+  - melanoma
+  - cross-species
   - machine learning
-  - biomanufacturing
-  - muscle tissue engineering
   - multi-omics
-  - process analytical technology
-preferred-citation:
-  type: article
-  title: "A 30-gene qPCR panel predicts manufacturing-readiness states in cultivated muscle tissue"
-  authors:
-    - family-names: "Rao"
-      given-names: "[PI Name]"
-  year: 2026
-  journal: "bioRxiv"
-  url: "https://doi.org/10.1101/xxxxxx"

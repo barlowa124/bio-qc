@@ -1,36 +1,42 @@
-# Cultivated Meat Multi-Omic Analysis Pipeline
+# Multi-omic state-map pipeline: RNA + metabolic-flux clustering with cross-species validation
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![DOI](https://img.shields.io/badge/DOI-pending-blue.svg)](https://doi.org/)
-[![bioRxiv](https://img.shields.io/badge/bioRxiv-pending-red.svg)](https://biorxiv.org)
 
-**Multi-omic manufacturing-readiness state map for cultivated meat with a 30-gene qPCR QC panel.**
-
-Rao Lab, North Carolina State University
+**Methods demonstration on public datasets. Developed independently by the author while affiliated with the Rao Lab, NC State; see Scope.**
 
 ---
 
-## Key Results
+## Scope and data provenance (read first)
+
+The state-map and gene-panel analyses in `p2_state_map/` and `p3_qc_panel/` were developed on pseudo-bulk profiles derived from two public human melanoma single-cell RNA-seq datasets (GSE115978, Jerby-Arnon et al. 2018; GSE72056, Tirosh et al. 2016). These were used as a stand-in expression dataset while building the pipeline. The resulting clusters, accuracy figures and gene rankings therefore characterize melanoma-derived profiles and are **not** evidence about cultivated-meat cell states, manufacturing readiness, or a usable qPCR QC panel.
+
+The bovine (GSE173199), porcine (GSE206914) and bovine single-nucleus (GSE240556) analyses use skeletal-muscle/myogenic data and are the domain-relevant components of this repository.
+
+Downstream artifacts generated from the melanoma-derived panel (drug-response scoring, techno-economic, life-cycle, regulatory and patent drafts) are illustrative pipeline outputs demonstrating that the tooling runs end to end. They are not findings and should not be cited as such.
+
+This repository was originally framed as a cultivated meat manufacturing-QC project; it is now maintained as a methods demonstration.
+
+## Pipeline demonstration metrics
 
 | Metric | Value |
 |--------|-------|
-| Multi-omic state map accuracy | **96.7%** (5-fold CV) |
-| 30-gene panel accuracy | **96.7%** ± 1.0% |
-| Bootstrap stability (1000 iter) | **96.3%** ± 0.8%, 95% CI [94.6%, 97.9%] |
-| Bayesian confident assignments | **97.9%** |
-| Cross-species validation | Bovine 3-state conserved |
-| snRNA-seq validation | 17,541 nuclei, 21/30 panel genes detected |
+| State-map cluster separation accuracy (melanoma pseudo-bulk) | **96.7%** (5-fold CV) |
+| 30-gene panel accuracy (melanoma pseudo-bulk) | **96.7%** ± 1.0% |
+| Bootstrap stability, 1000 iterations (melanoma pseudo-bulk) | **96.3%** ± 0.8%, 95% CI [94.6%, 97.9%] |
+| Bayesian confident assignments (melanoma pseudo-bulk) | **97.9%** |
+| Cross-species comparison | 3-cluster structure recovered in bovine GSE173199 |
+| snRNA-seq comparison | 17,541 bovine muscle nuclei (GSE240556), 21/30 panel genes detected |
 | PPI network | 74 edges, C1QBP central hub (degree 25) |
 | Top TF regulator | SP1 (8/30 targets, 26.7%) |
-| Assay cost | **$50-100/batch** |
-| Turnaround time | **4-6 hours** |
 
-## Three Manufacturing Readiness States
+## Three expression clusters (k-means, k=3)
 
-1. **Expansion-competent** — High proliferative capacity, low differentiation markers
-2. **Committed** — Intermediate metabolic activity, mixed marker expression
-3. **Terminal** — High differentiation markers, low proliferative capacity
+The pipeline partitions the melanoma-derived pseudo-bulk embedding into three clusters, labeled by their marker profiles:
+
+1. **expansion_competent** — high proliferative-capacity markers, low differentiation markers
+2. **committed** — intermediate metabolic activity, mixed marker expression
+3. **terminal** — high differentiation markers, low proliferative-capacity markers
 
 ## Quick Start
 
@@ -47,7 +53,7 @@ python notebooks/comprehensive_analysis.py
 
 # Run high-value analyses
 python notebooks/porcine_3species.py        # Cross-species comparison
-python notebooks/snrna_seq_analysis.py      # Single-nucleus validation
+python notebooks/snrna_seq_analysis.py      # Single-nucleus comparison
 python notebooks/vae_bayesian.py            # VAE + Bayesian GMM
 python notebooks/tf_ppi_analysis.py         # TF enrichment + PPI network
 python notebooks/bootstrap_ml_timeseries.py # Bootstrap + ML + time-series
@@ -73,26 +79,24 @@ docker run -v ./data:/app/data -v ./output:/app/output cultivated-meat
 
 ```
 cultivated_meat_projects/
-├── notebooks/                  # 22 analysis scripts
+├── notebooks/                  # Analysis scripts
 │   ├── comprehensive_analysis.py   # Master pipeline
 │   ├── p2_state_map.py             # Multi-omic state map
-│   ├── p3_qc_panel.py              # 30-gene QC panel
+│   ├── p3_qc_panel.py              # 30-gene panel selection
 │   ├── shap_dnn.py                 # SHAP + deep learning
 │   ├── wgcna_de_batch.py           # Co-expression + DE
 │   ├── cellcom_benchmark.py        # Cell communication + benchmark
-│   └── ...                         # 16 more scripts
+│   └── ...                         # many more scripts
 ├── api/                       # Flask prediction API
 │   ├── app.py                     # Server
 │   ├── model.pkl                  # Trained model
 │   └── test_client.py             # Test client
 ├── docs/                      # Jupyter Book documentation
-├── biorxiv_submission/        # Preprint submission package
 ├── cross_species_validation/  # Bovine/porcine GEO data
-├── p2_state_map/output/       # All results, figures, reports
-├── p3_qc_panel/output/        # 30-gene panel + qPCR primers
+├── p2_state_map/output/       # State-map results, figures, reports
+├── p3_qc_panel/output/        # 30-gene panel results
 ├── Dockerfile                 # Container definition
-├── docker-compose.yml         # Multi-service orchestration
-└── FINAL_SUMMARY.md           # Complete project summary
+└── docker-compose.yml         # Multi-service orchestration
 ```
 
 ## Analyses Included
@@ -100,8 +104,8 @@ cultivated_meat_projects/
 | Analysis | Description |
 |----------|-------------|
 | P2 State Map | Joint RNA+flux PCA + K-means clustering |
-| P3 QC Panel | L1 logistic regression biomarker selection |
-| Cross-Species | Bovine (GSE173199) + Porcine (GSE206914) validation |
+| P3 Panel | L1 logistic regression biomarker selection |
+| Cross-Species | Bovine (GSE173199) + Porcine (GSE206914) comparison |
 | snRNA-seq | GSE240556 single-nucleus resolution (17,541 nuclei) |
 | VAE + Bayesian GMM | Deep embeddings + uncertainty quantification |
 | TF Enrichment | JASPAR-based transcription factor analysis (30 TFs) |
@@ -114,42 +118,35 @@ cultivated_meat_projects/
 | Integration Benchmark | Early vs late vs single-modality comparison |
 | Differential Expression | 75 significant state comparisons |
 | Batch Effects | Cross-batch variability assessment |
-| **Batch Correction** | ComBat/Harmony/MNN/reference atlas benchmarking |
-| **Pathway Enrichment** | GO BP / KEGG / Reactome (hypergeometric, BH-corrected) |
-| **Cross-Platform** | RNA-seq vs qPCR vs Nanostring concordance |
-| **Digital Twin** | 90-day manufacturing simulation with stochastic perturbation |
-| **Transfer Learning** | Human→porcine domain adaptation (+8.3% accuracy) |
-| **Conformal Prediction** | 91.2% coverage guarantee, 78% singleton sets |
-| **Adversarial Robustness** | FGSM perturbation (epsilon 0.01–0.1) stability |
-| **Pareto Optimization** | Cost-accuracy-gene count tradeoff front |
-| **CRISPR Screen Mining** | DepMap essentiality scores for 7/30 genes |
-| **Alternative Splicing** | Isoform ratio state discrimination (12/30 genes) |
-| **Microbiome Screen** | 16S primer cross-reactivity in silico |
-| **Supply Chain Risk** | Primer single-source dependency analysis |
-| **Life Cycle Assessment** | 0.8 kg CO2-eq/batch (93% vs RNA-seq reduction) |
-| **Reference Atlas** | Human Protein Atlas outlier flagging |
-| **Commercial Benchmark** | 3 commercial kits vs our panel (cost, accuracy, turnaround) |
-| **Concept Drift** | KS-test + Mahalanobis monthly retraining triggers |
-| **Multi-Omic Cost** | Proteomics (+$400, +0.4%) / metabolomics (+$600, +0.6%) ROI |
-| **Regulatory Dossier** | FDA GRAS pre-submission compilation |
-| **Patent Claims** | Composition + method + system claims drafted |
-| **Techno-Economic** | Cost sensitivity ($25–200/batch) |
+| Batch Correction | ComBat/Harmony/MNN/reference atlas benchmarking |
+| Pathway Enrichment | GO BP / KEGG / Reactome (hypergeometric, BH-corrected) |
+| Cross-Platform | RNA-seq vs qPCR vs Nanostring concordance |
+| Transfer Learning | Human→porcine domain adaptation (+8.3% accuracy) |
+| Conformal Prediction | 91.2% coverage, 78% singleton sets |
+| Adversarial Robustness | FGSM perturbation (epsilon 0.01–0.1) stability |
+| Pareto Optimization | Cost-accuracy-gene count tradeoff front |
+| CRISPR Screen Mining | DepMap essentiality scores for 7/30 genes |
+| Alternative Splicing | Isoform ratio state discrimination (12/30 genes) |
+| Reference Atlas | Human Protein Atlas outlier flagging |
+| Concept Drift | KS-test + Mahalanobis monthly retraining triggers |
+
+Additional exploratory scripts (illustrative only): `patent_claims.py`, `patent_landscape.py`, `regulatory_dossier.py`, `regulatory_pathway.py`, `techno_economic_analysis.py`, `commercial_qc_benchmark.py`, `supply_chain_risk.py`, `lca_comparison.py`, `microbiome_primers.py`, `digital_twin.py`, `multiomics_integration.py` cost comparisons — these draft techno-economic, regulatory, patent, supply-chain, life-cycle, microbiome-screen, digital-twin and cost outputs as end-to-end pipeline demonstrations; they are not findings.
 
 ## Interactive Figures (Plotly HTML)
 
 | Figure | Content | File |
 |--------|---------|------|
-| Fig 1 | Manufacturing-Readiness State Map (UMAP scatter) | `docs/figures/fig1_state_map.html` |
-| Fig 2 | QC Panel ML Benchmark (6 classifiers) | `docs/figures/fig2_qc_performance.html` |
+| Fig 1 | State Map (UMAP scatter) | `docs/figures/fig1_state_map.html` |
+| Fig 2 | Panel ML Benchmark (6 classifiers) | `docs/figures/fig2_qc_performance.html` |
 | Fig 3 | SHAP Gene Importance (top 15) | `docs/figures/fig3_shap_importance.html` |
-| Fig 4 | Cross-Species Validation (accuracy + sample counts) | `docs/figures/fig4_cross_species.html` |
-| Fig 5 | qPCR Noise Robustness (CV vs accuracy) | `docs/figures/fig5_noise_robustness.html` |
+| Fig 4 | Cross-Species Comparison (accuracy + sample counts) | `docs/figures/fig4_cross_species.html` |
+| Fig 5 | Noise Robustness (CV vs accuracy) | `docs/figures/fig5_noise_robustness.html` |
 | Fig 6 | Drug Prediction Scores (LINCS/CMap) | `docs/figures/fig6_drug_predictions.html` |
 | Fig 7 | Techno-Economic Sensitivity | `docs/figures/fig7_tea_sensitivity.html` |
 | Fig 8 | PPI Network Visualization | `docs/figures/fig8_ppi_network.html` |
-| **Fig 9** | **Batch Correction Benchmark** | `docs/figures/fig9_batch_correction.html` |
-| **Fig 10** | **Pathway Enrichment Dot Plot** | `docs/figures/fig10_pathway_enrichment.html` |
-| **Fig 11** | **Cross-Platform Validation** | `docs/figures/fig11_cross_platform.html` |
+| Fig 9 | Batch Correction Benchmark | `docs/figures/fig9_batch_correction.html` |
+| Fig 10 | Pathway Enrichment Dot Plot | `docs/figures/fig10_pathway_enrichment.html` |
+| Fig 11 | Cross-Platform Comparison | `docs/figures/fig11_cross_platform.html` |
 | Fig 11b | Platform Heatmap (20 genes x 3 platforms) | `docs/figures/fig11b_platform_heatmap.html` |
 
 All figures are standalone HTML — double-click to open or embed in presentations.
@@ -188,31 +185,15 @@ All supplementary tables are generated programmatically from JSON outputs:
 
 ## Data Sources
 
-- **RNA-seq**: 239 samples from scFEA pseudo-bulk (23,682 genes)
+- **RNA-seq**: 239 pseudo-bulk profiles derived from human melanoma scRNA-seq — GSE115978 (Jerby-Arnon et al. 2018) and GSE72056 (Tirosh et al. 2016) — 23,682 genes, scFEA/METAFlux flux estimates
 - **METAFlux**: 13,082 reactions aggregated to 10 metabolic pathways
 - **Bovine**: GSE173199 (38 samples, D0-D7 timecourse)
 - **Porcine**: GSE206914 (14 samples, embryonic stages)
 - **snRNA-seq**: GSE240556 (17,541 bovine muscle nuclei)
-- **Protocols**: 6 documents from Rao Lab
-- **Media**: 5 spreadsheets (Media, Ordering, Aliquots, Antibodies, CEF)
 
-## Manuscript
+## Acknowledgements
 
-Target: *Frontiers in Cell and Developmental Biology* or *npj Science of Food*
-
-- Refined manuscript: `p2_state_map/output/manuscript_refined.md`
-- Supplementary: `p2_state_map/output/supplementary_materials.md`
-- bioRxiv package: `biorxiv_submission/`
-- Full report: `p2_state_map/output/analysis_report.html`
-
-## Citation
-
-Preprint forthcoming on bioRxiv. If you use this work, please cite:
-
-```
-Rao Lab. A Multi-Omic Manufacturing-Readiness State Map for Cultivated Meat:
-Derivation of a 30-Gene qPCR Quality Control Panel. bioRxiv (2026).
-```
+Developed independently by barlowa124 while affiliated with the Rao Lab, North Carolina State University. Public data from GEO as listed above. The lab is not an author of this repository.
 
 ## License
 

@@ -1,6 +1,6 @@
 # Jupyter Book configuration for Cultivated Meat Analysis Pipeline
 title: "Cultivated Meat Multi-Omic Analysis"
-author: "Rao Lab, NC State University"
+author: "barlowa124"
 logo: ""
 execute:
   execute_notebooks: "off"

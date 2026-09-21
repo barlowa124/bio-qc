@@ -1,23 +1,20 @@
 {
-  "title": "A Multi-Omic Manufacturing-Readiness State Map for Cultivated Meat: Derivation of a 30-Gene qPCR Quality Control Panel",
-  "description": "Multi-omic state map integrating RNA-seq transcriptomics and METAFlux metabolic flux predictions across 239 samples, defining three manufacturing readiness states. A 30-gene L1-regularized logistic regression panel achieves 96.7% cross-validation accuracy. Cross-species validation in bovine (GSE173199) and porcine (GSE206914), single-nucleus RNA-seq validation (GSE240556, 17,541 nuclei), VAE embeddings, Bayesian Gaussian mixture modeling, transcription factor enrichment (JASPAR), protein-protein interaction network (STRING), SHAP explainability, bootstrap stability analysis, and ML model comparison.",
+  "title": "Multi-omic state-map pipeline: RNA + metabolic-flux clustering with cross-species validation (methods demonstration)",
+  "description": "Methods demonstration of a multi-omic clustering pipeline. The state-map and 30-gene panel analyses were developed on pseudo-bulk profiles derived from public human melanoma scRNA-seq datasets (GSE115978, GSE72056) as a stand-in expression dataset; the resulting clusters, accuracy figures and gene rankings characterize melanoma-derived profiles, not cultivated-meat cell states. Domain-relevant components use bovine (GSE173199), porcine (GSE206914) and bovine single-nucleus (GSE240556) muscle/myogenic data. Includes METAFlux flux integration, VAE embeddings, Bayesian Gaussian mixture modeling, TF enrichment (JASPAR), PPI network (STRING), SHAP explainability, bootstrap stability and ML model comparison.",
   "creators": [
     {
-      "name": "Rao Lab",
-      "affiliation": "North Carolina State University"
+      "name": "barlowa124"
     }
   ],
   "keywords": [
-    "cultivated meat",
-    "stem cells",
-    "multi-omics",
-    "quality control",
-    "RNA-seq",
+    "transcriptomics",
     "metabolic flux",
-    "biomarker panel",
-    "qPCR",
+    "RNA-seq",
+    "single-cell",
+    "melanoma",
     "cross-species",
     "machine learning",
+    "multi-omics",
     "single-nucleus RNA-seq",
     "Bayesian modeling",
     "transcription factor",
@@ -33,9 +30,10 @@
     }
   ],
   "references": [
-    "GSE267112",
+    "GSE115978",
+    "GSE72056",
     "GSE173199",
-    "GSE240556",
-    "GSE206914"
+    "GSE206914",
+    "GSE240556"
   ]
 }

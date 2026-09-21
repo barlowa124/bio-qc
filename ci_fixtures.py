@@ -141,16 +141,10 @@ json.dump({
     "method": "variance_ranking"
 }, open(QC_OUT / "qc_panel_239.json", "w"))
 
-# manuscript_draft.md
-(PROJ / "manuscript_draft.md").write_text("# Manuscript Draft\n\n## Title\nA 30-gene qPCR panel for quality control in cultivated meat manufacturing\n\n## Abstract\nWe developed a 30-gene qPCR panel...")
-
-# LICENSE
-(PROJ / "LICENSE").write_text("MIT License\n\nCopyright (c) 2026 Rao Lab\n\nPermission is hereby granted...")
-
 # .zenodo.json
 json.dump({
-    "title": "Cultivated Meat Multi-Omic Quality Control Panel",
-    "creators": [{"name": "Rao Lab"}],
+    "title": "Multi-omic state-map pipeline (methods demonstration)",
+    "creators": [{"name": "barlowa124"}],
     "upload_type": "software"
 }, open(PROJ / ".zenodo.json", "w"))
 
