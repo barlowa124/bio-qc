@@ -79,10 +79,8 @@ Notably, our 30-gene panel shows **zero overlap** with canonical muscle stem cel
 ### PRELIMINARY DATA
 
 See attached:
-- `FINAL_SUMMARY.md` — Complete project summary with all results
 - `p2_state_map/output/analysis_report.html` — Full analysis report
 - `p2_state_map/output/literature_drug_panel_noise.json` — Benchmark + drug + noise data
-- `biorxiv_submission/manuscript.md` — Manuscript draft
 
 ### REFERENCES
 

@@ -30,6 +30,8 @@ This repository was originally framed as a cultivated meat manufacturing-QC proj
 | PPI network | 74 edges, C1QBP central hub (degree 25) |
 | Top TF regulator | SP1 (8/30 targets, 26.7%) |
 
+Accuracy figures measure how well a classifier recovers k-means cluster labels that were themselves defined on the same expression embedding. They quantify cluster separability and panel sufficiency, not agreement with any external ground truth or biological state annotation.
+
 ## Three expression clusters (k-means, k=3)
 
 The pipeline partitions the melanoma-derived pseudo-bulk embedding into three clusters, labeled by their marker profiles:
