@@ -2,9 +2,11 @@
 notebooks/digital_twin.py
 Bioreactor digital twin with 30-gene QC panel as closed-loop feedback controller.
 """
-import json, numpy as np
-from pathlib import Path
+import json
 import random
+from pathlib import Path
+
+import numpy as np
 
 random.seed(42)
 np.random.seed(42)
@@ -130,5 +132,5 @@ for r in results:
     print(f"{r['scenario']:12s} | Harvest: {str(r['harvested']):5s} | Cost: ${r['total_qc_cost_usd']:.2f} | Interventions: {r['interventions']}")
 
 (OUT / "digital_twin.json").write_text(json.dumps(results, indent=2))
-print(f"\nSaved to digital_twin.json")
+print("\nSaved to digital_twin.json")
 print("DONE")

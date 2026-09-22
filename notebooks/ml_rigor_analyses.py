@@ -12,25 +12,32 @@ Outputs:
   - docs/figures/figA1_ensemble.png ... figA6_bootstrap_shap.png
   - p2_state_map/output/ml_rigor_results.json
 """
-import json, warnings, sys, os
+import json
+import warnings
 from pathlib import Path
+
+import matplotlib
 import numpy as np
 import pandas as pd
-import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from sklearn.model_selection import StratifiedKFold, learning_curve, train_test_split
-from sklearn.preprocessing import StandardScaler, label_binarize
-from sklearn.linear_model import LogisticRegression
+from sklearn.calibration import calibration_curve
 from sklearn.ensemble import RandomForestClassifier, VotingClassifier
-from sklearn.neural_network import MLPClassifier
-from sklearn.svm import SVC
-from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
-    accuracy_score, roc_auc_score, roc_curve, precision_recall_curve,
-    average_precision_score, brier_score_loss
+    accuracy_score,
+    average_precision_score,
+    brier_score_loss,
+    precision_recall_curve,
+    roc_auc_score,
+    roc_curve,
 )
-from sklearn.calibration import calibration_curve, CalibratedClassifierCV
+from sklearn.model_selection import StratifiedKFold, learning_curve, train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neural_network import MLPClassifier
+from sklearn.preprocessing import StandardScaler, label_binarize
+from sklearn.svm import SVC
 
 warnings.filterwarnings("ignore")
 np.random.seed(42)
@@ -148,7 +155,7 @@ plt.tight_layout()
 fig.savefig(FIGS / "figA1_ensemble.png", dpi=300)
 fig.savefig(FIGS / "figA1_ensemble.svg")
 plt.close(fig)
-print(f"  Saved figA1_ensemble.png")
+print("  Saved figA1_ensemble.png")
 
 # ═══════════════════════════════════════════════════════════════
 # 2. CALIBRATION CURVES
@@ -188,7 +195,7 @@ plt.tight_layout()
 fig.savefig(FIGS / "figA2_calibration.png", dpi=300)
 fig.savefig(FIGS / "figA2_calibration.svg")
 plt.close(fig)
-print(f"  Saved figA2_calibration.png")
+print("  Saved figA2_calibration.png")
 results["calibration"] = cal_results
 
 # ═══════════════════════════════════════════════════════════════
@@ -270,7 +277,7 @@ plt.tight_layout()
 fig.savefig(FIGS / "figA3_roc_pr.png", dpi=300)
 fig.savefig(FIGS / "figA3_roc_pr.svg")
 plt.close(fig)
-print(f"  Saved figA3_roc_pr.png")
+print("  Saved figA3_roc_pr.png")
 results["roc_pr"] = roc_results
 
 # ═══════════════════════════════════════════════════════════════
@@ -311,7 +318,7 @@ plt.tight_layout()
 fig.savefig(FIGS / "figA4_ablation.png", dpi=300)
 fig.savefig(FIGS / "figA4_ablation.svg")
 plt.close(fig)
-print(f"  Saved figA4_ablation.png")
+print("  Saved figA4_ablation.png")
 
 # ═══════════════════════════════════════════════════════════════
 # 5. LEARNING CURVES
@@ -354,7 +361,7 @@ plt.tight_layout()
 fig.savefig(FIGS / "figA5_learning_curves.png", dpi=300)
 fig.savefig(FIGS / "figA5_learning_curves.svg")
 plt.close(fig)
-print(f"  Saved figA5_learning_curves.png")
+print("  Saved figA5_learning_curves.png")
 
 # ═══════════════════════════════════════════════════════════════
 # 6. BOOTSTRAP SHAP STABILITY
@@ -438,14 +445,14 @@ plt.tight_layout()
 fig.savefig(FIGS / "figA6_bootstrap_shap.png", dpi=300)
 fig.savefig(FIGS / "figA6_bootstrap_shap.svg")
 plt.close(fig)
-print(f"  Saved figA6_bootstrap_shap.png")
+print("  Saved figA6_bootstrap_shap.png")
 
 # ── Save JSON results ──
 (OUT / "ml_rigor_results.json").write_text(json.dumps(results, indent=2))
-print(f"\n--- Saved ml_rigor_results.json ---")
+print("\n--- Saved ml_rigor_results.json ---")
 
 # ── Summary ──
-print(f"\n--- ML Rigor Analyses Complete ---")
+print("\n--- ML Rigor Analyses Complete ---")
 print(f"  Figures saved to: {FIGS}")
 for f in sorted(FIGS.glob("figA*")):
     print(f"    {f.name}")

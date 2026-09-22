@@ -2,11 +2,13 @@
 notebooks/transfer_learning_benchmark.py
 Systematic transfer learning benchmark across unseen cell lines, media, and scales.
 """
-import json, numpy as np
+import json
 from pathlib import Path
+
+import numpy as np
 from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import StandardScaler
 
 np.random.seed(42)
 OUT = Path("p2_state_map/output")
@@ -97,5 +99,5 @@ for r in results:
     print(f"{r['scenario']:35s} | Best: {r['best_strategy']:12s} | Acc: {max(r['accuracy_no_adaptation'], r['accuracy_retrain'], r['accuracy_coral']):.4f}")
 
 (OUT / "transfer_learning_benchmark.json").write_text(json.dumps(results, indent=2))
-print(f"\nSaved to transfer_learning_benchmark.json")
+print("\nSaved to transfer_learning_benchmark.json")
 print("DONE")

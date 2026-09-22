@@ -2,12 +2,14 @@
 notebooks/alternative_splicing.py
 Simulate isoform-level qPCR targets and test if they improve classification accuracy.
 """
-import json, numpy as np
+import json
 from pathlib import Path
-from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import cross_val_score
+
+import numpy as np
 from sklearn.datasets import make_classification
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import StandardScaler
 
 np.random.seed(42)
 OUT = Path("p2_state_map/output")
@@ -66,5 +68,5 @@ results = {
 }
 
 (OUT / "alternative_splicing.json").write_text(json.dumps(results, indent=2))
-print(f"\nSaved to alternative_splicing.json")
+print("\nSaved to alternative_splicing.json")
 print("DONE")

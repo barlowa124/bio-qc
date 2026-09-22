@@ -2,13 +2,14 @@
 notebooks/pareto_optimization.py
 Multi-objective optimization: accuracy vs cost vs turnaround time.
 """
-import json, numpy as np
+import json
 from pathlib import Path
-from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import cross_val_score
+
+import numpy as np
 from sklearn.datasets import make_classification
-from itertools import combinations
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import StandardScaler
 
 np.random.seed(42)
 OUT = Path("p2_state_map/output")

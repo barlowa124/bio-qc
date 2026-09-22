@@ -108,5 +108,5 @@ results = {
 }
 
 (OUT / "microbiome_primers.json").write_text(json.dumps(results, indent=2))
-print(f"\nSaved to microbiome_primers.json")
+print("\nSaved to microbiome_primers.json")
 print("DONE")

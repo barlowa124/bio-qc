@@ -1,19 +1,32 @@
 """Sensitivity and ablation study: normalization, feature selectors, classifiers."""
-import json, warnings
-from pathlib import Path
+import json
+import warnings
 from collections import Counter
-import numpy as np, pandas as pd
-from sklearn.preprocessing import StandardScaler, RobustScaler, MinMaxScaler, QuantileTransformer
-from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.naive_bayes import GaussianNB
-from sklearn.feature_selection import SelectKBest, f_classif, mutual_info_classif, RFE, SelectFromModel
-from sklearn.model_selection import StratifiedKFold, cross_val_score
-from sklearn.decomposition import PCA
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
 from sklearn.cluster import KMeans
-import torch, torch.nn as nn
+from sklearn.decomposition import PCA
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+from sklearn.feature_selection import (
+    RFE,
+    SelectFromModel,
+    SelectKBest,
+    f_classif,
+    mutual_info_classif,
+)
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import StratifiedKFold, cross_val_score
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import (
+    MinMaxScaler,
+    QuantileTransformer,
+    RobustScaler,
+    StandardScaler,
+)
+from sklearn.svm import SVC
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
@@ -149,5 +162,5 @@ results = {
     "base_accuracy": float(base_mean),
 }
 json.dump(results, open(OUT / "sensitivity_ablation.json", "w"), indent=2)
-print(f"\nSaved to sensitivity_ablation.json")
+print("\nSaved to sensitivity_ablation.json")
 print("DONE")

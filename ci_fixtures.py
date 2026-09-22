@@ -4,8 +4,11 @@ This script creates dummy versions of all artifacts that the test suite
 expects, without requiring the large raw data files used by the full
 notebooks.  Run this in GitHub Actions before pytest.
 """
-import json, pickle, numpy as np
+import json
+import pickle
 from pathlib import Path
+
+import numpy as np
 
 np.random.seed(42)
 PROJ = Path(__file__).resolve().parent

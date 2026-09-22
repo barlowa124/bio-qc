@@ -2,9 +2,10 @@
 notebooks/crispr_screen_mining.py
 Query DepMap/Avana CRISPR screens for muscle-differentiation essential genes and overlap with panel.
 """
-import json, numpy as np
+import json
 from pathlib import Path
-from collections import Counter
+
+import numpy as np
 
 np.random.seed(42)
 OUT = Path("p2_state_map/output")
@@ -78,5 +79,5 @@ results = {
 }
 
 (OUT / "crispr_screen_mining.json").write_text(json.dumps(results, indent=2))
-print(f"\nSaved to crispr_screen_mining.json")
+print("\nSaved to crispr_screen_mining.json")
 print("DONE")

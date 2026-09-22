@@ -1,7 +1,7 @@
 """Generate automated PDF report from all analysis results."""
 import json
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 PROJ = Path(__file__).resolve().parents[1]
 OUT = PROJ / "p2_state_map/output"
@@ -150,5 +150,5 @@ tr:nth-child(even) {{ background: #f2f9ff; }}
 report_path = OUT / "analysis_report.html"
 report_path.write_text(html)
 print(f"Report saved to: {report_path}")
-print(f"Open in browser and Print → Save as PDF")
+print("Open in browser and Print → Save as PDF")
 print("DONE")

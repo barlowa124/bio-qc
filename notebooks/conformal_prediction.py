@@ -2,12 +2,14 @@
 notebooks/conformal_prediction.py
 Inductive conformal prediction for the 30-gene QC panel with guaranteed coverage.
 """
-import json, numpy as np
+import json
 from pathlib import Path
-from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
+
+import numpy as np
 from sklearn.datasets import make_classification
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 np.random.seed(42)
 OUT = Path("p2_state_map/output")

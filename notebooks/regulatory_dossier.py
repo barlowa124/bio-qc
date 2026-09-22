@@ -3,8 +3,8 @@ notebooks/regulatory_dossier.py
 Compile a pre-submission regulatory dossier for FDA GRAS / Novel Food pathways.
 """
 import json
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 OUT = Path("p2_state_map/output")
 OUT.mkdir(parents=True, exist_ok=True)
@@ -96,7 +96,7 @@ print(f"\nTotal estimated submission cost: ${dossier['section_6_submission_timel
 print(f"Timeline: {dossier['section_6_submission_timeline']['month_6_9']}")
 
 (OUT / "regulatory_dossier.json").write_text(json.dumps(dossier, indent=2))
-print(f"\nSaved to regulatory_dossier.json")
+print("\nSaved to regulatory_dossier.json")
 
 # Also save as markdown for human review
 md_lines = ["# Regulatory Pre-Submission Dossier\n", f"**Date:** {datetime.now().strftime('%Y-%m-%d')}\n"]

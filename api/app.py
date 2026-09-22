@@ -21,7 +21,7 @@ def health():
 def predict():
     data = request.get_json()
     if not data or "expression" not in data:
-        return jsonify({"error": "Missing 'expression' field. Send {'expression': [val1, val2, ..., val30]}"}), 400
+        return jsonify({"error": "Missing 'expression' field."}), 400
     expr = np.array(data["expression"], dtype=np.float32).reshape(1, -1)
     if expr.shape[1] != len(meta["genes"]):
         return jsonify({"error": f"Expected {len(meta['genes'])} values, got {expr.shape[1]}"}), 400

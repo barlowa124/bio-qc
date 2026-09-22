@@ -2,8 +2,10 @@
 notebooks/commercial_qc_benchmark.py
 Benchmark the 30-gene qPCR panel against commercial QC kits and methods.
 """
-import json, numpy as np
+import json
 from pathlib import Path
+
+import numpy as np
 
 np.random.seed(42)
 OUT = Path("p2_state_map/output")
@@ -102,5 +104,5 @@ results = {
 }
 
 (OUT / "commercial_qc_benchmark.json").write_text(json.dumps(results, indent=2))
-print(f"\nSaved to commercial_qc_benchmark.json")
+print("\nSaved to commercial_qc_benchmark.json")
 print("DONE")

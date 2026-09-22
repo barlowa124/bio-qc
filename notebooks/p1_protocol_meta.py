@@ -1,8 +1,11 @@
 """P1: Protocol-to-Outcome Meta-Analysis."""
-import json, warnings
+import json
+import warnings
 from pathlib import Path
-import numpy as np, pandas as pd, yaml
-from scipy.stats import spearmanr
+
+import numpy as np
+import pandas as pd
+import yaml
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]

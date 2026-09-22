@@ -2,9 +2,10 @@
 notebooks/public_dataset_metaanalysis.py
 Simulate GEO/ArrayExpress integration for muscle differentiation datasets.
 """
-import json, numpy as np
+import json
 from pathlib import Path
-from collections import Counter
+
+import numpy as np
 
 np.random.seed(42)
 OUT = Path("p2_state_map/output")

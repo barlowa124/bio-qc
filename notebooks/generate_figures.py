@@ -1,5 +1,5 @@
 """Generate all 5 publication figures for the manuscript."""
-import json, warnings
+import warnings
 from pathlib import Path
 import numpy as np, pandas as pd
 from sklearn.preprocessing import StandardScaler
@@ -8,10 +8,10 @@ from sklearn.cluster import KMeans
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_selection import SelectFromModel
 from sklearn.model_selection import StratifiedKFold, cross_val_predict
-from sklearn.metrics import roc_curve, auc, confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import confusion_matrix
 import matplotlib; matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import matplotlib.pyplot as plt
 import seaborn as sns
 
 warnings.filterwarnings("ignore")
@@ -123,6 +123,7 @@ axes[0].set_title("Confusion Matrix (5-fold CV)"); axes[0].set_ylabel("True"); a
 
 # 3b: Per-class metrics
 from sklearn.metrics import classification_report
+
 cr = classification_report(readiness, y_pred, output_dict=True)
 metrics_data = []
 for s in states:

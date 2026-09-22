@@ -1,13 +1,17 @@
 """SHAP explainability + DNN classifier."""
-import json, warnings
-from pathlib import Path
+import json
+import warnings
 from collections import Counter
-import numpy as np, pandas as pd
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import torch
+import torch.nn as nn
 from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
 from sklearn.linear_model import LogisticRegression
-import torch, torch.nn as nn
+from sklearn.preprocessing import StandardScaler
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
@@ -85,6 +89,7 @@ y_t = torch.tensor(y_int)
 
 # 5-fold CV
 from sklearn.model_selection import StratifiedKFold
+
 skf = StratifiedKFold(5, shuffle=True, random_state=42)
 dnn_scores = []
 for train_idx, test_idx in skf.split(X_panel, y_int):
@@ -103,7 +108,7 @@ for train_idx, test_idx in skf.split(X_panel, y_int):
 
 dnn_scores = np.array(dnn_scores)
 print(f"DNN 5-fold CV: {dnn_scores.mean():.3f} +/- {dnn_scores.std():.3f}")
-print(f"Logistic Regression comparison: 0.962 +/- 0.015")
+print("Logistic Regression comparison: 0.962 +/- 0.015")
 
 # ── Save ──
 results = {
@@ -113,5 +118,5 @@ results = {
             "architecture": "64->32->3 with dropout", "lr_accuracy": 0.962}
 }
 json.dump(results, open(OUT / "shap_dnn_results.json", "w"), indent=2)
-print(f"\nSaved to shap_dnn_results.json")
+print("\nSaved to shap_dnn_results.json")
 print("DONE")

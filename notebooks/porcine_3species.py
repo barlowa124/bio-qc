@@ -1,12 +1,18 @@
 """Porcine GSE206914 processing + 3-species comparison."""
-import json, warnings, time, urllib.request, re
-from pathlib import Path
+import json
+import re
+import time
+import urllib.request
+import warnings
 from collections import Counter
-import numpy as np, pandas as pd
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
 from scipy.stats import pearsonr
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
@@ -145,6 +151,6 @@ results = {
     "porcine_status": "metadata_only" if not any("count" in str(p) for p in porcine_info) else "data_available"
 }
 json.dump(results, open(OUT / "three_species_comparison.json", "w"), indent=2)
-print(f"\nSaved to three_species_comparison.json")
+print("\nSaved to three_species_comparison.json")
 print("=" * 60)
 print("DONE")

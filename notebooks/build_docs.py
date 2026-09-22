@@ -1,5 +1,4 @@
 """Build Jupyter Book documentation site."""
-import json, shutil
 from pathlib import Path
 
 PROJ = Path(__file__).resolve().parents[1]

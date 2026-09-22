@@ -84,7 +84,7 @@ for name, data in methods.items():
 
 # Comparison vs qPCR
 qpcr = methods["30_gene_qPCR_panel"]
-print(f"\nRelative to 30-gene qPCR panel (annual):")
+print("\nRelative to 30-gene qPCR panel (annual):")
 for name, data in methods.items():
     if name == "30_gene_qPCR_panel":
         continue
@@ -93,7 +93,7 @@ for name, data in methods.items():
 
 # Sensitivity: what if qPCR panel is run more frequently?
 frequencies = [1, 2, 3, 4, 5]  # times per batch
-print(f"\nSensitivity: qPCR frequency vs annual CO2 (t):")
+print("\nSensitivity: qPCR frequency vs annual CO2 (t):")
 for freq in frequencies:
     samples = freq * 240  # 240 batches/year
     co2 = qpcr['co2_kg_per_sample'] * samples / 1000
@@ -107,5 +107,5 @@ results = {
 }
 
 (OUT / "lca_comparison.json").write_text(json.dumps(results, indent=2))
-print(f"\nSaved to lca_comparison.json")
+print("\nSaved to lca_comparison.json")
 print("DONE")

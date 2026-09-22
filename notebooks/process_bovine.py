@@ -1,11 +1,14 @@
 """Process bovine data v3: use pre-built mapping, fix alignment."""
-import json, warnings
-from pathlib import Path
-import numpy as np, pandas as pd
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans
+import json
+import warnings
 from collections import Counter
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
@@ -140,7 +143,7 @@ for s in ["expansion_competent", "committed", "terminal"]:
     print(f"     {s}: {c} ({c/len(bov_states):.1%})")
 
 # Per-sample
-print(f"\n   Per-sample classification:")
+print("\n   Per-sample classification:")
 for sample, state in zip(bov_sub.columns, bov_states):
     d = bov_dists[len(bov_states) - 1 - list(reversed(bov_sub.columns.tolist())).index(sample)]
     # simpler:
@@ -150,7 +153,7 @@ for i, (sample, state) in enumerate(zip(bov_sub.columns, bov_states)):
     print(f"     {sample:20s} -> {state}")
 
 # Per-condition summary
-print(f"\n   Per-condition summary:")
+print("\n   Per-condition summary:")
 conditions = {}
 for sample, state in zip(bov_sub.columns, bov_states):
     # Extract condition from sample name

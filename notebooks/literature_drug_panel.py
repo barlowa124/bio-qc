@@ -1,15 +1,16 @@
 """Literature benchmark + drug prediction + minimal panel + noise simulation."""
-import json, warnings
+import json
+import warnings
 from pathlib import Path
-from collections import Counter
-import numpy as np, pandas as pd
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
+
+import numpy as np
+import pandas as pd
 from sklearn.cluster import KMeans
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import cross_val_score, StratifiedKFold
+from sklearn.decomposition import PCA
 from sklearn.feature_selection import SequentialFeatureSelector
-from scipy.stats import pearsonr, spearmanr
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import StandardScaler
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
@@ -197,5 +198,5 @@ results = {
     "qpcr_noise_simulation": noise_results
 }
 json.dump(results, open(OUT / "literature_drug_panel_noise.json", "w"), indent=2)
-print(f"\nSaved to literature_drug_panel_noise.json")
+print("\nSaved to literature_drug_panel_noise.json")
 print("DONE")

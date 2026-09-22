@@ -11,9 +11,10 @@ Tables:
   S7: Bootstrap SHAP stability rankings (100 resamples)
   S8: Ablation study (leave-one-gene-out drops)
 """
-import json, warnings
+import json
+import warnings
 from pathlib import Path
-import numpy as np
+
 import pandas as pd
 
 warnings.filterwarnings("ignore")
@@ -133,7 +134,7 @@ rows = [
 ]
 df = pd.DataFrame(rows)
 df.to_csv(SUPPL / "Table_S3_cross_species.csv", index=False)
-print(f"  Saved Table_S3_cross_species.csv")
+print("  Saved Table_S3_cross_species.csv")
 
 # ═══════════════════════════════════════════════════════════════
 # Table S4: Cross-platform
@@ -156,7 +157,7 @@ if cp and "expression_concordance" in cp:
         })
 df = pd.DataFrame(rows)
 df.to_csv(SUPPL / "Table_S4_cross_platform.csv", index=False)
-print(f"  Saved Table_S4_cross_platform.csv")
+print("  Saved Table_S4_cross_platform.csv")
 
 # ═══════════════════════════════════════════════════════════════
 # Table S5: Batch correction
@@ -182,7 +183,7 @@ else:
     ]
 df = pd.DataFrame(rows)
 df.to_csv(SUPPL / "Table_S5_batch_correction.csv", index=False)
-print(f"  Saved Table_S5_batch_correction.csv")
+print("  Saved Table_S5_batch_correction.csv")
 
 # ═══════════════════════════════════════════════════════════════
 # Table S6: Pathway enrichment
@@ -260,7 +261,7 @@ df.to_csv(SUPPL / "Table_S8_ablation.csv", index=False)
 print(f"  Saved Table_S8_ablation.csv ({len(df)} genes)")
 
 # ── Summary ──
-print(f"\n--- Supplementary Tables Complete ---")
+print("\n--- Supplementary Tables Complete ---")
 for f in sorted(SUPPL.glob("Table_*.csv")):
     print(f"  {f.name}")
 print(f"Output: {SUPPL}")

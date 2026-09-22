@@ -1,7 +1,10 @@
 """Download cross-species datasets with rate-limit handling."""
-import json, warnings, time, urllib.request, urllib.error
+import json
+import time
+import urllib.error
+import urllib.request
+import warnings
 from pathlib import Path
-import numpy as np, pandas as pd
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
@@ -55,7 +58,7 @@ for gse, desc in datasets.items():
     root = ET.fromstring(text)
     ids = [e.text for e in root.findall(".//Id")]
     if not ids:
-        print(f"     No results")
+        print("     No results")
         continue
     
     geo_id = ids[0]
@@ -151,7 +154,7 @@ for gse in datasets:
             print(f"     Failed: {fname} - {e}")
 
 # ── 3. Summary ────────────────────────────────────────────
-print(f"\n\n3. Files downloaded:")
+print("\n\n3. Files downloaded:")
 for gse in datasets:
     d = CROSS / gse
     if d.exists():

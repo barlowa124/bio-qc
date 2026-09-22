@@ -1,8 +1,10 @@
 """Generate SVG versions of Plotly figures using kaleido (vector output).
 SVG rendering is simpler than PNG and may work even when PNG fails.
 """
-import json, warnings
+import json
+import warnings
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -187,7 +189,7 @@ fig = go.Figure(data=go.Heatmap(z=corr_matrix, x=platforms, y=platforms,
 fig.update_layout(title="Cross-Platform Correlation Heatmap", template="plotly_white")
 save_svg(fig, "fig11b_platform_heatmap")
 
-print(f"\n--- SVG Complete ---")
+print("\n--- SVG Complete ---")
 for svg in sorted(FIGS.glob("fig*.svg")):
     print(f"  {svg.name}")
 print("DONE")

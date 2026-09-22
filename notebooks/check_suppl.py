@@ -1,4 +1,6 @@
-import urllib.request, re, time, json
+import re
+import time
+import urllib.request
 from pathlib import Path
 
 CROSS = Path(r"C:\Users\asdf\CascadeProjects\rao_lab_ml\cultivated_meat_projects\cross_species_validation")

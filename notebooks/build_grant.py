@@ -1,6 +1,6 @@
 """Generate grant proposal draft."""
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 PROJ = Path(__file__).resolve().parents[1]
 OUT = PROJ / "p2_state_map/output"

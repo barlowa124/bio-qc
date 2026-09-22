@@ -2,12 +2,14 @@
 notebooks/adversarial_robustness.py
 Test biologically plausible perturbations on the 30-gene panel.
 """
-import json, numpy as np
+import json
 from pathlib import Path
-from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
+
+import numpy as np
 from sklearn.datasets import make_classification
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import StandardScaler
 
 np.random.seed(42)
 OUT = Path("p2_state_map/output")

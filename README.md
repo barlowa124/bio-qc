@@ -68,6 +68,9 @@ python notebooks/build_report.py            # HTML report → Print to PDF
 
 # Start prediction API
 cd api && pip install -r requirements.txt && python app.py
+# Binds 127.0.0.1 by default; set HOST to override.
+# The API loads pickled model artifacts from this repo only; it is for
+# local/research use and is not a hardened service.
 ```
 
 ### Docker
@@ -151,7 +154,7 @@ Additional exploratory scripts (illustrative only): `patent_claims.py`, `patent_
 | Fig 11 | Cross-Platform Comparison | `docs/figures/fig11_cross_platform.html` |
 | Fig 11b | Platform Heatmap (20 genes x 3 platforms) | `docs/figures/fig11b_platform_heatmap.html` |
 
-All figures are standalone HTML — double-click to open or embed in presentations.
+All figures are standalone HTML — double-click to open or embed in presentations. Each file loads Plotly.js v3.3.1 from the CDN (`cdn.plot.ly`), so an internet connection is required for interactive rendering.
 
 **Generate:** `python notebooks/generate_interactive_figures.py`
 

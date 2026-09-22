@@ -1,13 +1,18 @@
 """VAE embeddings + Bayesian state assignment."""
-import json, warnings
-from pathlib import Path
+import json
+import warnings
 from collections import Counter
-import numpy as np, pandas as pd
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import torch
+import torch.nn as nn
+import torch.optim as optim
 from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
 from sklearn.mixture import BayesianGaussianMixture
-import torch, torch.nn as nn, torch.optim as optim
+from sklearn.preprocessing import StandardScaler
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
@@ -138,6 +143,6 @@ results = {
     "sample_probabilities": sample_probs
 }
 json.dump(results, open(OUT / "vae_bayesian_results.json", "w"), indent=2)
-print(f"\nSaved to vae_bayesian_results.json")
+print("\nSaved to vae_bayesian_results.json")
 print("=" * 60)
 print("DONE")

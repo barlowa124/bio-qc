@@ -1,17 +1,17 @@
 """Comprehensive computational analysis: tasks 2-10."""
-import json, warnings, tarfile, gzip
-from pathlib import Path
-import numpy as np, pandas as pd
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans
-from sklearn.linear_model import LogisticRegression, Ridge
-from sklearn.model_selection import cross_val_score, StratifiedKFold
-from sklearn.feature_selection import SelectFromModel
-from scipy.stats import pearsonr, spearmanr, chi2_contingency
-from scipy.spatial.distance import cdist
+import json
+import warnings
 from collections import Counter
-import scipy.stats as st
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+from scipy.stats import pearsonr
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.feature_selection import SelectFromModel
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
@@ -171,7 +171,7 @@ pseudo_corr, pseudo_p = pearsonr(pseudotime, bov_true_times)
 print(f"   Diffusion pseudotime vs true time: r={pseudo_corr:.3f}, p={pseudo_p:.2e}")
 
 # Per-timepoint pseudotime stats
-print(f"\n   Pseudotime by true timepoint:")
+print("\n   Pseudotime by true timepoint:")
 for t in sorted(set(bov_true_times)):
     mask = bov_true_times == t
     pt = pseudotime[mask]
@@ -189,7 +189,7 @@ trajectory = {
     "n_timepoints": len(set(bov_true_times)),
 }
 json.dump(trajectory, open(OUT / "pseudotime_analysis.json", "w"), indent=2)
-print(f"\n   Saved to pseudotime_analysis.json")
+print("\n   Saved to pseudotime_analysis.json")
 
 # ═══════════════════════════════════════════════════════════
 # TASK 3: GENE REGULATORY NETWORK
@@ -232,7 +232,7 @@ for e in edges:
     hub_degrees[e["source"]] += 1
     hub_degrees[e["target"]] += 1
 
-print(f"\n   Hub genes (top 5):")
+print("\n   Hub genes (top 5):")
 for gene, deg in hub_degrees.most_common(5):
     print(f"     {gene}: degree={deg}")
 
@@ -261,7 +261,7 @@ network = {
     "state_specific_edges": state_edges,
 }
 json.dump(network, open(OUT / "gene_regulatory_network.json", "w"), indent=2)
-print(f"\n   Saved to gene_regulatory_network.json")
+print("\n   Saved to gene_regulatory_network.json")
 
 # ═══════════════════════════════════════════════════════════
 # TASK 4: DRUG/COMPOUND PREDICTION
@@ -301,7 +301,7 @@ compound_knowledge = {
 }
 
 # Match compounds to desired state (expansion-competent)
-print(f"\n   Compounds predicted to promote expansion-competent state:")
+print("\n   Compounds predicted to promote expansion-competent state:")
 predictions = []
 for compound, info in compound_knowledge.items():
     score = 0
@@ -321,7 +321,7 @@ for p in predictions:
     print(f"     {p['compound']}: score={p['score']}, {p['effect']}")
 
 json.dump({"signatures": {s: {"up": list(v["up"]), "down": list(v["down"])} for s, v in signatures.items()}, "predictions": predictions}, open(OUT / "drug_predictions.json", "w"), indent=2)
-print(f"\n   Saved to drug_predictions.json")
+print("\n   Saved to drug_predictions.json")
 
 # ═══════════════════════════════════════════════════════════
 # TASK 5: POWER ANALYSIS
@@ -370,11 +370,11 @@ max_d = max(effects.values())
 n_per_group_anova = 2 * (z_alpha + z_beta)**2 / (max_d**2 + 1e-10)
 n_total_3group = 3 * n_per_group_anova
 
-print(f"\n   Effect sizes (Cohen's d):")
+print("\n   Effect sizes (Cohen's d):")
 for k, v in effects.items():
     print(f"     {k}: d={v:.3f}")
 
-print(f"\n   Required sample sizes (80% power, α=0.05):")
+print("\n   Required sample sizes (80% power, α=0.05):")
 for k, v in power_results.items():
     print(f"     {k}: n={v['n_per_group']}/group, {v['n_total']} total (d={v['cohens_d']})")
 
@@ -397,7 +397,7 @@ power_analysis = {
     "assumptions": {"alpha": 0.05, "power": 0.80, "test": "one-way ANOVA + pairwise t-tests"},
 }
 json.dump(power_analysis, open(OUT / "power_analysis.json", "w"), indent=2)
-print(f"\n   Saved to power_analysis.json")
+print("\n   Saved to power_analysis.json")
 
 # ═══════════════════════════════════════════════════════════
 # TASK 6: INTERACTIVE HTML DASHBOARD
@@ -585,10 +585,11 @@ agreement = (bovine_pred == bov_readiness).mean()
 print(f"   Transfer accuracy (human→bovine): {agreement:.1%}")
 
 # Confusion matrix
-from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.metrics import confusion_matrix
+
 cm = confusion_matrix(bov_readiness, bovine_pred, labels=["expansion_competent", "committed", "terminal"])
-print(f"\n   Confusion matrix (rows=true bovine, cols=predicted):")
-print(f"              expansion committed terminal")
+print("\n   Confusion matrix (rows=true bovine, cols=predicted):")
+print("              expansion committed terminal")
 for i, state in enumerate(["expansion_competent", "committed", "terminal"]):
     print(f"   {state:12s} {cm[i,0]:5d}    {cm[i,1]:5d}    {cm[i,2]:5d}")
 
@@ -599,7 +600,7 @@ transfer_results = {
     "per_class_accuracy": {state: float((bovine_pred[bov_readiness == state] == state).mean()) if (bov_readiness == state).sum() > 0 else 0 for state in ["expansion_competent", "committed", "terminal"]},
 }
 json.dump(transfer_results, open(OUT / "transfer_learning.json", "w"), indent=2)
-print(f"\n   Saved to transfer_learning.json")
+print("\n   Saved to transfer_learning.json")
 
 # ═══════════════════════════════════════════════════════════
 # TASK 8: PATHWAY ENRICHMENT PER STATE
@@ -623,7 +624,7 @@ for state in ["expansion_competent", "committed", "terminal"]:
     state_flux = Xf_s[mask]
     pathway_activity[state] = {p: float(state_flux.mean(axis=0)[i]) if i < state_flux.shape[1] else 0 for i, p in enumerate(pathways[:state_flux.shape[1]])}
 
-print(f"\n   Pathway activity by state:")
+print("\n   Pathway activity by state:")
 for state in ["expansion_competent", "committed", "terminal"]:
     if state in pathway_activity:
         top = sorted(pathway_activity[state].items(), key=lambda x: x[1], reverse=True)[:5]
@@ -648,7 +649,7 @@ for s1, s2 in [("expansion_competent", "terminal"), ("expansion_competent", "com
         print(f"     {direction} {p}: Δ={d:+.3f}")
 
 json.dump({"pathway_activity": pathway_activity, "differential_pathways": diff_pathways}, open(OUT / "pathway_enrichment.json", "w"), indent=2)
-print(f"\n   Saved to pathway_enrichment.json")
+print("\n   Saved to pathway_enrichment.json")
 
 # ═══════════════════════════════════════════════════════════
 # TASK 9: P5 REPRODUCIBILITY
@@ -712,7 +713,7 @@ for b in range(n_boot):
     pca_stability.append(pca_boot.explained_variance_ratio_)
 
 pca_stability = np.array(pca_stability)
-print(f"   PCA variance stability (bootstrap CV):")
+print("   PCA variance stability (bootstrap CV):")
 for i in range(5):
     cv = pca_stability[:, i].std() / (pca_stability[:, i].mean() + 1e-10)
     print(f"     PC{i+1}: mean={pca_stability[:, i].mean():.3f}, CV={cv:.3f}")
@@ -727,7 +728,7 @@ reproducibility = {
     "pca_bootstrap_cv": [float(pca_stability[:, i].std() / (pca_stability[:, i].mean() + 1e-10)) for i in range(5)],
 }
 json.dump(reproducibility, open(OUT / "reproducibility.json", "w"), indent=2)
-print(f"\n   Saved to reproducibility.json")
+print("\n   Saved to reproducibility.json")
 
 # ═══════════════════════════════════════════════════════════
 # TASK 10: PUBLICATION-READY FIGURES
@@ -737,9 +738,9 @@ print("TASK 10: PUBLICATION-READY FIGURES")
 print("=" * 60)
 
 import matplotlib
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 from matplotlib.lines import Line2D
 
 plt.rcParams.update({
@@ -784,7 +785,7 @@ fig.suptitle('Figure 1: Multi-Omic State Maps Across Species', fontweight='bold'
 plt.tight_layout()
 fig.savefig(OUT / 'fig1_state_map_publication.png')
 plt.close()
-print(f"   fig1_state_map_publication.png saved")
+print("   fig1_state_map_publication.png saved")
 
 # Figure 2: Pseudotime Trajectory
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
@@ -818,7 +819,7 @@ fig.suptitle('Figure 2: Bovine Differentiation Trajectory', fontweight='bold')
 plt.tight_layout()
 fig.savefig(OUT / 'fig2_pseudotime_publication.png')
 plt.close()
-print(f"   fig2_pseudotime_publication.png saved")
+print("   fig2_pseudotime_publication.png saved")
 
 # Figure 3: Gene Regulatory Network
 fig, ax = plt.subplots(figsize=(12, 10))
@@ -864,13 +865,12 @@ ax.legend(handles=legend_elements, loc='lower right')
 plt.tight_layout()
 fig.savefig(OUT / 'fig3_network_publication.png')
 plt.close()
-print(f"   fig3_network_publication.png saved")
+print("   fig3_network_publication.png saved")
 
 # Figure 4: Cross-Species Transfer
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
 # Confusion matrix heatmap
-import matplotlib.colors as mcolors
 ax = axes[0]
 im = ax.imshow(cm, cmap='Blues', aspect='auto')
 ax.set_xticks(range(3))
@@ -902,7 +902,7 @@ fig.suptitle('Figure 4: Cross-Species Transfer Learning', fontweight='bold')
 plt.tight_layout()
 fig.savefig(OUT / 'fig4_transfer_publication.png')
 plt.close()
-print(f"   fig4_transfer_publication.png saved")
+print("   fig4_transfer_publication.png saved")
 
 # Figure 5: Comprehensive Summary
 fig, axes = plt.subplots(2, 2, figsize=(14, 12))
@@ -954,7 +954,7 @@ fig.suptitle('Figure 5: Comprehensive Analysis Summary', fontweight='bold', y=1.
 plt.tight_layout()
 fig.savefig(OUT / 'fig5_summary_publication.png')
 plt.close()
-print(f"   fig5_summary_publication.png saved")
+print("   fig5_summary_publication.png saved")
 
 # ═══════════════════════════════════════════════════════════
 # FINAL SUMMARY

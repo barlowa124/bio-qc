@@ -2,11 +2,13 @@
 notebooks/single_cell_deconvolution.py
 Deconvolve bulk qPCR signatures into single-cell proportions.
 """
-import json, numpy as np
+import json
 from pathlib import Path
-from sklearn.linear_model import LinearRegression, Ridge
-from sklearn.preprocessing import StandardScaler
+
+import numpy as np
+from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import StandardScaler
 
 np.random.seed(42)
 OUT = Path("p2_state_map/output")
@@ -63,7 +65,7 @@ rmse_ridge = np.sqrt(mean_squared_error(true_props, pred_props_ridge))
 corr_ls = np.corrcoef(true_props.flatten(), pred_props_ls.flatten())[0, 1]
 corr_ridge = np.corrcoef(true_props.flatten(), pred_props_ridge.flatten())[0, 1]
 
-print(f"\nDeconvolution performance:")
+print("\nDeconvolution performance:")
 print(f"  Least Squares  | RMSE: {rmse_ls:.4f} | Corr: {corr_ls:.4f}")
 print(f"  Ridge Regression | RMSE: {rmse_ridge:.4f} | Corr: {corr_ridge:.4f}")
 
@@ -97,5 +99,5 @@ results = {
 }
 
 (OUT / "single_cell_deconvolution.json").write_text(json.dumps(results, indent=2))
-print(f"\nSaved to single_cell_deconvolution.json")
+print("\nSaved to single_cell_deconvolution.json")
 print("DONE")

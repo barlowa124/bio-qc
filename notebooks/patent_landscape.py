@@ -1,8 +1,7 @@
 """Patent landscape mining for cultivated meat QC and gene panel IP."""
 import json
-from pathlib import Path
 from collections import Counter
-import re
+from pathlib import Path
 
 PROJ = Path(__file__).resolve().parents[1]
 OUT = PROJ / "p2_state_map/output"
@@ -105,5 +104,5 @@ results = {
     "recommendation": "File provisional patent before preprint submission; focus on the specific 30-gene combination + Bayesian integration",
 }
 json.dump(results, open(OUT / "patent_landscape.json", "w"), indent=2)
-print(f"\nSaved to patent_landscape.json")
+print("\nSaved to patent_landscape.json")
 print("DONE")

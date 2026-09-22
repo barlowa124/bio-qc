@@ -1,18 +1,19 @@
 """Bootstrap stability, ML comparison, time-series modeling."""
-import json, warnings
-from pathlib import Path
+import json
+import warnings
 from collections import Counter
-import numpy as np, pandas as pd
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.svm import SVC
-from sklearn.model_selection import cross_val_score, StratifiedKFold
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
 from scipy.stats import pearsonr
-from scipy.spatial.distance import cdist
-import scipy.stats as st
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import StratifiedKFold, cross_val_score
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
@@ -179,12 +180,12 @@ for gi, gene in enumerate(tc_valid.index):
 
 # Top trending genes
 trending = sorted(trend_scores.items(), key=lambda x: abs(x[1]["r"]), reverse=True)
-print(f"\nTop temporally-correlated genes:")
+print("\nTop temporally-correlated genes:")
 for gene, info in trending[:10]:
     print(f"  {gene}: r={info['r']:.3f}, p={info['p']:.4f}")
 
 # Check panel gene trends in bovine
-print(f"\nPanel gene temporal trends in bovine:")
+print("\nPanel gene temporal trends in bovine:")
 panel_trends = {}
 for gene in gp:
     if gene in trend_scores:
@@ -216,6 +217,6 @@ results = {
     }
 }
 json.dump(results, open(OUT / "bootstrap_ml_timeseries.json", "w"), indent=2, default=convert)
-print(f"\nSaved to bootstrap_ml_timeseries.json")
+print("\nSaved to bootstrap_ml_timeseries.json")
 print("=" * 60)
 print("DONE")

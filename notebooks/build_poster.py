@@ -1,10 +1,9 @@
 """Poster and slide generation helper (Matplotlib-based poster figure)."""
-import json
 from pathlib import Path
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.gridspec import GridSpec
-import matplotlib.patches as mpatches
 
 PROJ = Path(__file__).resolve().parents[1]
 OUT = PROJ / "p2_state_map/output"
@@ -107,7 +106,7 @@ ax6.text(0.1, 0.5, stats_text, fontsize=11, verticalalignment="center",
 ax6.set_title("F. Project Summary", fontsize=13, fontweight="bold")
 
 plt.savefig(FIGS / "poster_summary.png", dpi=300, bbox_inches="tight", facecolor="white")
-print(f"  Saved poster_summary.png (18x12 in, 300 dpi)")
+print("  Saved poster_summary.png (18x12 in, 300 dpi)")
 
 # ── Talk slide: single summary figure ──
 print("\n─── Generating talk_summary.png ───")
@@ -141,6 +140,6 @@ ax.axhline(95, color="gray", linestyle="--", alpha=0.5)
 fig.suptitle("Cultivated Meat 30-Gene QC Panel — Summary", fontsize=16, fontweight="bold", y=1.02)
 plt.tight_layout()
 plt.savefig(FIGS / "talk_summary.png", dpi=300, bbox_inches="tight", facecolor="white")
-print(f"  Saved talk_summary.png (15x5 in, 300 dpi)")
+print("  Saved talk_summary.png (15x5 in, 300 dpi)")
 
 print("\nDONE")

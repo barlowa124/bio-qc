@@ -77,12 +77,12 @@ print(f"{'Year':>5s} | {'Customers':>9s} | {'Samples':>8s} | {'Revenue $k':>10s}
 for r in revenue:
     print(f"{r['year']:5d} | {r['customers']:9d} | {r['samples']:8d} | {r['revenue_k_usd']:10.1f} | {r['gross_margin_k_usd']:8.1f} | {r['ebitda_k_usd']:10.1f}")
 
-print(f"\nCap Table (at seed):")
+print("\nCap Table (at seed):")
 for entity, data in cap_table.items():
     if isinstance(data, dict):
         print(f"  {entity:20s} | {data['pct']:5.1f}% | Exit value: ${data['value_at_exit_usd']:,}")
 
-print(f"\nKey Metrics:")
+print("\nKey Metrics:")
 for k, v in metrics.items():
     print(f"  {k:30s}: {v}")
 
@@ -104,5 +104,5 @@ results = {
 }
 
 (OUT / "investor_financial_model.json").write_text(json.dumps(results, indent=2))
-print(f"\nSaved to investor_financial_model.json")
+print("\nSaved to investor_financial_model.json")
 print("DONE")

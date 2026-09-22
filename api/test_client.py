@@ -1,5 +1,8 @@
 """Test client for the prediction API."""
-import requests, json, numpy as np
+import json
+
+import numpy as np
+import requests
 
 # Example: random expression values for 30 genes
 test_expr = np.random.lognormal(0, 1, 30).tolist()

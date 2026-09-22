@@ -1,7 +1,11 @@
 """Prediction API: POST gene expression -> state prediction + confidence."""
-import json, pickle, warnings
+import json
+import pickle
+import warnings
 from pathlib import Path
-import numpy as np, pandas as pd
+
+import numpy as np
+import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 
@@ -25,8 +29,9 @@ gv = Xr.var(axis=0)
 Xr_f = Xr[:, gv > np.percentile(gv, 25)]
 Xr_s = StandardScaler().fit_transform(Xr_f)
 Xf_s = StandardScaler().fit_transform(Xf)
-from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+
 pr = PCA(15).fit_transform(Xr_s)
 pf = PCA(15).fit_transform(Xf_s)
 km = KMeans(3, random_state=42, n_init=10).fit(np.hstack([pr, pf]))
@@ -108,10 +113,10 @@ print(json.dumps(response.json(), indent=2))
 (API_DIR / "requirements.txt").write_text("flask\nnumpy\nscikit-learn\nrequests\n")
 
 print(f"API created at: {API_DIR}")
-print(f"  app.py — Flask server")
-print(f"  model.pkl — Trained logistic regression")
-print(f"  scaler.pkl — StandardScaler")
-print(f"  model_metadata.json — Gene list + class labels")
-print(f"\nTo run: cd api && pip install -r requirements.txt && python app.py")
-print(f"To test: python test_client.py")
+print("  app.py — Flask server")
+print("  model.pkl — Trained logistic regression")
+print("  scaler.pkl — StandardScaler")
+print("  model_metadata.json — Gene list + class labels")
+print("\nTo run: cd api && pip install -r requirements.txt && python app.py")
+print("To test: python test_client.py")
 print("DONE")

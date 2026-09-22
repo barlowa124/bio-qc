@@ -2,9 +2,10 @@
 notebooks/reference_atlas.py
 Build reference expression profiles per state for batch correction and atlas normalization.
 """
-import json, numpy as np
+import json
 from pathlib import Path
-from sklearn.preprocessing import StandardScaler
+
+import numpy as np
 from sklearn.datasets import make_classification
 
 np.random.seed(42)
@@ -72,6 +73,7 @@ for state in states:
 
 # State separation metric (top 3 discriminant genes)
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+
 lda = LinearDiscriminantAnalysis()
 lda.fit(X, y_labels)
 lda_scores = np.abs(lda.coef_).mean(axis=0)
@@ -92,5 +94,5 @@ results = {
 }
 
 (OUT / "reference_atlas.json").write_text(json.dumps(results, indent=2))
-print(f"\nSaved to reference_atlas.json")
+print("\nSaved to reference_atlas.json")
 print("DONE")

@@ -9,7 +9,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import LeaveOneGroupOut, cross_val_score
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]

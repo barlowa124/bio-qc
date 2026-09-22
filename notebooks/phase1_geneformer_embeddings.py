@@ -7,14 +7,16 @@ Validates the embedding pipeline methodology:
 
 When GPU is available, swap generate_embeddings() for real model inference.
 """
-import warnings, json
+import json
+import warnings
 from pathlib import Path
+
 import numpy as np
-from sklearn.model_selection import StratifiedKFold, cross_val_score
-from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import StratifiedKFold, cross_val_score
 from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
 
 warnings.filterwarnings("ignore")
 

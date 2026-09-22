@@ -1,11 +1,14 @@
 """Build bovine-specific state map and compare with human."""
-import json, warnings
-from pathlib import Path
-import numpy as np, pandas as pd
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans
+import json
+import warnings
 from collections import Counter
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
@@ -66,16 +69,16 @@ rmap = {order[0]: "expansion_competent", order[1]: "committed", order[2]: "termi
 bov_readiness = np.array([rmap[c] for c in bov_clusters])
 
 bov_counts = Counter(bov_readiness)
-print(f"\n   Bovine state distribution:")
+print("\n   Bovine state distribution:")
 for s in ["expansion_competent", "committed", "terminal"]:
     print(f"     {s}: {bov_counts.get(s, 0)} ({bov_counts.get(s,0)/len(bov_readiness):.1%})")
 
 # ── 3. Per-condition breakdown ────────────────────────────
-print(f"\n3. Per-sample states:")
+print("\n3. Per-sample states:")
 for sample, state in zip(bovine.columns, bov_readiness):
     print(f"     {sample:20s} -> {state}")
 
-print(f"\n   Per-condition summary:")
+print("\n   Per-condition summary:")
 conditions = {}
 for sample, state in zip(bovine.columns, bov_readiness):
     parts = sample.split("_")
@@ -89,7 +92,7 @@ for cond, states in sorted(conditions.items()):
     print(f"     {cond}: {dict(c)}")
 
 # ── 4. Cross-species: conserved marker analysis ───────────
-print(f"\n4. Cross-species conserved marker analysis...")
+print("\n4. Cross-species conserved marker analysis...")
 
 conserved = [
     "PAX7", "MYF5", "MYOD1", "MYOG", "MYH3", "DES", "MYL1", "NEB",
@@ -149,7 +152,7 @@ for gene in conserved:
         }
 
 # Compare
-print(f"\n   Marker gene comparison (expansion / committed / terminal):")
+print("\n   Marker gene comparison (expansion / committed / terminal):")
 print(f"   {'Gene':12s} {'Bovine':30s} {'Human':30s}")
 print(f"   {'-'*12} {'-'*30} {'-'*30}")
 for gene in conserved:

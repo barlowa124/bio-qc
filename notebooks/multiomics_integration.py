@@ -2,11 +2,13 @@
 notebooks/multiomics_integration.py
 Integrate transcriptomics (qPCR) with proteomics and metabolomics for holistic QC.
 """
-import json, numpy as np
+import json
 from pathlib import Path
+
+import numpy as np
 from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import StandardScaler
 
 np.random.seed(42)
 OUT = Path("p2_state_map/output")
@@ -43,7 +45,7 @@ acc_m = cross_val_score(clf, X_m, y, cv=5).mean()
 acc_early = cross_val_score(clf, X_early, y, cv=5).mean()
 acc_full = cross_val_score(clf, X_full, y, cv=5).mean()
 
-print(f"\nAccuracy by omics layer:")
+print("\nAccuracy by omics layer:")
 print(f"  Transcriptomics only (30):    {acc_t:.4f}")
 print(f"  Proteomics only (15):         {acc_p:.4f}")
 print(f"  Metabolomics only (10):       {acc_m:.4f}")
@@ -60,10 +62,11 @@ costs = {
 
 # Correlation matrix between layers
 from numpy import corrcoef
+
 corr_tp = corrcoef(X_t[:, 0], X_p[:, 0])[0, 1]
 corr_tm = corrcoef(X_t[:, 0], X_m[:, 0])[0, 1]
 
-print(f"\nCross-omics correlation (first feature):")
+print("\nCross-omics correlation (first feature):")
 print(f"  Transcriptomics-Proteomics: {corr_tp:.3f}")
 print(f"  Transcriptomics-Metabolomics: {corr_tm:.3f}")
 
@@ -81,5 +84,5 @@ results = {
 }
 
 (OUT / "multiomics_integration.json").write_text(json.dumps(results, indent=2))
-print(f"\nSaved to multiomics_integration.json")
+print("\nSaved to multiomics_integration.json")
 print("DONE")

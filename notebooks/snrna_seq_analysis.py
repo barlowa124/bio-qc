@@ -1,8 +1,13 @@
 """GSE240556 bovine snRNA-seq analysis with Scanpy."""
-import json, warnings, gzip, tarfile, io
+import gzip
+import io
+import json
+import tarfile
+import warnings
 from pathlib import Path
-from collections import Counter
-import numpy as np, pandas as pd
+
+import numpy as np
+import pandas as pd
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
@@ -43,7 +48,7 @@ for sf in suppl_files:
                         extracted[m.name] = content
                         extracted_any = True
                         print(f"      -> extracted {len(content)} bytes")
-        except:
+        except (tarfile.TarError, OSError, EOFError):
             pass
         
         # Try as gzipped tar
@@ -62,7 +67,7 @@ for sf in suppl_files:
                             extracted[m.name] = content
                             extracted_any = True
                             print(f"      -> extracted {len(content)} bytes")
-            except:
+            except (tarfile.TarError, gzip.BadGzipFile, OSError, EOFError):
                 pass
         
         # Try as direct gzip
@@ -73,11 +78,11 @@ for sf in suppl_files:
                 text = content.decode("utf-8", errors="ignore")[:500]
                 print(f"  Preview: {text[:200]}")
                 extracted_any = True
-            except:
+            except (gzip.BadGzipFile, OSError, EOFError):
                 pass
         
         if not extracted_any:
-            print(f"  Not an archive - likely FTP listing")
+            print("  Not an archive - likely FTP listing")
             text = data.decode("utf-8", errors="ignore")[:300]
             print(f"  Preview: {text[:200]}")
     except Exception as e:
@@ -85,11 +90,11 @@ for sf in suppl_files:
 
 # ── If we got 10x data, process with anndata ──
 if extracted:
-    print(f"\n─── Processing extracted 10x data ───")
+    print("\n─── Processing extracted 10x data ───")
     try:
         import anndata
-        import scipy.sparse
         import scipy.io
+        import scipy.sparse
 
         # Find matrix, barcodes, features
         mtx_key = [k for k in extracted if 'mtx' in k.lower()]
@@ -124,7 +129,7 @@ if extracted:
             adata.obs['n_counts'] = np.array(adata.X.sum(axis=1)).flatten()
             adata.var['n_cells'] = np.array((adata.X > 0).sum(axis=0)).flatten()
 
-            print(f"\n  QC stats:")
+            print("\n  QC stats:")
             print(f"    Median genes/cell: {np.median(adata.obs['n_genes']):.0f}")
             print(f"    Median counts/cell: {np.median(adata.obs['n_counts']):.0f}")
             print(f"    Total cells: {adata.n_obs}")
@@ -166,7 +171,7 @@ if extracted:
                 }
             }
             json.dump(results, open(OUT / "snrna_seq_analysis.json", "w"), indent=2)
-            print(f"\nSaved to snrna_seq_analysis.json")
+            print("\nSaved to snrna_seq_analysis.json")
         else:
             print("  Could not find required 10x files (matrix, barcodes, features)")
     except ImportError as e:

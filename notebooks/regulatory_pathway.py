@@ -1,7 +1,7 @@
 """Regulatory pathway mapping for FDA/EMA cultivated meat QC panel approval."""
 import json
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 PROJ = Path(__file__).resolve().parents[1]
 OUT = PROJ / "p2_state_map/output"
@@ -155,5 +155,5 @@ results = {
     "recommendation": "Simultaneous FDA pre-submission + SFA fast-track; file provisional patent; begin method validation immediately",
 }
 json.dump(results, open(OUT / "regulatory_pathway.json", "w"), indent=2)
-print(f"\nSaved to regulatory_pathway.json")
+print("\nSaved to regulatory_pathway.json")
 print("DONE")

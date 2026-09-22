@@ -2,9 +2,10 @@
 notebooks/pathway_enrichment.py
 GO/KEGG/Reactome pathway enrichment for the 30-gene QC panel.
 """
-import json, numpy as np
+import json
 from pathlib import Path
-from collections import defaultdict
+
+import numpy as np
 
 np.random.seed(42)
 OUT = Path("p2_state_map/output")

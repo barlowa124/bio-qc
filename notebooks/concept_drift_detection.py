@@ -2,9 +2,11 @@
 notebooks/concept_drift_detection.py
 Monitor for concept drift in continuous manufacturing using the QC panel.
 """
-import json, numpy as np
+import json
 from pathlib import Path
-from scipy.stats import ks_2samp, chi2_contingency
+
+import numpy as np
+from scipy.stats import chi2_contingency, ks_2samp
 
 np.random.seed(42)
 OUT = Path("p2_state_map/output")
@@ -89,5 +91,5 @@ output = {
 }
 
 (OUT / "concept_drift_detection.json").write_text(json.dumps(output, indent=2))
-print(f"\nSaved to concept_drift_detection.json")
+print("\nSaved to concept_drift_detection.json")
 print("DONE")

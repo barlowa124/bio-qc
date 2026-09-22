@@ -1,8 +1,8 @@
 """Techno-economic analysis (TEA) for 30-gene qPCR panel at manufacturing scale."""
 import json
 from pathlib import Path
+
 import numpy as np
-import pandas as pd
 
 PROJ = Path(__file__).resolve().parents[1]
 OUT = PROJ / "p2_state_map/output"
@@ -133,5 +133,5 @@ results = {
               "C11orf63", "EMC1", "HRH4", "PLEKHG4B", "PPIEL", "XKR9", "APOL1", "LINC00574", "UGT8", "IFITM3"],
 }
 json.dump(results, open(OUT / "techno_economic_analysis.json", "w"), indent=2)
-print(f"\nSaved to techno_economic_analysis.json")
+print("\nSaved to techno_economic_analysis.json")
 print("DONE")

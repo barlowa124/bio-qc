@@ -1,12 +1,13 @@
 """Try Ensembl REST API with small batches."""
-import json, time, sys
-from pathlib import Path
+import json
 import urllib.request
+from pathlib import Path
 
 CROSS = Path(r"C:\Users\asdf\CascadeProjects\rao_lab_ml\cultivated_meat_projects\cross_species_validation")
 
 # Load bovine gene IDs
 import pandas as pd
+
 sf = pd.read_csv(CROSS / "GSE173199/sf_diff_counts.csv", index_col=0, nrows=100)
 ids = [g.split(".")[0] for g in sf.index.tolist()]
 print(f"Testing with {len(ids)} IDs")

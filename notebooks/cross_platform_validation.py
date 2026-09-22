@@ -2,10 +2,11 @@
 notebooks/cross_platform_validation.py
 Benchmark concordance between Nanostring, RNA-seq, and qPCR for the 30-gene panel.
 """
-import json, numpy as np
+import json
 from pathlib import Path
+
+import numpy as np
 from scipy.stats import pearsonr
-from sklearn.linear_model import LinearRegression
 
 np.random.seed(42)
 OUT = Path("p2_state_map/output")
@@ -47,8 +48,9 @@ for p1, p2 in pairs:
     })
 
 # Classification concordance: do all platforms assign same state?
-from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
+
 y = np.random.choice(["expansion_competent", "committed", "terminal"], n_samples, p=[0.3, 0.4, 0.3])
 clf = LogisticRegression(max_iter=1000, C=1.0, solver="lbfgs")
 
@@ -81,7 +83,7 @@ print("=" * 60)
 for c in concordance:
     print(f"{c['platform_a']:10s} vs {c['platform_b']:10s} | Gene r={c['mean_gene_correlation']:.3f} | Sample r={c['mean_sample_correlation']:.3f} | Agreement: {c['platform_agreement']}")
 
-print(f"\nState assignment concordance:")
+print("\nState assignment concordance:")
 for s in state_concordance:
     print(f"  {s['platform_a']:10s} vs {s['platform_b']:10s} | {s['state_agreement']:.1%}")
 

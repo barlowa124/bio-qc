@@ -1,7 +1,7 @@
 """Additional grants database: NSF, USDA, GFI, New Harvest, DOD matches."""
 import json
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 PROJ = Path(__file__).resolve().parents[1]
 OUT = PROJ / "p2_state_map/output"
@@ -195,5 +195,5 @@ results = {
     "personnel_grants": ["New Harvest Fellowship", "NSF GRFP (for grad student)"],
 }
 json.dump(results, open(OUT / "grants_database.json", "w"), indent=2)
-print(f"\nSaved to grants_database.json")
+print("\nSaved to grants_database.json")
 print("DONE")

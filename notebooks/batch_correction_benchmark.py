@@ -2,11 +2,13 @@
 notebooks/batch_correction_benchmark.py
 Compare batch correction methods against the reference atlas.
 """
-import json, numpy as np
+import json
 from pathlib import Path
-from sklearn.preprocessing import StandardScaler
+
+import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import StandardScaler
 
 np.random.seed(42)
 OUT = Path("p2_state_map/output")
@@ -37,6 +39,7 @@ acc_combat = cross_val_score(LogisticRegression(max_iter=1000, C=1.0, solver="lb
 
 # Method 3: Harmony-like (simplified: remove batch mean from PCA space)
 from sklearn.decomposition import PCA
+
 pca = PCA(n_components=10)
 X_pca = pca.fit_transform(StandardScaler().fit_transform(X))
 X_harmony = np.zeros_like(X_pca)
@@ -71,6 +74,8 @@ acc_ref = cross_val_score(LogisticRegression(max_iter=1000, C=1.0, solver="lbfgs
 
 # Batch mixing metric: kBET-like (simplified)
 from sklearn.neighbors import NearestNeighbors
+
+
 def batch_mixing_score(X_embed, batch_labels, k=10):
     nbrs = NearestNeighbors(n_neighbors=k).fit(X_embed)
     _, indices = nbrs.kneighbors(X_embed)

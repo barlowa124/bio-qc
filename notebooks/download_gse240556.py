@@ -1,5 +1,9 @@
 """Download GSE240556 bovine snRNA-seq (Nature Comms 2024, cultivated meat heterogeneity)."""
-import urllib.request, re, time, json, gzip, shutil
+import gzip
+import re
+import shutil
+import time
+import urllib.request
 from pathlib import Path
 
 CROSS = Path(r"C:\Users\asdf\CascadeProjects\rao_lab_ml\cultivated_meat_projects\cross_species_validation")
@@ -61,7 +65,7 @@ for url in all_urls[:10]:
                     with open(csv_path, 'wb') as f_out:
                         shutil.copyfileobj(f_in, f_out)
                 print(f"     Decompressed: {csv_path.stat().st_size} bytes")
-            except:
+            except (OSError, gzip.BadGzipFile):
                 pass
     except Exception as e:
         print(f"   Failed: {fname} - {e}")

@@ -1,9 +1,13 @@
 """Deepen P1: Extract protocol factors from docx text + P4: quantify media components.
 Plus cross-project integration, METAFlux mapping, and validation design."""
-import json, re, warnings
-from pathlib import Path
+import json
+import re
+import warnings
 from collections import Counter
-import numpy as np, pandas as pd
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
 from docx import Document
 
 warnings.filterwarnings("ignore")
@@ -163,11 +167,9 @@ gvar = X_rna.var(axis=0)
 keep = gvar > np.percentile(gvar, 25)
 X_rna_f = X_rna[:, keep]; kept = genes[keep]
 
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
-from sklearn.linear_model import LogisticRegression
-from sklearn.feature_selection import SelectFromModel
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
 X_rna_s = StandardScaler().fit_transform(X_rna_f)
 X_flux_s = StandardScaler().fit_transform(X_flux)

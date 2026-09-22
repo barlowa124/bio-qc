@@ -1,6 +1,8 @@
 """Map all bovine ENSBTAG IDs to gene symbols via Ensembl REST."""
-import json, time
+import json
+import time
 from pathlib import Path
+
 import pandas as pd
 import requests
 

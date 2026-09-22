@@ -17,10 +17,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import yaml
-from scipy.stats import pearsonr, spearmanr
-from sklearn.decomposition import PCA
+from scipy.stats import pearsonr
 from sklearn.cluster import KMeans
-from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
+from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
 warnings.filterwarnings("ignore")
@@ -188,7 +187,7 @@ for g in range(min(n_genes, 5000)):  # sample 5000 genes for speed
 stability_df = pd.DataFrame(gene_stability)
 stable_genes = stability_df[stability_df["is_stable"]]
 print(f"   Stable genes (ratio > 1.5): {len(stable_genes)}/{len(stability_df)} ({len(stable_genes)/len(stability_df):.1%})")
-print(f"   Top 10 most stable genes:")
+print("   Top 10 most stable genes:")
 for _, row in stability_df.nlargest(10, "stability_ratio").iterrows():
     print(f"     {row['gene']:20s} ratio={row['stability_ratio']:.2f}")
 

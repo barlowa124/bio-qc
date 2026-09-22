@@ -2,8 +2,10 @@
 
 Reads JSON outputs and regenerates figures as static images using kaleido.
 """
-import json, warnings
+import json
+import warnings
 from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -296,7 +298,7 @@ fig.update_layout(title="Cross-Platform Correlation Heatmap",
 save_static(fig, "fig11b_platform_heatmap")
 
 # ── Summary ──
-print(f"\n--- Static Figures Complete ---")
+print("\n--- Static Figures Complete ---")
 pngs = sorted(FIGS.glob("fig*.png"))
 svgs = sorted(FIGS.glob("fig*.svg"))
 print(f"  PNG: {len(pngs)} files")

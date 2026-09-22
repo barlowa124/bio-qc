@@ -1,16 +1,20 @@
 """Cell communication from snRNA-seq + multi-omic benchmark + pipeline figure."""
-import json, warnings, gzip, tarfile, io
+import gzip
+import io
+import json
+import tarfile
+import warnings
 from pathlib import Path
-from collections import Counter
-import numpy as np, pandas as pd
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans
-from scipy.stats import pearsonr
+
 import matplotlib
+import numpy as np
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
@@ -33,7 +37,9 @@ with tarfile.open(fileobj=io.BytesIO(data)) as tar:
     members = {m.name: tar.extractfile(m).read() for m in tar.getmembers()}
 
 # Decompress and parse
-import scipy.sparse, scipy.io
+import scipy.io
+import scipy.sparse
+
 mtx_data = gzip.decompress(members['GSM7701679_matrix.mtx.gz'])
 mtx = scipy.io.mmread(io.BytesIO(mtx_data)).tocsr()
 bc_data = gzip.decompress(members['GSM7701679_barcodes.tsv.gz'])
@@ -44,6 +50,7 @@ meta_data = gzip.decompress(members['GSM7701679_meta_data.tsv.gz'])
 meta_lines = [l.decode().strip().split('\t') for l in meta_data.split(b'\n') if l.strip()]
 
 import anndata
+
 adata = anndata.AnnData(
     X=mtx.T.tocsr(),
     obs=pd.DataFrame(index=barcodes),
@@ -133,6 +140,7 @@ km_flux = KMeans(3, random_state=42, n_init=10).fit(pf_sep)
 
 # Compare cluster agreement
 from sklearn.metrics import adjusted_rand_score
+
 methods = {
     "early_integration": km_early.labels_,
     "late_integration": km_late.labels_,
@@ -216,5 +224,5 @@ results = {
     "pipeline_figure": "fig6_pipeline_overview.png"
 }
 json.dump(results, open(OUT / "cellcom_benchmark_pipeline.json", "w"), indent=2)
-print(f"\nSaved to cellcom_benchmark_pipeline.json")
+print("\nSaved to cellcom_benchmark_pipeline.json")
 print("DONE")

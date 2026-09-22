@@ -67,7 +67,7 @@ print(f"Filing strategy: {claims['filing_strategy']}")
 print(f"Estimated cost: ${claims['estimated_filing_cost_usd']:,}")
 
 (OUT / "patent_claims.json").write_text(json.dumps(claims, indent=2))
-print(f"\nSaved to patent_claims.json")
+print("\nSaved to patent_claims.json")
 
 # Save as markdown
 md = """# Patent Claim Draft: 30-Gene QC Panel for Cultivated Meat

@@ -87,5 +87,5 @@ results = {
 }
 
 (OUT / "supply_chain_risk.json").write_text(json.dumps(results, indent=2))
-print(f"\nSaved to supply_chain_risk.json")
+print("\nSaved to supply_chain_risk.json")
 print("DONE")

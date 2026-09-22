@@ -1,11 +1,9 @@
 """scRNA-seq atlas integration with additional public cultivated muscle datasets."""
-import json, warnings
+import json
+import warnings
 from pathlib import Path
-from collections import Counter
-import numpy as np, pandas as pd
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans
+
+import numpy as np
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
@@ -112,14 +110,14 @@ total_nuclei = sum(d["nuclei"] for d in datasets if d["nuclei"] > 0)
 mean_overlap = np.mean([d["panel_overlap_pct"] for d in datasets])
 median_overlap = np.median([d["panel_overlap_pct"] for d in datasets])
 
-print(f"\n─── Aggregate Statistics ───")
+print("\n─── Aggregate Statistics ───")
 print(f"  Total nuclei (sc/sn): {total_nuclei:,}")
 print(f"  Mean panel overlap: {mean_overlap:.1f}%")
 print(f"  Median panel overlap: {median_overlap:.1f}%")
 print(f"  Species covered: {len(set(d['species'] for d in datasets))}")
 
 # ── Panel gene detection frequency across atlas ──
-print(f"\n─── Panel Gene Detection (simulated multi-atlas consensus) ───")
+print("\n─── Panel Gene Detection (simulated multi-atlas consensus) ───")
 # Simulate detection based on known biology and dataset overlap
 gene_detection = {
     "MALAT1": 7, "LMNA": 7, "CTSA": 7, "C1QBP": 7, "TOMM7": 7,
@@ -134,16 +132,16 @@ for g, count in sorted(gene_detection.items(), key=lambda x: x[1], reverse=True)
     print(f"  {g:12} detected in {count}/{len(datasets)} datasets ({pct:.0f}%)")
 
 # ── Benchmark: panel genes vs known muscle markers ──
-print(f"\n─── Panel vs Known Muscle Marker Overlap ───")
+print("\n─── Panel vs Known Muscle Marker Overlap ───")
 known_muscle_markers = ["PAX7", "MYOD1", "MYOG", "DES", "ACTA1", "MYH1", "MYH2", "MYH3", "MYH4", "MYH7", "TNNT3", "TNNC2", "CKM", "GAPDH", "ACTB"]
 overlap = set(panel_genes) & set(known_muscle_markers)
 print(f"  Known muscle markers: {len(known_muscle_markers)}")
 print(f"  Panel overlap: {len(overlap)} genes ({len(overlap)/len(known_muscle_markers)*100:.1f}%)")
 print(f"  Overlapping: {list(overlap) if overlap else 'None'}")
-print(f"  Interpretation: Panel captures non-canonical biology; distinct from standard muscle marker sets")
+print("  Interpretation: Panel captures non-canonical biology; distinct from standard muscle marker sets")
 
 # ── Atlas integration recommendation ──
-print(f"\n─── Integration Recommendations ───")
+print("\n─── Integration Recommendations ───")
 recommendations = [
     "Download GSE199351 (porcine) and GSE216505 (human) via GEOparse for actual expression matrices",
     "Run Seurat/Scanpy integration (RPCA, Harmony, or scVI) across all species",
@@ -168,5 +166,5 @@ results = {
     "integration_recommendations": recommendations,
 }
 json.dump(results, open(OUT / "scrna_atlas_integration.json", "w"), indent=2)
-print(f"\nSaved to scrna_atlas_integration.json")
+print("\nSaved to scrna_atlas_integration.json")
 print("DONE")

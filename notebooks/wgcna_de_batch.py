@@ -1,14 +1,16 @@
 """WGCNA co-expression + differential expression + batch effects."""
-import json, warnings
+import json
+import warnings
 from pathlib import Path
-from collections import Counter
-import numpy as np, pandas as pd
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans
-from scipy.stats import pearsonr, ttest_ind
-from scipy.cluster.hierarchy import linkage, fcluster
+
+import numpy as np
+import pandas as pd
+from scipy.cluster.hierarchy import fcluster, linkage
 from scipy.spatial.distance import pdist
+from scipy.stats import ttest_ind
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
@@ -129,5 +131,5 @@ results = {
     "batch_effects": {"batch_pc_separation": batch_sep, "gene_batch_effects": batch_effects}
 }
 json.dump(results, open(OUT / "wgcna_de_batch.json", "w"), indent=2)
-print(f"\nSaved to wgcna_de_batch.json")
+print("\nSaved to wgcna_de_batch.json")
 print("DONE")

@@ -1,7 +1,7 @@
 """FAIR compliance checklist for the cultivated meat multi-omic project."""
 import json
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 PROJ = Path(__file__).resolve().parents[1]
 OUT = PROJ / "p2_state_map/output"
@@ -124,7 +124,7 @@ checklist["overall_score"]["percentage"] = round(
     (checklist["overall_score"]["complete"] * 100 + checklist["overall_score"]["partial"] * 50) / checklist["overall_score"]["total"], 1
 )
 
-print(f"\n─── FAIR Assessment ───")
+print("\n─── FAIR Assessment ───")
 print(f"  Complete:   {checklist['overall_score']['complete']}/{checklist['overall_score']['total']}")
 print(f"  Partial:    {checklist['overall_score']['partial']}/{checklist['overall_score']['total']}")
 print(f"  Score:      {checklist['overall_score']['percentage']:.1f}%")
@@ -137,10 +137,10 @@ for principle, items in checklist["principles"].items():
         icon = "✅" if detail["status"] == "complete" else "🟡" if detail["status"] == "partial" else "❌"
         print(f"    {icon} {item}")
 
-print(f"\n─── Recommendations ───")
+print("\n─── Recommendations ───")
 for r in checklist["recommendations"]:
     print(f"  {r}")
 
 json.dump(checklist, open(OUT / "fair_compliance.json", "w"), indent=2)
-print(f"\nSaved to fair_compliance.json")
+print("\nSaved to fair_compliance.json")
 print("DONE")

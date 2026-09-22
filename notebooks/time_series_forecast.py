@@ -2,8 +2,10 @@
 notebooks/time_series_forecast.py
 Forecast future cell states from time-series qPCR data.
 """
-import json, numpy as np
+import json
 from pathlib import Path
+
+import numpy as np
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_squared_error
 
@@ -104,7 +106,7 @@ future_states = true_states[-horizon:]
 rmse_ar = np.sqrt(mean_squared_error(future_true, ar_preds))
 markov_acc = np.mean([markov_preds[i] == future_states[i] for i in range(horizon)])
 
-print(f"\nValidation:")
+print("\nValidation:")
 print(f"  AR RMSE: {rmse_ar:.4f}")
 print(f"  Markov accuracy: {markov_acc:.0%}")
 
@@ -123,5 +125,5 @@ results = {
 }
 
 (OUT / "time_series_forecast.json").write_text(json.dumps(results, indent=2))
-print(f"\nSaved to time_series_forecast.json")
+print("\nSaved to time_series_forecast.json")
 print("DONE")

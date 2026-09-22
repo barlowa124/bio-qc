@@ -5,6 +5,7 @@ Chromium and takes a full-page screenshot at high resolution.
 """
 import warnings
 from pathlib import Path
+
 from playwright.sync_api import sync_playwright
 
 warnings.filterwarnings("ignore")
@@ -59,7 +60,7 @@ with sync_playwright() as p:
 
     browser.close()
 
-print(f"\n--- Done ---")
+print("\n--- Done ---")
 for png in sorted(FIGS.glob("fig*.png")):
     print(f"  {png.name}")
 print(f"Output: {FIGS}")

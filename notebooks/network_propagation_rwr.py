@@ -2,9 +2,11 @@
 notebooks/network_propagation_rwr.py
 Random Walk with Restart on PPI network to rank candidate genes for panel expansion.
 """
-import json, numpy as np
-from pathlib import Path
+import json
 from collections import defaultdict
+from pathlib import Path
+
+import numpy as np
 
 np.random.seed(42)
 OUT = Path("p2_state_map/output")
@@ -110,5 +112,5 @@ results = {
 }
 
 (OUT / "network_propagation_rwr.json").write_text(json.dumps(results, indent=2))
-print(f"\nSaved to network_propagation_rwr.json")
+print("\nSaved to network_propagation_rwr.json")
 print("DONE")

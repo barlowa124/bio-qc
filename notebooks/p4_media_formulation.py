@@ -1,8 +1,11 @@
 """P4: Media Formulation vs Transcriptomic/Flux Response."""
-import json, warnings
+import json
+import warnings
 from pathlib import Path
-import numpy as np, pandas as pd, yaml
-from scipy.stats import pearsonr
+
+import numpy as np
+import pandas as pd
+import yaml
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
@@ -64,7 +67,7 @@ flux_vars = X_flux.var(axis=0)
 
 # Top variable flux reactions (most responsive to conditions)
 top_flux_idx = np.argsort(flux_vars)[-20:][::-1]
-print(f"   Top 10 most variable flux reactions:")
+print("   Top 10 most variable flux reactions:")
 for i in top_flux_idx[:10]:
     print(f"     {flux_aligned.index[i]}: mean={flux_means[i]:.6f}, var={flux_vars[i]:.6f}")
 

@@ -2,8 +2,10 @@
 notebooks/spatial_transcriptomics.py
 Simulate spatial transcriptomics for muscle tissue architecture validation.
 """
-import json, numpy as np
+import json
 from pathlib import Path
+
+import numpy as np
 
 np.random.seed(42)
 OUT = Path("p2_state_map/output")
@@ -64,6 +66,7 @@ print(f"Zone distribution: Periphery={sum(1 for z in true_zones if z==0)}, Inter
 
 # Moran's I (spatial autocorrelation) for first gene
 from scipy.spatial.distance import pdist, squareform
+
 coords = np.array(spot_coords)
 dist_matrix = squareform(pdist(coords))
 weights = 1 / (dist_matrix + np.eye(n_spots))
@@ -92,5 +95,5 @@ results = {
 }
 
 (OUT / "spatial_transcriptomics.json").write_text(json.dumps(results, indent=2))
-print(f"\nSaved to spatial_transcriptomics.json")
+print("\nSaved to spatial_transcriptomics.json")
 print("DONE")

@@ -1,10 +1,13 @@
 """Rebuild Y from METAFlux pathway activities + retrain per-domain Ridge."""
-import json, warnings
+import json
+import warnings
 from pathlib import Path
-import numpy as np, pandas as pd
+
+import numpy as np
+import pandas as pd
+from scipy.stats import pearsonr
 from sklearn.linear_model import RidgeCV
 from sklearn.preprocessing import StandardScaler
-from scipy.stats import pearsonr
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]

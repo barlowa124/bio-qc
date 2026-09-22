@@ -1,8 +1,8 @@
 """TF binding site enrichment + STRING PPI network."""
-import json, warnings, time, urllib.request, urllib.parse
-from pathlib import Path
+import json
+import warnings
 from collections import Counter
-import numpy as np, pandas as pd
+from pathlib import Path
 
 warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
@@ -111,7 +111,7 @@ for tf, targets in sorted(tf_knowledge.items()):
         print(f"  {tf}: {len(hits)} targets -> {hits}")
 
 tf_results["enrichment"].sort(key=lambda x: x["n_targets"], reverse=True)
-print(f"\nTop TFs by target count:")
+print("\nTop TFs by target count:")
 for e in tf_results["enrichment"][:5]:
     print(f"  {e['tf']}: {e['n_targets']} targets (ratio={e['enrichment_ratio']:.3f})")
 
@@ -133,7 +133,7 @@ for a, b in ppi_knowledge:
 
 hubs = degrees.most_common(10)
 print(f"\nNetwork: {len(ppi_results['interactions'])} edges among {len(set(list(degrees.keys())))} genes")
-print(f"Hub genes:")
+print("Hub genes:")
 for gene, deg in hubs:
     print(f"  {gene}: degree={deg}")
 
@@ -144,6 +144,6 @@ ppi_results["n_nodes"] = len(set(list(degrees.keys())))
 # ── Save ──
 combined = {"tf_enrichment": tf_results, "ppi_network": ppi_results}
 json.dump(combined, open(OUT / "tf_ppi_results.json", "w"), indent=2)
-print(f"\nSaved to tf_ppi_results.json")
+print("\nSaved to tf_ppi_results.json")
 print("=" * 60)
 print("DONE")

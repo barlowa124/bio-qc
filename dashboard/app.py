@@ -1,14 +1,13 @@
 """Streamlit dashboard for the 30-gene QC panel state prediction."""
 import json
 import pickle
-import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
+import streamlit as st
 
 # Setup paths
 PROJ = Path(__file__).resolve().parents[1]
@@ -63,7 +62,7 @@ if loaded:
     st.sidebar.subheader("Model Info")
     st.sidebar.write(f"**Genes:** {len(genes)}")
     st.sidebar.write(f"**States:** {', '.join(classes)}")
-    st.sidebar.write(f"**CV Accuracy:** 96.7%")
+    st.sidebar.write("**CV Accuracy:** 96.7%")
 
 # ── Page: Prediction ──
 if page == "Prediction" and loaded:
@@ -219,7 +218,7 @@ elif page == "Literature & Drugs" and loaded:
         minimal = data.get("minimal_panel", {})
         if minimal:
             st.subheader("Minimal Panel")
-            st.write(f"**10 genes achieve 96.6% accuracy** — matching the full 30-gene panel.")
+            st.write("**10 genes achieve 96.6% accuracy** — matching the full 30-gene panel.")
             st.write("Selected genes:", minimal.get("selected_genes", []))
 
 # ── Page: About ──
