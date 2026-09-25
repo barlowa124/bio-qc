@@ -50,7 +50,9 @@ cd cultivated-meat-multiomic
 # Install
 pip install -r requirements.txt
 
-# Run core analysis
+# Run core analysis (requires the source expression/flux matrices —
+# see docs/installation.md; analysis scripts read shared_data/data_paths.yaml
+# or absolute paths from the original analysis workstation)
 python notebooks/comprehensive_analysis.py
 
 # Run high-value analyses

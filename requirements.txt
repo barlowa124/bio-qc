@@ -11,3 +11,7 @@ torch>=2.0
 umap-learn>=0.5
 gseapy>=1.0
 pyyaml>=6.0
+flask>=2.3
+requests>=2.31
+streamlit>=1.30
+plotly>=5.18

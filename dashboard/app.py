@@ -111,7 +111,8 @@ if page == "Prediction" and loaded:
         common = [g for g in genes if g in df.columns]
         if len(common) < len(genes):
             st.warning(f"Only {len(common)}/{len(genes)} genes matched. Missing: {set(genes) - set(common)}")
-        if len(common) > 0:
+            st.error("Prediction requires all 30 panel genes; fix the CSV columns and re-upload.")
+        else:
             X = df[common].values.astype(np.float32)
             Xs = scaler.transform(X)
             probs = model.predict_proba(Xs)
