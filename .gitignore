@@ -15,4 +15,4 @@ shared_data/data_paths.yaml
 # Large data files (>100MB) - download from GEO
 cross_species_validation/GSE240556/suppl_35601.txt
 cross_species_validation/GSE173199/sf_diff_counts.csv.gz
-cross_species_validation/GSE173199/timecourse_counts.csv.gz
+cross_species_validation/GSE173199/timecourse_counts.csv.gz.venv/
