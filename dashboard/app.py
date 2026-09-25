@@ -21,8 +21,74 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-st.title("🧬 Cultivated Meat 30-Gene QC Panel Dashboard")
-st.markdown("Manufacturing-readiness state prediction for cultivated muscle tissue")
+px.defaults.template = "plotly_dark"
+
+st.markdown("""
+<style>
+  [data-testid="stAppViewContainer"] {
+    background:
+      radial-gradient(1100px 480px at 82% -12%, rgba(45,212,191,0.08), transparent 60%),
+      radial-gradient(900px 420px at -5% -5%, rgba(59,130,246,0.07), transparent 55%),
+      #0b1120;
+  }
+  [data-testid="stHeader"] { background: rgba(11,17,32,0.7); backdrop-filter: blur(8px); }
+  .block-container { padding-top: 2.2rem; max-width: 1400px; }
+  [data-testid="stSidebar"] {
+    background: #0d1526;
+    border-right: 1px solid rgba(148,163,184,0.10);
+  }
+  [data-testid="stSidebar"] h2 { font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; }
+  [data-testid="stSidebar"] [role="radiogroup"] { gap: 2px; }
+  [data-testid="stSidebar"] [role="radiogroup"] label {
+    padding: 7px 12px; border-radius: 8px; border: 1px solid transparent;
+    transition: background .15s, border-color .15s; margin-bottom: 2px;
+  }
+  [data-testid="stSidebar"] [role="radiogroup"] label:hover { background: rgba(45,212,191,0.06); }
+  [data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) {
+    background: rgba(45,212,191,0.12); border-color: rgba(45,212,191,0.35);
+  }
+  .cm-hero {
+    background:
+      radial-gradient(circle at 92% 20%, rgba(94,234,212,0.18), transparent 50%),
+      linear-gradient(115deg, #0f2137 0%, #134e4a 100%);
+    border: 1px solid rgba(94,234,212,0.18);
+    border-radius: 16px; padding: 26px 32px; margin-bottom: 8px;
+  }
+  .cm-hero .eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #5eead4; }
+  .cm-hero h1 { margin: 4px 0 6px; font-size: 1.85rem; font-weight: 750; letter-spacing: -0.02em; color: #f0fdfa; }
+  .cm-hero p { margin: 0; color: rgba(204,251,241,0.75); font-size: 0.95rem; }
+  div[data-testid="stMetric"] {
+    background: #111a2e; border: 1px solid rgba(148,163,184,0.12);
+    border-radius: 12px; padding: 14px 18px;
+  }
+  div[data-testid="stMetric"] [data-testid="stMetricLabel"] { color: #94a3b8; }
+  div[data-testid="stMetric"] [data-testid="stMetricValue"] { color: #5eead4; font-weight: 700; }
+  div[data-testid="stVerticalBlockBorderWrapper"] {
+    background: rgba(17,26,46,0.55); border: 1px solid rgba(148,163,184,0.12);
+    border-radius: 14px;
+  }
+  button[kind="primary"], button[kind="primaryFormSubmit"] {
+    background: linear-gradient(180deg, #14b8a6, #0d9488) !important;
+    border-color: #2dd4bf !important; font-weight: 650;
+    box-shadow: 0 2px 8px rgba(20,184,166,0.3);
+  }
+  h1, h2, h3 { letter-spacing: -0.015em; }
+  h2 { font-weight: 700; }
+  [data-testid="stNumberInput"] input, .stTextInput input, [data-baseweb="select"] > div {
+    background: #0f1729; border-color: rgba(148,163,184,0.2);
+  }
+  [data-testid="stFileUploader"] { background: rgba(17,26,46,0.4); border-radius: 12px; padding: 6px; }
+  .cm-state { font-size: 2.4rem; font-weight: 800; letter-spacing: -0.02em; margin: 0; }
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<div class="cm-hero">
+  <div class="eyebrow">Manufacturing QC · 30-Gene Panel</div>
+  <h1>Cultivated Meat QC Panel Dashboard</h1>
+  <p>Manufacturing-readiness state prediction for cultivated muscle tissue</p>
+</div>
+""", unsafe_allow_html=True)
 
 # ── Load artifacts ──
 @st.cache_resource
@@ -53,9 +119,14 @@ except Exception as e:
     st.error(f"Failed to load model: {e}")
     loaded = False
 
+def styled_fig(fig):
+    fig.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                      font_color="#cbd5e1", margin=dict(l=10, r=10, t=44, b=10))
+    return fig
+
 # ── Sidebar ──
 st.sidebar.header("Navigation")
-page = st.sidebar.radio("Select page", ["Prediction", "Performance", "Explainability", "Cross-Species", "Literature & Drugs", "About"])
+page = st.sidebar.radio("Select page", ["Prediction", "Performance", "Explainability", "Cross-Species", "Literature & Drugs", "About"], label_visibility="collapsed")
 
 if loaded:
     st.sidebar.markdown("---")
@@ -66,16 +137,16 @@ if loaded:
 
 # ── Page: Prediction ──
 if page == "Prediction" and loaded:
-    st.header("🔮 State Prediction")
-    st.markdown("Enter expression values (log TPM) for the 30 genes:")
+    st.header("State Prediction")
 
-    # Create input fields in 3 columns
-    cols = st.columns(3)
-    expr = []
-    for i, g in enumerate(genes):
-        with cols[i % 3]:
-            val = st.number_input(g, value=0.0, step=0.1, key=f"gene_{i}")
-            expr.append(val)
+    with st.container(border=True):
+        st.markdown("**Expression input** — log TPM values for the 30 panel genes")
+        cols = st.columns(3)
+        expr = []
+        for i, g in enumerate(genes):
+            with cols[i % 3]:
+                val = st.number_input(g, value=0.0, step=0.1, key=f"gene_{i}")
+                expr.append(val)
 
     if st.button("Predict", type="primary"):
         X = np.array(expr, dtype=np.float32).reshape(1, -1)
@@ -85,11 +156,15 @@ if page == "Prediction" and loaded:
 
         col1, col2 = st.columns(2)
         with col1:
-            st.subheader("Prediction")
-            state_colors = {"expansion_competent": "#2ecc71", "committed": "#f39c12", "terminal": "#e74c3c"}
-            color = state_colors.get(pred, "#3498db")
-            st.markdown(f"<h1 style='color:{color}'>{pred.replace('_', ' ').title()}</h1>", unsafe_allow_html=True)
-            st.metric("Confidence", f"{probs.max():.1%}")
+            state_colors = {"expansion_competent": "#34d399", "committed": "#fbbf24", "terminal": "#f87171"}
+            color = state_colors.get(pred, "#38bdf8")
+            st.markdown(f"""
+            <div style="background:#111a2e;border:1px solid rgba(148,163,184,0.12);border-left:4px solid {color};
+                        border-radius:12px;padding:18px 22px;margin-top:12px;">
+              <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#94a3b8;">Predicted state</div>
+              <p class="cm-state" style="color:{color}">{pred.replace('_', ' ').title()}</p>
+              <div style="color:#94a3b8;font-size:0.85rem;">confidence {probs.max():.1%}</div>
+            </div>""", unsafe_allow_html=True)
         with col2:
             st.subheader("Probabilities")
             prob_df = pd.DataFrame({
@@ -97,89 +172,69 @@ if page == "Prediction" and loaded:
                 "Probability": probs
             })
             fig = px.bar(prob_df, x="State", y="Probability", color="State",
-                         color_discrete_map={c.replace("_", " ").title(): state_colors.get(c, "#3498db") for c in model.classes_})
+                         color_discrete_map={c.replace("_", " ").title(): state_colors.get(c, "#38bdf8") for c in model.classes_})
             fig.update_layout(showlegend=False, yaxis_range=[0, 1])
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(styled_fig(fig), use_container_width=True)
 
     # Batch upload
-    st.markdown("---")
-    st.subheader("Batch Upload")
-    st.markdown("Upload a CSV with columns matching the 30 gene names. Each row = one sample.")
-    uploaded = st.file_uploader("Upload CSV", type="csv")
-    if uploaded is not None:
-        df = pd.read_csv(uploaded)
-        common = [g for g in genes if g in df.columns]
-        if len(common) < len(genes):
-            st.warning(f"Only {len(common)}/{len(genes)} genes matched. Missing: {set(genes) - set(common)}")
-            st.error("Prediction requires all 30 panel genes; fix the CSV columns and re-upload.")
-        else:
-            X = df[common].values.astype(np.float32)
-            Xs = scaler.transform(X)
-            probs = model.predict_proba(Xs)
-            preds = model.classes_[probs.argmax(axis=1)]
-            conf = probs.max(axis=1)
-            df["prediction"] = preds
-            df["confidence"] = conf
-            st.dataframe(df)
-            st.download_button("Download results", df.to_csv(index=False), "predictions.csv", "text/csv")
+    with st.container(border=True):
+        st.markdown("**Batch upload** — CSV with columns matching the 30 gene names; each row is one sample.")
+        uploaded = st.file_uploader("Upload CSV", type="csv")
+        if uploaded is not None:
+            df = pd.read_csv(uploaded)
+            common = [g for g in genes if g in df.columns]
+            if len(common) < len(genes):
+                st.warning(f"Only {len(common)}/{len(genes)} genes matched. Missing: {set(genes) - set(common)}")
+                st.error("Prediction requires all 30 panel genes; fix the CSV columns and re-upload.")
+            else:
+                X = df[common].values.astype(np.float32)
+                Xs = scaler.transform(X)
+                probs = model.predict_proba(Xs)
+                preds = model.classes_[probs.argmax(axis=1)]
+                conf = probs.max(axis=1)
+                df["prediction"] = preds
+                df["confidence"] = conf
+                st.dataframe(df)
+                st.download_button("Download results", df.to_csv(index=False), "predictions.csv", "text/csv")
 
 # ── Page: Performance ──
 elif page == "Performance" and loaded:
-    st.header("📊 Model Performance")
+    st.header("Model Performance")
+    boot = results.get("bootstrap_ml_timeseries", {}).get("bootstrap", {})
     col1, col2, col3 = st.columns(3)
     with col1:
         st.metric("CV Accuracy", "96.7%", "± 1.0%")
     with col2:
-        st.metric("Bootstrap", "96.3%", "± 0.8%")
+        b_mean = f"{boot['cv_mean']*100:.1f}%" if boot else "96.3%"
+        b_std = f"± {boot['cv_std']*100:.1f}% over {boot['n_iterations']} iters" if boot else "± 0.8%"
+        st.metric("Bootstrap", b_mean, b_std)
     with col3:
         st.metric("DNN CV", "96.2%", "± 1.5%")
 
-    # ML comparison
-    if "bootstrap_ml_timeseries" in results:
-        ml = results["bootstrap_ml_timeseries"].get("ml_comparison", {})
-        if ml:
-            names = list(ml.keys())
-            scores = [v.get("mean", 0) for v in ml.values()]
-            stds = [v.get("std", 0) for v in ml.values()]
-            fig = go.Figure(data=[
-                go.Bar(name="Mean CV", x=names, y=scores, error_y=dict(type="data", array=stds))
-            ])
-            fig.update_layout(title="ML Model Comparison", yaxis_title="Accuracy", yaxis_range=[0.85, 1.0])
-            st.plotly_chart(fig, use_container_width=True)
-
     # Noise robustness
-    if "literature_drug_panel_noise" in results:
-        noise = results["literature_drug_panel_noise"].get("noise_simulation", {})
-        if noise:
-            cvs = list(noise.keys())
-            accs = [noise[cv]["accuracy"] for cv in cvs]
-            fig = px.line(x=cvs, y=accs, markers=True, labels={"x": "CV (%)", "y": "Accuracy"}, title="qPCR Noise Robustness")
-            fig.update_layout(yaxis_range=[0.8, 1.0])
-            st.plotly_chart(fig, use_container_width=True)
+    noise = results.get("literature_drug_panel_noise", {}).get("qpcr_noise_simulation", [])
+    if noise:
+        ndf = pd.DataFrame(noise)
+        fig = px.line(ndf, x="cv_level", y="mean_accuracy", markers=True,
+                      labels={"cv_level": "qPCR noise CV", "mean_accuracy": "Accuracy"},
+                      title="qPCR Noise Robustness")
+        fig.update_layout(yaxis_range=[0.8, 1.0])
+        st.plotly_chart(styled_fig(fig), use_container_width=True)
 
 # ── Page: Explainability ──
 elif page == "Explainability" and loaded:
-    st.header("🔍 SHAP Explainability")
+    st.header("SHAP Explainability")
     if "shap_dnn_results" in results:
         shap = results["shap_dnn_results"]["shap"]
         top = shap.get("top_genes", [])
         if top:
             df = pd.DataFrame(top)
             fig = px.bar(df, x="importance", y="gene", orientation="h", title="Gene Importance (SHAP)")
-            st.plotly_chart(fig, use_container_width=True)
-
-        per_state = shap.get("per_state_expression", {})
-        if per_state:
-            state = st.selectbox("Select state", list(per_state.keys()), format_func=lambda x: x.replace("_", " ").title())
-            expr = per_state[state]
-            df = pd.DataFrame({"gene": list(expr.keys()), "mean_expression": list(expr.values())})
-            df = df.sort_values("mean_expression", ascending=False).head(15)
-            fig = px.bar(df, x="mean_expression", y="gene", orientation="h", title=f"Top Genes in {state.replace('_', ' ').title()}")
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(styled_fig(fig), use_container_width=True)
 
 # ── Page: Cross-Species ──
 elif page == "Cross-Species" and loaded:
-    st.header("🐄 Cross-Species Validation")
+    st.header("Cross-Species Validation")
     if "cross_species_comparison" in results:
         cs = results["cross_species_comparison"]
         st.json(cs, expanded=False)
@@ -192,7 +247,7 @@ elif page == "Cross-Species" and loaded:
 
 # ── Page: Literature & Drugs ──
 elif page == "Literature & Drugs" and loaded:
-    st.header("📚 Literature Benchmark & Drug Predictions")
+    st.header("Literature Benchmark & Drug Predictions")
 
     if "literature_drug_panel_noise" in results:
         data = results["literature_drug_panel_noise"]
@@ -203,7 +258,7 @@ elif page == "Literature & Drugs" and loaded:
             sets = list(lit.keys())
             overlaps = [lit[s].get("overlap_percent", 0) for s in sets]
             fig = px.bar(x=sets, y=overlaps, labels={"x": "Gene Set", "y": "Overlap (%)"}, title="Panel vs Canonical Gene Sets")
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(styled_fig(fig), use_container_width=True)
 
         drugs = data.get("drug_predictions", {})
         if drugs:
@@ -214,7 +269,7 @@ elif page == "Literature & Drugs" and loaded:
             df = pd.DataFrame({"compound": compounds, "score": scores, "mechanism": mechanisms})
             df = df.sort_values("score", ascending=False)
             fig = px.bar(df, x="score", y="compound", color="mechanism", orientation="h", title="LINCS/Connectivity Map Predictions")
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(styled_fig(fig), use_container_width=True)
 
         minimal = data.get("minimal_panel", {})
         if minimal:
@@ -224,7 +279,7 @@ elif page == "Literature & Drugs" and loaded:
 
 # ── Page: About ──
 elif page == "About":
-    st.header("ℹ️ About")
+    st.header("About")
     st.markdown("""
     This dashboard accompanies the manuscript:
     **"A 30-gene qPCR panel predicts manufacturing-readiness states in cultivated muscle tissue"**
