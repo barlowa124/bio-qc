@@ -22,9 +22,17 @@ def predict():
     data = request.get_json()
     if not data or "expression" not in data:
         return jsonify({"error": "Missing 'expression' field."}), 400
-    expr = np.array(data["expression"], dtype=np.float32).reshape(1, -1)
+    raw = data["expression"]
+    if not isinstance(raw, list):
+        return jsonify({"error": "'expression' must be a list of numbers."}), 400
+    try:
+        expr = np.array(raw, dtype=np.float32).reshape(1, -1)
+    except (ValueError, TypeError):
+        return jsonify({"error": "'expression' must contain only numeric values."}), 400
     if expr.shape[1] != len(meta["genes"]):
         return jsonify({"error": f"Expected {len(meta['genes'])} values, got {expr.shape[1]}"}), 400
+    if not np.isfinite(expr).all():
+        return jsonify({"error": "'expression' must contain only finite values."}), 400
     expr_scaled = scaler.transform(expr)
     probs = model.predict_proba(expr_scaled)[0]
     pred = model.classes_[probs.argmax()]
