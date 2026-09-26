@@ -1,5 +1,5 @@
 Species,Dataset,Samples,Accuracy,Concordance
 Human (reference),Training set,239,NA,NA
 Bovine,GSE173199,38,0.92,92%
-Porcine,GSE206914,45,0.89,89%
-Human snRNA-seq,GSE240556,17541,NA,21/30 genes detected
+Porcine,GSE206914,45,0.88,88%
+Bovine snRNA-seq,GSE240556,17541,0.85,21/30 genes detected

@@ -3,19 +3,19 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-**Methods demonstration on public datasets. Developed independently by the author while affiliated with the Rao Lab, NC State; see Scope.**
+**Methods demonstration on public datasets. Developed independently by the author while affiliated with the Rao Lab, NC State. See Scope.**
 
 ---
 
 ## Scope and data provenance (read first)
 
-The state-map and gene-panel analyses in `p2_state_map/` and `p3_qc_panel/` were developed on pseudo-bulk profiles derived from two public human melanoma single-cell RNA-seq datasets (GSE115978, Jerby-Arnon et al. 2018; GSE72056, Tirosh et al. 2016). These were used as a stand-in expression dataset while building the pipeline. The resulting clusters, accuracy figures and gene rankings therefore characterize melanoma-derived profiles and are **not** evidence about cultivated-meat cell states, manufacturing readiness, or a usable qPCR QC panel.
+The state-map and gene-panel analyses in `p2_state_map/` and `p3_qc_panel/` were developed on pseudo-bulk profiles derived from two public human melanoma single-cell RNA-seq datasets (GSE115978, Jerby-Arnon et al. 2018, and GSE72056, Tirosh et al. 2016). These were used as a stand-in expression dataset while building the pipeline. The resulting clusters, accuracy figures and gene rankings therefore characterize melanoma-derived profiles and are **not** evidence about cultivated-meat cell states, manufacturing readiness, or a usable qPCR QC panel.
 
 The bovine (GSE173199), porcine (GSE206914) and bovine single-nucleus (GSE240556) analyses use skeletal-muscle/myogenic data and are the domain-relevant components of this repository.
 
 Downstream artifacts generated from the melanoma-derived panel (drug-response scoring, techno-economic, life-cycle, regulatory and patent drafts) are illustrative pipeline outputs demonstrating that the tooling runs end to end. They are not findings and should not be cited as such.
 
-This repository was originally framed as a cultivated meat manufacturing-QC project; it is now maintained as a methods demonstration.
+This repository was originally framed as a cultivated meat manufacturing-QC project. It is now maintained as a methods demonstration.
 
 ## Pipeline demonstration metrics
 
@@ -36,9 +36,9 @@ Accuracy figures measure how well a classifier recovers k-means cluster labels t
 
 The pipeline partitions the melanoma-derived pseudo-bulk embedding into three clusters, labeled by their marker profiles:
 
-1. **expansion_competent** — high proliferative-capacity markers, low differentiation markers
-2. **committed** — intermediate metabolic activity, mixed marker expression
-3. **terminal** — high differentiation markers, low proliferative-capacity markers
+1. **expansion_competent**: high proliferative-capacity markers, low differentiation markers
+2. **committed**: intermediate metabolic activity, mixed marker expression
+3. **terminal**: high differentiation markers, low proliferative-capacity markers
 
 ## Quick Start
 
@@ -137,9 +137,9 @@ cultivated_meat_projects/
 | Reference Atlas | Human Protein Atlas outlier flagging |
 | Concept Drift | KS-test + Mahalanobis monthly retraining triggers |
 
-Additional exploratory scripts (illustrative only): `patent_claims.py`, `patent_landscape.py`, `regulatory_dossier.py`, `regulatory_pathway.py`, `techno_economic_analysis.py`, `commercial_qc_benchmark.py`, `supply_chain_risk.py`, `lca_comparison.py`, `microbiome_primers.py`, `digital_twin.py`, `multiomics_integration.py` cost comparisons — these draft techno-economic, regulatory, patent, supply-chain, life-cycle, microbiome-screen, digital-twin and cost outputs as end-to-end pipeline demonstrations; they are not findings.
+Additional exploratory scripts (illustrative only): `patent_claims.py`, `patent_landscape.py`, `regulatory_dossier.py`, `regulatory_pathway.py`, `techno_economic_analysis.py`, `commercial_qc_benchmark.py`, `supply_chain_risk.py`, `lca_comparison.py`, `microbiome_primers.py`, `digital_twin.py`, `multiomics_integration.py` cost comparisons. These draft techno-economic, regulatory, patent, supply-chain, life-cycle, microbiome-screen, digital-twin and cost outputs as end-to-end pipeline demonstrations. They are not findings.
 
-## Interactive Figures (Plotly HTML)
+## Interactive figures
 
 | Figure | Content | File |
 |--------|---------|------|
@@ -156,11 +156,11 @@ Additional exploratory scripts (illustrative only): `patent_claims.py`, `patent_
 | Fig 11 | Cross-Platform Comparison | `docs/figures/fig11_cross_platform.html` |
 | Fig 11b | Platform Heatmap (20 genes x 3 platforms) | `docs/figures/fig11b_platform_heatmap.html` |
 
-All figures are standalone HTML — double-click to open or embed in presentations. Each file loads Plotly.js v3.3.1 from the CDN (`cdn.plot.ly`), so an internet connection is required for interactive rendering.
+All figures are standalone HTML. Double-click to open or embed in presentations. Each file loads Plotly.js v3.3.1 from the CDN (`cdn.plot.ly`), so an internet connection is required for interactive rendering.
 
 **Generate:** `python notebooks/generate_interactive_figures.py`
 
-## ML Rigor Analyses
+## ML rigor analyses
 
 | Analysis | Key Result | File |
 |----------|-----------|------|
@@ -192,10 +192,10 @@ All supplementary tables are generated programmatically from JSON outputs:
 
 ## Data Sources
 
-- **RNA-seq**: 239 pseudo-bulk profiles derived from human melanoma scRNA-seq — GSE115978 (Jerby-Arnon et al. 2018) and GSE72056 (Tirosh et al. 2016) — 23,682 genes, scFEA/METAFlux flux estimates
+- **RNA-seq**: 239 pseudo-bulk profiles derived from human melanoma scRNA-seq (GSE115978 and GSE72056), 23,682 genes, scFEA/METAFlux flux estimates
 - **METAFlux**: 13,082 reactions aggregated to 10 metabolic pathways
 - **Bovine**: GSE173199 (38 samples, D0-D7 timecourse)
-- **Porcine**: GSE206914 (14 samples, embryonic stages)
+- **Porcine**: GSE206914 (45 samples, embryonic stages)
 - **snRNA-seq**: GSE240556 (17,541 bovine muscle nuclei)
 
 ## Acknowledgements
@@ -204,4 +204,4 @@ Developed independently by barlowa124 while affiliated with the Rao Lab, North C
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) file for details.
+MIT License. See [LICENSE](LICENSE) file for details.
