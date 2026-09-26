@@ -64,7 +64,7 @@ UXS1, PLOD1, MALAT1, C1D, KIF1B, UPK1B, SNHG3, C1QBP, LMNA, TOMM7, MRPL32, AEBP1
 **Drug Predictions (LINCS L1000)**
 - p38 inhibitors, STAT3 inhibitors, Wnt activators
 - TGFβ/BMP inhibitors, FGF2, IGF1
-- 17 compounds with mechanistic rationale
+- 20 literature-curated compounds, none targeting a panel gene directly
 
 **Regulatory Pathway**
 - FDA: GRAS self-determination / method validation (12 months, $150K)

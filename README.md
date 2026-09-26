@@ -17,6 +17,8 @@ Downstream artifacts generated from the melanoma-derived panel (drug-response sc
 
 This repository was originally framed as a cultivated meat manufacturing-QC project. It is now maintained as a methods demonstration.
 
+Where real pipeline outputs are unavailable, generated artifacts fall back to synthetic demonstration values and are flagged in the figure title or a `data_source` field. Specifically: the CRISPR essentiality scores are seeded Gaussian draws (not DepMap), the compound panel-gene matches are name-based triage (not LINCS/CMap), the techno-economic curve is an illustrative model, and `ci_fixtures.py` writes `data_source: ci_fixture_synthetic` markers into every CI placeholder. Figures regenerated from real sources read `docs/supplementary/Table_S*.csv` or `p2_state_map/output/*.json` directly.
+
 ## Pipeline demonstration metrics
 
 | Metric | Value |
@@ -148,8 +150,9 @@ Additional exploratory scripts (illustrative only): `patent_claims.py`, `patent_
 | Fig 3 | SHAP Gene Importance (top 15) | `docs/figures/fig3_shap_importance.html` |
 | Fig 4 | Cross-Species Comparison (accuracy + sample counts) | `docs/figures/fig4_cross_species.html` |
 | Fig 5 | Noise Robustness (CV vs accuracy) | `docs/figures/fig5_noise_robustness.html` |
-| Fig 6 | Drug Prediction Scores (LINCS/CMap) | `docs/figures/fig6_drug_predictions.html` |
+| Fig 6 | Compound Panel-Gene Target Matches | `docs/figures/fig6_drug_predictions.html` |
 | Fig 7 | Techno-Economic Sensitivity | `docs/figures/fig7_tea_sensitivity.html` |
+| Fig 8 | PPI Network Visualization | `docs/figures/fig8_ppi_network.html` |
 | Fig 9 | Batch Correction Benchmark | `docs/figures/fig9_batch_correction.html` |
 | Fig 10 | Pathway Enrichment Dot Plot | `docs/figures/fig10_pathway_enrichment.html` |
 | Fig 11 | Cross-Platform Comparison | `docs/figures/fig11_cross_platform.html` |

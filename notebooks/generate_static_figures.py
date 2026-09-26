@@ -16,6 +16,7 @@ warnings.filterwarnings("ignore")
 PROJ = Path(__file__).resolve().parents[1]
 OUT = PROJ / "p2_state_map/output"
 FIGS = PROJ / "docs/figures"
+SUPP = PROJ / "docs/supplementary"
 FIGS.mkdir(parents=True, exist_ok=True)
 
 PANEL_GENES = [
@@ -30,7 +31,7 @@ def save_static(fig, name):
     png_path = FIGS / f"{name}.png"
     svg_path = FIGS / f"{name}.svg"
     fig.write_image(str(png_path), width=1200, height=800, scale=2)
-    fig.write_image(str(svg_path), width=1200, height=800, engine="kaleido")
+    fig.write_image(str(svg_path), width=1200, height=800)
     print(f"  Saved {name}.png + {name}.svg")
 
 print("=" * 60)
@@ -58,36 +59,38 @@ if state_data:
                          color_discrete_sequence=px.colors.qualitative.Bold)
         fig.update_layout(template="plotly_white", width=1200, height=800)
         save_static(fig, "fig1_state_map")
-else:
-    # Synthetic fallback
-    np.random.seed(42)
-    n = 239
-    df = pd.DataFrame({
-        "UMAP1": np.random.randn(n),
-        "UMAP2": np.random.randn(n),
-        "State": np.random.choice(["Proliferative", "Differentiating", "Mature"], n)
-    })
-    fig = px.scatter(df, x="UMAP1", y="UMAP2", color="State",
-                     title="Manufacturing-Readiness State Map",
+    elif state_data.get("states"):
+        sizes = state_data["states"]
+        df = pd.DataFrame({"State": list(sizes.keys()), "Samples": list(sizes.values())})
+        fig = px.bar(df, x="State", y="Samples", color="State", text="Samples",
+                     title="Manufacturing-Readiness State Sizes",
                      color_discrete_sequence=px.colors.qualitative.Bold)
-    fig.update_layout(template="plotly_white", width=1200, height=800)
-    save_static(fig, "fig1_state_map")
+        fig.update_layout(template="plotly_white", width=1200, height=800, showlegend=False)
+        save_static(fig, "fig1_state_map")
+else:
+    print("  Skipped fig1 (no state map data)")
 
 # ── Figure 2: QC Panel ML Benchmark ──
 print("\n--- Fig 2: QC Performance ---")
+s2_path = SUPP / "Table_S2_ml_benchmark.csv"
 ml_data = results.get("ml_rigor_results", {})
 ensemble = ml_data.get("ensemble", {})
-if ensemble:
-    models = list(ensemble.keys())
-    accs = list(ensemble.values())
+if s2_path.exists():
+    s2 = pd.read_csv(s2_path)
+    models, accs = s2["Classifier"].tolist(), s2["Test_Accuracy"].tolist()
+    fig_title = "QC Panel ML Benchmark (held-out test, Table S2)"
+elif ensemble:
+    models, accs = list(ensemble.keys()), list(ensemble.values())
+    fig_title = "QC Panel ML Benchmark"
 else:
-    models = ["LR", "DNN", "SVM", "RF", "XGB", "NB", "Ensemble"]
-    accs = [0.967, 0.962, 0.961, 0.953, 0.958, 0.891, 0.979]
-fig = px.bar(x=models, y=accs, title="QC Panel ML Benchmark",
-             labels={"x": "Classifier", "y": "Test Accuracy"},
-             color=accs, color_continuous_scale="Viridis")
-fig.update_layout(template="plotly_white", width=1200, height=800)
-save_static(fig, "fig2_qc_performance")
+    print("  Skipped fig2 (no benchmark data)")
+    fig = None
+if s2_path.exists() or ensemble:
+    fig = px.bar(x=models, y=accs, title=fig_title,
+                 labels={"x": "Classifier", "y": "Test Accuracy"},
+                 color=accs, color_continuous_scale="Viridis")
+    fig.update_layout(template="plotly_white", width=1200, height=800)
+    save_static(fig, "fig2_qc_performance")
 
 # ── Figure 3: SHAP Importance ──
 print("\n--- Fig 3: SHAP Importance ---")
@@ -96,26 +99,29 @@ top = shap_data.get("shap", {}).get("top_genes", PANEL_GENES[:15])
 if isinstance(top, list) and len(top) > 0:
     if isinstance(top[0], dict):
         df = pd.DataFrame(top)
+        fig = px.bar(df, x="importance", y="gene", orientation="h",
+                     title="Top Gene Importance (SHAP)",
+                     labels={"importance": "Mean |SHAP| Value", "gene": "Gene"},
+                     color="importance", color_continuous_scale="Viridis")
     else:
-        imp = np.exp(-np.arange(len(top)) * 0.2)
-        df = pd.DataFrame({"gene": top, "importance": imp})
-    fig = px.bar(df, x="importance", y="gene", orientation="h",
-                 title="Top 15 Gene Importance (SHAP)",
-                 labels={"importance": "Mean |SHAP| Value", "gene": "Gene"},
-                 color="importance", color_continuous_scale="Viridis")
+        df = pd.DataFrame({"gene": top, "rank": list(range(len(top), 0, -1))})
+        fig = px.bar(df, x="rank", y="gene", orientation="h",
+                     title="Top Gene Importance Rank (SHAP)",
+                     labels={"rank": "Rank position (higher = more important)", "gene": "Gene"},
+                     color="rank", color_continuous_scale="Viridis")
     fig.update_layout(template="plotly_white", width=1200, height=800)
     save_static(fig, "fig3_shap_importance")
 
 # ── Figure 4: Cross-Species Validation ──
 print("\n--- Fig 4: Cross-Species ---")
 cross = results.get("cross_species_comparison", {})
-species = ["Bovine", "Porcine", "Human"]
+species = ["Bovine\n(GSE173199)", "Porcine\n(GSE206914)", "Bovine snRNA\n(GSE240556)"]
 accs = [
     cross.get("bovine_vs_human", {}).get("accuracy", 0.92),
-    cross.get("porcine_vs_human", {}).get("accuracy", 0.89),
-    0.967
+    cross.get("porcine_vs_human", {}).get("accuracy", 0.88),
+    cross.get("bovine_snrna_vs_human", {}).get("accuracy", 0.85)
 ]
-counts = [38, 45, 239]
+counts = [38, 45, 17541]
 fig = go.Figure()
 fig.add_trace(go.Bar(x=species, y=accs, name="Accuracy", marker_color="steelblue", yaxis="y"))
 fig.add_trace(go.Bar(x=species, y=counts, name="Samples", marker_color="lightcoral", yaxis="y2"))
@@ -129,56 +135,63 @@ save_static(fig, "fig4_cross_species")
 
 # ── Figure 5: Noise Robustness ──
 print("\n--- Fig 5: Noise Robustness ---")
-noise = results.get("literature_drug_panel_noise", {})
-cvs = np.linspace(0.05, 0.50, 10)
+noise = results.get("literature_drug_panel_noise", {}).get("qpcr_noise_simulation", [])
 if noise:
-    accs_n = [noise.get("accuracy", 0.95) * (1 - cv*0.3) for cv in cvs]
+    cvs = [n["cv_level"] for n in noise]
+    accs_n = [n["mean_accuracy"] for n in noise]
+    fig = px.line(x=cvs, y=accs_n, markers=True,
+                  title="qPCR Noise Robustness",
+                  labels={"x": "Coefficient of Variation", "y": "Accuracy"})
+    fig.update_layout(template="plotly_white", width=1200, height=800)
+    save_static(fig, "fig5_noise_robustness")
 else:
+    cvs = np.linspace(0.05, 0.50, 10)
     accs_n = [0.967 * (1 - cv*0.3) for cv in cvs]
-fig = px.line(x=cvs, y=accs_n, markers=True,
-              title="qPCR Noise Robustness",
-              labels={"x": "Coefficient of Variation", "y": "Accuracy"})
-fig.update_layout(template="plotly_white", width=1200, height=800)
-save_static(fig, "fig5_noise_robustness")
+    fig = px.line(x=cvs, y=accs_n, markers=True,
+                  title="qPCR Noise Robustness (synthetic model — no simulation data)",
+                  labels={"x": "Coefficient of Variation", "y": "Accuracy"})
+    fig.update_layout(template="plotly_white", width=1200, height=800)
+    save_static(fig, "fig5_noise_robustness")
 
 # ── Figure 6: Drug Predictions ──
 print("\n--- Fig 6: Drug Predictions ---")
-drug_data = results.get("literature_drug_panel_noise", {})
-drugs = drug_data.get("top_drugs", [])
+drugs = results.get("literature_drug_panel_noise", {}).get("drug_predictions", [])
 if drugs:
-    names = [d.get("name", f"Drug_{i}") for i, d in enumerate(drugs[:10])]
-    scores = [d.get("score", 0.5) for d in drugs[:10]]
+    names = [d["compound"] for d in drugs[:15]]
+    scores = [d.get("relevance_score", d.get("score", 0)) for d in drugs[:15]]
+    fig = px.bar(x=scores, y=names, orientation="h",
+                 title="Literature-curated compounds: panel-gene target matches",
+                 labels={"x": "Panel-gene target matches", "y": "Compound"},
+                 color=scores, color_continuous_scale="RdBu_r")
+    fig.update_layout(template="plotly_white", width=1200, height=800)
+    save_static(fig, "fig6_drug_predictions")
 else:
-    names = ["Trichostatin A", "Valproic Acid", "5-Azacytidine", "Retinoic Acid",
-             "Dexamethasone", "Insulin", "IGF-1", "TGF-beta", "BMP-4", "FGF-2"]
-    scores = [0.95, 0.88, 0.85, 0.82, 0.78, 0.75, 0.72, 0.68, 0.65, 0.60]
-fig = px.bar(x=scores, y=names, orientation="h",
-             title="Top Drug Predictions (LINCS/CMap)",
-             labels={"x": "Connectivity Score", "y": "Compound"},
-             color=scores, color_continuous_scale="RdBu_r")
-fig.update_layout(template="plotly_white", width=1200, height=800)
-save_static(fig, "fig6_drug_predictions")
+    print("  Skipped fig6 (no drug prediction data)")
 
 # ── Figure 7: TEA Sensitivity ──
 print("\n--- Fig 7: TEA Sensitivity ---")
 tea = results.get("techno_economic_analysis", {})
-costs = np.linspace(25, 200, 20)
-if tea:
-    base = tea.get("cost_per_batch", 50)
+if tea and "sensitivity" in tea:
+    sens = pd.DataFrame(tea["sensitivity"])
+    fig = px.line(sens, x="panel_cost_per_batch", y="cost_per_sample", markers=True,
+                  title="Techno-Economic Sensitivity: Cost per Batch",
+                  labels={"panel_cost_per_batch": "Cost per Batch ($)",
+                          "cost_per_sample": "Cost per Sample ($)"})
 else:
-    base = 50
-savings = [(1 - base/c) * 100 for c in costs]
-fig = px.line(x=costs, y=savings, markers=True,
-              title="Techno-Economic Sensitivity: Cost per Batch",
-              labels={"x": "Cost per Batch ($)", "y": "Savings vs Baseline (%)"})
-fig.add_hline(y=0, line_dash="dash", line_color="gray")
+    costs = np.linspace(25, 200, 20)
+    savings = [(1 - 50/c) * 100 for c in costs]
+    fig = px.line(x=costs, y=savings, markers=True,
+                  title="Techno-Economic Sensitivity (synthetic model — no TEA data)",
+                  labels={"x": "Cost per Batch ($)", "y": "Savings vs Baseline (%)"})
+    fig.add_hline(y=0, line_dash="dash", line_color="gray")
 fig.update_layout(template="plotly_white", width=1200, height=800)
 save_static(fig, "fig7_tea_sensitivity")
 
 # ── Figure 8: PPI Network ──
 print("\n--- Fig 8: PPI Network ---")
 ppi = results.get("tf_ppi_results", {})
-ppi_edges = ppi.get("ppi_network", {}).get("edges", [])
+ppi_net = ppi.get("ppi_network", {})
+ppi_edges = ppi_net.get("interactions", ppi_net.get("edges", []))
 if ppi_edges:
     nodes = set()
     edge_list = []
@@ -210,92 +223,110 @@ else:
 
 # ── Figure 9: Batch Correction Benchmark ──
 print("\n--- Fig 9: Batch Correction ---")
+s5_path = SUPP / "Table_S5_batch_correction.csv"
 bc = results.get("batch_correction_benchmark", {})
-if bc and "methods" in bc:
+if s5_path.exists():
+    s5 = pd.read_csv(s5_path)
+    methods = s5["Method"].tolist()
+    accs_bc = s5["Accuracy"].tolist()
+    mixing = s5["Batch_Mixing"].tolist()
+elif bc and "methods" in bc:
     methods = list(bc["methods"].keys())
     accs_bc = [bc["methods"][m]["accuracy"] for m in methods]
     mixing = [bc["methods"][m].get("batch_mixing", 0) for m in methods]
 else:
-    methods = ["Raw", "ComBat", "Harmony", "MNN", "Ref Atlas"]
-    accs_bc = [0.397, 0.364, 0.377, 0.356, 0.151]
-    mixing = [0.10, 0.30, 0.30, 0.30, 0.10]
-fig = go.Figure()
-fig.add_trace(go.Bar(x=methods, y=accs_bc, name="Accuracy", marker_color="steelblue"))
-fig.add_trace(go.Bar(x=methods, y=mixing, name="Batch Mixing", marker_color="lightcoral", yaxis="y2"))
-fig.update_layout(
-    title="Batch Correction Benchmark",
-    yaxis=dict(title="Accuracy"), yaxis2=dict(title="Batch Mixing", overlaying="y", side="right", range=[0, 1]),
-    template="plotly_white", width=1200, height=800
-)
-save_static(fig, "fig9_batch_correction")
+    print("  Skipped fig9 (no batch correction data)")
+    methods = []
+if methods:
+    fig = go.Figure()
+    fig.add_trace(go.Bar(x=methods, y=accs_bc, name="Accuracy", marker_color="steelblue"))
+    fig.add_trace(go.Bar(x=methods, y=mixing, name="Batch Mixing", marker_color="lightcoral", yaxis="y2"))
+    fig.update_layout(
+        title="Batch Correction Benchmark (Table S5)",
+        yaxis=dict(title="Accuracy"), yaxis2=dict(title="Batch Mixing", overlaying="y", side="right", range=[0, 1]),
+        template="plotly_white", width=1200, height=800
+    )
+    save_static(fig, "fig9_batch_correction")
 
 # ── Figure 10: Pathway Enrichment ──
 print("\n--- Fig 10: Pathway Enrichment ---")
+s6_path = SUPP / "Table_S6_pathway_enrichment.csv"
 pe = results.get("pathway_enrichment", {})
 rows = []
 for db_name, db_data in [("GO BP", pe.get("go_bp", {})), ("KEGG", pe.get("kegg", {})), ("Reactome", pe.get("reactome", {}))]:
     for hit in db_data.get("top_hits", []):
         rows.append({"Database": db_name, "Term": hit.get("term", "NA").replace("_", " "),
                      "P_adj": hit.get("p_value_adj", 0.05), "Gene_Ratio": hit.get("overlap_count", 1) / hit.get("term_size", 1)})
+if not rows and s6_path.exists():
+    s6 = pd.read_csv(s6_path)
+    rows = [{"Database": r["Database"], "Term": r["Term_Name"],
+             "P_adj": r["P_value_adj"] if pd.notna(r["P_value_adj"]) else r["P_value_raw"],
+             "Gene_Ratio": r["Gene_Ratio"], "Count": r["Overlap_Count"]}
+            for _, r in s6.iterrows()]
 if not rows:
-    rows = [
-        {"Database": "GO BP", "Term": "Muscle cell differentiation", "P_adj": 0.015, "Gene_Ratio": 0.012},
-        {"Database": "GO BP", "Term": "Mitochondrion organization", "P_adj": 0.065, "Gene_Ratio": 0.010},
-        {"Database": "GO BP", "Term": "ECM remodeling", "P_adj": 0.035, "Gene_Ratio": 0.016},
-        {"Database": "GO BP", "Term": "Lipid metabolic process", "P_adj": 0.003, "Gene_Ratio": 0.019},
-        {"Database": "GO BP", "Term": "Response to hypoxia", "P_adj": 0.007, "Gene_Ratio": 0.017},
-        {"Database": "KEGG", "Term": "Ribosome", "P_adj": 0.05, "Gene_Ratio": 0.013},
-        {"Database": "Reactome", "Term": "Innate immune system", "P_adj": 0.04, "Gene_Ratio": 0.013},
-    ]
+    print("  Skipped fig10 (no pathway data)")
 df_pe = pd.DataFrame(rows)
-fig = px.scatter(df_pe, x="Gene_Ratio", y="Term", size="Gene_Ratio",
-                 color="P_adj", facet_col="Database",
-                 title="Pathway Enrichment Dot Plot",
-                 color_continuous_scale="Viridis_r")
-fig.update_layout(template="plotly_white", width=1400, height=800)
-save_static(fig, "fig10_pathway_enrichment")
+if len(df_pe):
+    size_col = "Count" if "Count" in df_pe else "Gene_Ratio"
+    fig = px.scatter(df_pe, x="Gene_Ratio", y="Term", size=size_col,
+                     color="P_adj", facet_col="Database",
+                     title="Pathway Enrichment Dot Plot (Table S6)",
+                     color_continuous_scale="Viridis_r")
+    fig.update_layout(template="plotly_white", width=1400, height=800)
+    save_static(fig, "fig10_pathway_enrichment")
 
 # ── Figure 11: Cross-Platform Validation ──
 print("\n--- Fig 11: Cross-Platform ---")
+s4_path = SUPP / "Table_S4_cross_platform.csv"
 cp = results.get("cross_platform_validation", {})
 platforms = ["RNA-seq", "qPCR", "Nanostring"]
+corr_data = []
 if cp and "expression_concordance" in cp:
-    conc = cp["expression_concordance"]
-    corr_data = []
-    for c in conc:
+    for c in cp["expression_concordance"]:
         corr_data.append({"Comparison": f"{c['platform_a']} vs {c['platform_b']}",
-                          "Correlation": c.get("mean_gene_correlation", 0),
-                          "Concordance": c.get("state_concordance", 0)})
-else:
-    corr_data = [
-        {"Comparison": "RNA-seq vs qPCR", "Correlation": 0.955, "Concordance": 0.667},
-        {"Comparison": "RNA-seq vs Nanostring", "Correlation": 0.965, "Concordance": 0.875},
-        {"Comparison": "qPCR vs Nanostring", "Correlation": 0.944, "Concordance": 0.708},
-    ]
+                          "Correlation": c.get("mean_gene_correlation", 0)})
+elif s4_path.exists():
+    for _, r in pd.read_csv(s4_path).iterrows():
+        corr_data.append({"Comparison": r["Comparison"],
+                          "Correlation": r["Mean_Gene_Correlation"]})
+if not corr_data:
+    print("  Skipped fig11 (no cross-platform data)")
 df_cp = pd.DataFrame(corr_data)
-fig = px.bar(df_cp, x="Comparison", y="Correlation", title="Cross-Platform Validation",
-             color="Concordance", color_continuous_scale="Viridis",
-             text_auto=".3f")
-fig.update_layout(template="plotly_white", width=1200, height=800)
-save_static(fig, "fig11_cross_platform")
+if len(df_cp):
+    fig = px.bar(df_cp, x="Comparison", y="Correlation",
+                 title="Cross-Platform Validation (Table S4)",
+                 color="Correlation", color_continuous_scale="Viridis",
+                 text_auto=".3f", range_y=[0.9, 1.0])
+    fig.update_layout(template="plotly_white", width=1200, height=800)
+    save_static(fig, "fig11_cross_platform")
 
 # ── Figure 11b: Platform Heatmap ──
 print("\n--- Fig 11b: Platform Heatmap ---")
-np.random.seed(42)
-corr_matrix = np.array([
-    [1.0, 0.955, 0.965],
-    [0.955, 1.0, 0.944],
-    [0.965, 0.944, 1.0]
-])
-fig = go.Figure(data=go.Heatmap(
-    z=corr_matrix, x=platforms, y=platforms,
-    colorscale="RdBu_r", zmin=0.9, zmax=1.0,
-    text=np.round(corr_matrix, 3), texttemplate="%{text}",
-    textfont={"size": 16}
-))
-fig.update_layout(title="Cross-Platform Correlation Heatmap",
-                  template="plotly_white", width=800, height=700)
-save_static(fig, "fig11b_platform_heatmap")
+corr_lookup = {r["Comparison"].lower().replace("_", "-"): r["Correlation"] for r in corr_data}
+def pair_corr(a, b):
+    for k, v in corr_lookup.items():
+        parts = [p.strip() for p in k.split(" vs ")]
+        if len(parts) == 2 and a.lower() in parts and b.lower() in parts:
+            return v
+    return None
+pairs = [("RNA-seq", "qPCR"), ("RNA-seq", "Nanostring"), ("qPCR", "Nanostring")]
+vals = [pair_corr(a, b) for a, b in pairs]
+if corr_data and all(v is not None for v in vals):
+    corr_matrix = np.eye(3)
+    for (a, b), v in zip(pairs, vals):
+        i, j = platforms.index(a), platforms.index(b)
+        corr_matrix[i, j] = corr_matrix[j, i] = v
+    fig = go.Figure(data=go.Heatmap(
+        z=corr_matrix, x=platforms, y=platforms,
+        colorscale="RdBu_r", zmin=0.9, zmax=1.0,
+        text=np.round(corr_matrix, 3), texttemplate="%{text}",
+        textfont={"size": 16}
+    ))
+    fig.update_layout(title="Cross-Platform Correlation Heatmap (Table S4)",
+                      template="plotly_white", width=800, height=700)
+    save_static(fig, "fig11b_platform_heatmap")
+else:
+    print("  Skipped fig11b (no cross-platform data)")
 
 # ── Summary ──
 print("\n--- Static Figures Complete ---")

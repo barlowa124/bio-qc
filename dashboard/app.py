@@ -254,22 +254,25 @@ elif page == "Literature & Drugs" and loaded:
     if "literature_drug_panel_noise" in results:
         data = results["literature_drug_panel_noise"]
 
-        lit = data.get("literature_overlap", {})
+        lit = data.get("literature_benchmark", [])
         if lit:
             st.subheader("Literature Overlap")
-            st.metric("Panel genes found in canonical muscle marker sets", lit.get("count", 0))
+            st.caption("The 30-gene panel shares zero genes with canonical muscle marker sets. The panel is orthogonal to standard muscle biology markers.")
+            st.dataframe(pd.DataFrame(lit)[["gene_set", "size", "overlap_count", "pct_of_panel", "pct_of_set", "jaccard"]],
+                         use_container_width=True, hide_index=True)
 
         drugs = data.get("drug_predictions", [])
         if drugs:
             st.subheader("Drug/Compound Predictions")
-            df = pd.DataFrame(drugs).sort_values("score", ascending=False)
-            fig = px.bar(df, x="score", y="compound", color="mechanism", orientation="h", title="LINCS/Connectivity Map Predictions")
-            st.plotly_chart(styled_fig(fig), use_container_width=True)
+            st.caption("Panel-relevance is a name-match score: panel genes whose names contain the compound's target. No curated muscle compound targets a panel gene directly, so every score is 0. This is literature triage output, not a LINCS prediction.")
+            df = pd.DataFrame(drugs)[["compound", "target", "effect", "ref", "relevance_score"]].sort_values("relevance_score", ascending=False)
+            st.dataframe(df, use_container_width=True, hide_index=True)
 
         minimal = data.get("minimal_panel", {})
-        if minimal:
+        knee = minimal.get("knee_point_n_genes")
+        if knee:
             st.subheader("Minimal Panel")
-            st.write("**10 genes achieve 96.6% accuracy**, matching the full 30-gene panel.")
+            st.write(f"**{knee} genes achieve 96.6% accuracy**, matching the full 30-gene panel.")
 
 # ── Page: About ──
 elif page == "About":

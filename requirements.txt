@@ -15,3 +15,4 @@ flask>=2.3
 requests>=2.31
 streamlit>=1.30
 plotly>=5.18
+kaleido>=1.4

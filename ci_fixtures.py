@@ -80,22 +80,43 @@ if __name__ == "__main__":
 (API_DIR / "app.py").write_text(api_code)
 
 # ── 2. Output JSON fixtures ──
-# shap_dnn_results.json
+# shap_dnn_results.json (values per audited fig2 CV benchmarks)
 json.dump({
-    "shap": {"top_genes": ["LMNA", "PLOD1", "C1QBP"]},
-    "dnn": {"cv_mean": 0.967, "cv_std": 0.012}
+    "data_source": "ci_fixture_synthetic",
+    "shap": {"top_genes": [
+        {"gene": "LMNA", "importance": 0.09115},
+        {"gene": "PLOD1", "importance": 0.05773},
+        {"gene": "C1QBP", "importance": 0.0727}
+    ]},
+    "dnn": {"cv_mean": 0.962, "cv_std": 0.015}
 }, open(OUT / "shap_dnn_results.json", "w"))
 
-# literature_drug_panel_noise.json
+# literature_drug_panel_noise.json (schema matches notebooks/literature_drug_panel.py)
 json.dump({
-    "literature_overlap": {"count": 15},
-    "drug_predictions": [{"compound": "Rapamycin", "score": 0.85, "mechanism": "mTOR inhibition"}],
-    "minimal_panel": {"n_genes": 25},
-    "qpcr_noise_simulation": [{"cv_level": 0.05, "mean_accuracy": 0.95}]
+    "data_source": "ci_fixture_synthetic",
+    "literature_benchmark": [
+        {"gene_set": "PanglaoDB_Satellite_Cell", "size": 20, "overlap_count": 0,
+         "overlap_genes": [], "jaccard": 0.0, "pct_of_panel": 0.0, "pct_of_set": 0.0},
+        {"gene_set": "Muscle_Differentiation_Canonical", "size": 20, "overlap_count": 0,
+         "overlap_genes": [], "jaccard": 0.0, "pct_of_panel": 0.0, "pct_of_set": 0.0}
+    ],
+    "drug_predictions": [
+        {"compound": "mTOR_inhibitor_Rapamycin", "target": "MTOR",
+         "effect": "promotes_quiescence", "ref": "Rodgers 2014",
+         "panel_gene_matches": [], "relevance_score": 0},
+        {"compound": "p38_inhibitor_SB203580", "target": "MAPK14",
+         "effect": "maintains_quiescence", "ref": "Bernet 2014",
+         "panel_gene_matches": [], "relevance_score": 0}
+    ],
+    "minimal_panel": {"results": [], "knee_point_n_genes": 10},
+    "qpcr_noise_simulation": [{"cv_level": 0.05, "mean_accuracy": 0.95,
+                               "std_accuracy": 0.02, "min_accuracy": 0.90,
+                               "accuracy_loss": 0.017}]
 }, open(OUT / "literature_drug_panel_noise.json", "w"))
 
 # tf_ppi_results.json
 json.dump({
+    "data_source": "ci_fixture_synthetic",
     "tf_enrichment": {"top_tfs": ["SP1", "MYOD1"]},
     "ppi_network": {"source": "STRING", "genes_queried": panel_genes, "interactions": [{"source": "C1QBP", "target": "LMNA"}], "hub_genes": ["C1QBP", "LMNA"], "n_edges": 74, "n_nodes": 30}
 }, open(OUT / "tf_ppi_results.json", "w"))
@@ -103,37 +124,45 @@ json.dump({
 # grant_proposal_draft.md
 (OUT / "grant_proposal_draft.md").write_text("# Grant Proposal Draft\n\nNIH R21 application for cultivated meat QC panel.\n\nBudget: $275,000 over 2 years.")
 
-# vae_bayesian_results.json
+# vae_bayesian_results.json (script constants: LATENT_DIM=8, GMM n_components=3)
 json.dump({
-    "vae": {"latent_dim": 10, "recon_loss": 0.45},
-    "bayesian_gmm": {"n_components": 3, "bic": -1200}
+    "data_source": "ci_fixture_synthetic",
+    "vae": {"latent_dim": 8},
+    "bayesian_gmm": {"n_components": 3}
 }, open(OUT / "vae_bayesian_results.json", "w"))
 
 # wgcna_de_batch.json
 json.dump({
+    "data_source": "ci_fixture_synthetic",
     "wgcna": {"modules": {"blue": ["LMNA", "PLOD1"], "turquoise": ["C1QBP", "CTSA"]}, "n_modules": 2}
 }, open(OUT / "wgcna_de_batch.json", "w"))
 
-# bootstrap_ml_timeseries.json
+# bootstrap_ml_timeseries.json (n_boot=1000 in script; 96.3% +/- 0.8% per docs)
 json.dump({
-    "bootstrap": {"cv_mean": 0.967, "cv_std": 0.01, "n_iterations": 100}
+    "data_source": "ci_fixture_synthetic",
+    "bootstrap": {"cv_mean": 0.963, "cv_std": 0.008, "n_iterations": 1000}
 }, open(OUT / "bootstrap_ml_timeseries.json", "w"))
 
-# cross_species_comparison.json
+# cross_species_comparison.json (GSE240556 is bovine snRNA-seq, not human)
 json.dump({
+    "data_source": "ci_fixture_synthetic",
     "bovine_vs_human": {"accuracy": 0.92, "n_genes": 30},
-    "porcine_vs_human": {"accuracy": 0.89, "n_genes": 30}
+    "porcine_vs_human": {"accuracy": 0.88, "n_genes": 30},
+    "bovine_snrna_vs_human": {"accuracy": 0.85, "n_genes": 30,
+                              "n_samples": 17541, "note": "GSE240556 is Bos taurus"}
 }, open(OUT / "cross_species_comparison.json", "w"))
 
 # cellcom_benchmark_pipeline.json
 json.dump({
+    "data_source": "ci_fixture_synthetic",
     "cellcom": {"method": "CellChat", "n_interactions": 45, "top_pathways": ["NOTCH", "WNT"]}
 }, open(OUT / "cellcom_benchmark_pipeline.json", "w"))
 
-# state_map_results.json
+# state_map_results.json (cluster sizes 61/86/92 per MODEL_CARD and poster)
 json.dump({
+    "data_source": "ci_fixture_synthetic",
     "n_samples": 239,
-    "states": {"expansion_competent": 62, "committed": 86, "terminal": 91},
+    "states": {"expansion_competent": 61, "committed": 86, "terminal": 92},
     "accuracy": 0.967
 }, open(OUT / "state_map_results.json", "w"))
 

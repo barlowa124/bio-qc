@@ -37,7 +37,7 @@
 | Bovine cross-species comparison | 3-cluster structure recovered (GSE173199) |
 | Noise robustness (25% CV) | 94.2% |
 
-All accuracy figures describe classification of melanoma-derived pseudo-bulk profiles, not cultivated-meat cell states. CV figures are cross-validated; the held-out test benchmark (`Table_S2_ml_benchmark.csv`) shows the DNN dropping to 75% test accuracy where LR/RF/XGB hold ~96%. The DNN's CV number overstates its held-out performance.
+All accuracy figures describe classification of melanoma-derived pseudo-bulk profiles, not cultivated-meat cell states. CV figures are cross-validated. The held-out test benchmark (`Table_S2_ml_benchmark.csv`) shows the DNN dropping to 75% test accuracy where LR/RF/XGB hold ~96%. The DNN's CV number overstates its held-out performance.
 
 ## Ethical considerations & limitations
 - **Domain mismatch:** Trained on human melanoma data. The panel is not a usable cultivated-meat QC assay
