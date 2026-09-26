@@ -13,14 +13,14 @@ pip install -r requirements.txt
 ```
 
 Key packages:
-- `numpy`, `pandas`, `scipy` — Data processing
-- `scikit-learn` — Machine learning
-- `torch` — Deep learning (VAE)
-- `anndata`, `scipy.sparse` — Single-cell data
-- `matplotlib`, `seaborn` — Visualization
+- `numpy`, `pandas`, `scipy`: data processing
+- `scikit-learn`: machine learning
+- `torch`: deep learning (VAE)
+- `anndata`, `scipy.sparse`: single-cell data
+- `matplotlib`, `seaborn`: visualization
 
 ## Data
 
 Public datasets are downloaded automatically or can be placed in:
-- `cross_species_validation/` — Bovine and porcine GEO data
+- `cross_species_validation/`: bovine and porcine GEO data
 - Source data paths configured in `shared_data/data_paths.yaml`

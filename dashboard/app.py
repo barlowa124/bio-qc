@@ -16,7 +16,7 @@ OUT = PROJ / "p2_state_map/output"
 
 st.set_page_config(
     page_title="Cultivated Meat QC Panel",
-    page_icon="🧬",
+    page_icon=":dna:",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -140,7 +140,7 @@ if page == "Prediction" and loaded:
     st.header("State Prediction")
 
     with st.container(border=True):
-        st.markdown("**Expression input** — log TPM values for the 30 panel genes")
+        st.markdown("**Expression input.** Log TPM values for the 30 panel genes")
         cols = st.columns(3)
         expr = []
         for i, g in enumerate(genes):
@@ -178,7 +178,7 @@ if page == "Prediction" and loaded:
 
     # Batch upload
     with st.container(border=True):
-        st.markdown("**Batch upload** — CSV with columns matching the 30 gene names; each row is one sample.")
+        st.markdown("**Batch upload.** CSV with columns matching the 30 gene names. Each row is one sample.")
         uploaded = st.file_uploader("Upload CSV", type="csv")
         if uploaded is not None:
             df = pd.read_csv(uploaded)
@@ -210,6 +210,7 @@ elif page == "Performance" and loaded:
         st.metric("Bootstrap", b_mean, b_std)
     with col3:
         st.metric("DNN CV", "96.2%", "± 1.5%")
+    st.caption("CV figures are cross-validated. On the held-out test set (Table S2) the DNN drops to 75% while LR/RF/XGB hold ~96%. DNN CV overstates held-out performance.")
 
     # Noise robustness
     noise = results.get("literature_drug_panel_noise", {}).get("qpcr_noise_simulation", [])
@@ -228,9 +229,10 @@ elif page == "Explainability" and loaded:
         shap = results["shap_dnn_results"]["shap"]
         top = shap.get("top_genes", [])
         if top:
-            df = pd.DataFrame(top)
-            fig = px.bar(df, x="importance", y="gene", orientation="h", title="Gene Importance (SHAP)")
-            st.plotly_chart(styled_fig(fig), use_container_width=True)
+            st.caption("Top genes by SHAP importance (ranked)")
+            cols = st.columns(len(top))
+            for col, g in zip(cols, top):
+                col.metric(label=f"#{top.index(g) + 1}", value=g)
 
 # ── Page: Cross-Species ──
 elif page == "Cross-Species" and loaded:
@@ -241,8 +243,8 @@ elif page == "Cross-Species" and loaded:
 
     st.markdown("""
     **Bovine** (GSE173199, 38 samples): 3-state conserved
-    **Porcine**: Muscle progenitor validation
-    **Human** (GSE240556, 17,541 nuclei): 21/30 panel genes detected
+    **Porcine** (GSE206914): Muscle progenitor validation
+    **Bovine snRNA-seq** (GSE240556, 17,541 nuclei): 21/30 panel genes detected
     """)
 
 # ── Page: Literature & Drugs ──
@@ -255,27 +257,19 @@ elif page == "Literature & Drugs" and loaded:
         lit = data.get("literature_overlap", {})
         if lit:
             st.subheader("Literature Overlap")
-            sets = list(lit.keys())
-            overlaps = [lit[s].get("overlap_percent", 0) for s in sets]
-            fig = px.bar(x=sets, y=overlaps, labels={"x": "Gene Set", "y": "Overlap (%)"}, title="Panel vs Canonical Gene Sets")
-            st.plotly_chart(styled_fig(fig), use_container_width=True)
+            st.metric("Panel genes found in canonical muscle marker sets", lit.get("count", 0))
 
-        drugs = data.get("drug_predictions", {})
+        drugs = data.get("drug_predictions", [])
         if drugs:
             st.subheader("Drug/Compound Predictions")
-            compounds = list(drugs.keys())
-            scores = [drugs[c].get("score", 0) for c in compounds]
-            mechanisms = [drugs[c].get("mechanism", "unknown") for c in compounds]
-            df = pd.DataFrame({"compound": compounds, "score": scores, "mechanism": mechanisms})
-            df = df.sort_values("score", ascending=False)
+            df = pd.DataFrame(drugs).sort_values("score", ascending=False)
             fig = px.bar(df, x="score", y="compound", color="mechanism", orientation="h", title="LINCS/Connectivity Map Predictions")
             st.plotly_chart(styled_fig(fig), use_container_width=True)
 
         minimal = data.get("minimal_panel", {})
         if minimal:
             st.subheader("Minimal Panel")
-            st.write("**10 genes achieve 96.6% accuracy** — matching the full 30-gene panel.")
-            st.write("Selected genes:", minimal.get("selected_genes", []))
+            st.write("**10 genes achieve 96.6% accuracy**, matching the full 30-gene panel.")
 
 # ── Page: About ──
 elif page == "About":
@@ -286,8 +280,8 @@ elif page == "About":
 
     - **Repository:** [github.com/barlowa124/cultivated-meat-multiomic](https://github.com/barlowa124/cultivated-meat-multiomic)
     - **License:** MIT
-    - **Panel cost:** $50–100 / batch
-    - **Turnaround:** 4–6 hours
+    - **Panel cost:** $50-100 / batch
+    - **Turnaround:** 4-6 hours
 
     ### Core Technologies
     - Logistic regression + DNN classifier
@@ -298,4 +292,4 @@ elif page == "About":
     """)
 
 st.sidebar.markdown("---")
-st.sidebar.caption("© 2026 Rao Lab — MIT License")
+st.sidebar.caption("© 2026 Rao Lab. MIT License")

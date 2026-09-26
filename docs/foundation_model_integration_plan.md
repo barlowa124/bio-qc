@@ -1,9 +1,9 @@
-# Foundation Model Integration Plan
-## Cultivated Meat 30-Gene qPCR Panel — 3-State Classification
+# Foundation model integration plan
+## Cultivated meat 30-gene qPCR panel: 3-state classification
 
 ---
 
-## 1. Model Deep Dives
+## 1. Model details
 
 ### Geneformer (ctheodoris/Geneformer)
 | Property | Value |
@@ -24,12 +24,14 @@
 4. Fine-tune by replacing head with task-specific classifier
 
 **Relevance to cultivated meat:**
-- ✅ Cell state classification across differentiation — directly matches your 3-state problem
-- ✅ Batch integration — addresses your batch correction needs
-- ✅ Disease classification — analogous to manufacturing-readiness state detection
-- ✅ In silico perturbation — could identify which genes drive state transitions
-- ⚠️ Pretrained on human only — cross-species transfer to bovine/porcine is unknown
-- ⚠️ Input size 4096 genes — your 30-gene panel is much smaller; needs gene set intersection
+- Cell state classification across differentiation. Directly matches your 3-state problem
+- Batch integration. Addresses your batch correction needs
+- Disease classification. Analogous to manufacturing-readiness state detection
+- In silico perturbation. Could identify which genes drive state transitions
+
+**Caveats:**
+- Pretrained on human only. Cross-species transfer to bovine/porcine is unknown
+- Input size 4096 genes. Your 30-gene panel is much smaller and needs gene set intersection
 
 ### scGPT (tdc/scGPT)
 | Property | Value |
@@ -50,12 +52,14 @@
 4. Fine-tune via transfer learning on downstream tasks
 
 **Relevance to cultivated meat:**
-- ✅ Multi-batch integration — directly applicable
-- ✅ Cell type annotation — matches your classification task
-- ✅ Multi-omic integration — could incorporate proteomics/metabolomics later
-- ✅ MIT license — most permissive for commercial use
-- ⚠️ Smaller model (50M) — may not capture as much biology as Geneformer
-- ⚠️ Less community adoption (12K vs 4.1M downloads)
+- Multi-batch integration. Directly applicable
+- Cell type annotation. Matches your classification task
+- Multi-omic integration. Could incorporate proteomics/metabolomics later
+- MIT license. Most permissive for commercial use
+
+**Caveats:**
+- Smaller model (50M). May not capture as much biology as Geneformer
+- Less community adoption (12K vs 4.1M downloads)
 
 ### sCellTransformer (InstaDeepAI/sCellTransformer)
 | Property | Value |
@@ -69,9 +73,9 @@
 
 ---
 
-## 2. Can They Be Fine-Tuned for 3-State Classification?
+## 2. Can they be fine-tuned for 3-state classification?
 
-### Geneformer: YES ✅
+### Geneformer: yes
 The README explicitly lists "cell state classification across differentiation" as a demonstrated application. The fine-tuning workflow:
 1. Tokenize your 30-gene qPCR data using Geneformer's tokenizer
 2. Map your genes to Geneformer's vocabulary (~20K protein-coding genes)
@@ -84,7 +88,7 @@ The README explicitly lists "cell state classification across differentiation" a
 - **B) Imputation:** Use Geneformer to impute the missing ~4000 genes from your 30, then classify on full profile.
 - **C) Embedding extraction:** Extract cell embeddings from Geneformer, train a lightweight classifier on top.
 
-### scGPT: YES ✅
+### scGPT: yes
 The README lists "cell type annotation" as a downstream task. The fine-tuning workflow:
 1. Load your data as AnnData
 2. Use TDC's scGPT tokenizer
@@ -97,7 +101,7 @@ The README lists "cell type annotation" as a downstream task. The fine-tuning wo
 
 ## 3. Integration Plan
 
-### Phase 1: Embedding Extraction (Low Risk, 1-2 hours)
+### Phase 1: embedding extraction (low risk, 1-2 hours)
 **Goal:** Test if foundation model embeddings improve over your current features.
 
 1. Install Geneformer: `pip install git+https://huggingface.co/ctheodoris/Geneformer`
@@ -108,7 +112,7 @@ The README lists "cell type annotation" as a downstream task. The fine-tuning wo
 
 **Success metric:** Embedding-based classifier > 0.967 (current LR baseline)
 
-### Phase 2: Full Fine-Tuning (Medium Risk, 3-5 hours)
+### Phase 2: full fine-tuning (medium risk, 3-5 hours)
 **Goal:** Fine-tune Geneformer end-to-end on your 3-state task.
 
 1. Prepare tokenized dataset from qPCR data
@@ -119,7 +123,7 @@ The README lists "cell type annotation" as a downstream task. The fine-tuning wo
 
 **Success metric:** Fine-tuned Geneformer > 0.979 (current ensemble)
 
-### Phase 3: Cross-Species Transfer (High Impact, 3-5 hours)
+### Phase 3: cross-species transfer (high impact, 3-5 hours)
 **Goal:** Use Geneformer's human knowledge to boost bovine/porcine accuracy.
 
 1. Fine-tune Geneformer on human data (Phase 2)
@@ -129,7 +133,7 @@ The README lists "cell type annotation" as a downstream task. The fine-tuning wo
 
 **Success metric:** Bovine accuracy > 0.92, Porcine > 0.89 (current baselines)
 
-### Phase 4: In Silico Perturbation (Novel Contribution, 4-6 hours)
+### Phase 4: in silico perturbation (novel contribution, 4-6 hours)
 **Goal:** Use Geneformer's zero-shot perturbation to identify genes that drive state transitions.
 
 1. For each of the 30 genes, simulate knockout/overexpression
@@ -155,16 +159,16 @@ The README lists "cell type annotation" as a downstream task. The fine-tuning wo
 
 ## 5. Recommended Priority
 
-1. **Phase 1 first** — embedding extraction is fast and low-risk
-2. **Phase 2 if Phase 1 succeeds** — full fine-tuning for the manuscript
-3. **Phase 3 if Phase 2 succeeds** — cross-species is a strong contribution
-4. **Phase 4 as stretch goal** — in silico perturbation is most novel
+1. **Phase 1 first**: embedding extraction is fast and low-risk
+2. **Phase 2 if Phase 1 succeeds**: full fine-tuning for the manuscript
+3. **Phase 3 if Phase 2 succeeds**: cross-species is a strong contribution
+4. **Phase 4 as stretch goal**: in silico perturbation is most novel
 
 **Estimated total time:** 11-18 hours across all phases.
 
 ---
 
-## 6. Key Papers to Cite
+## 6. Key papers to cite
 
 | Paper | How to Cite |
 |-------|-------------|

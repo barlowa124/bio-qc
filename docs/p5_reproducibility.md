@@ -1,3 +1,3 @@
-# Reproducibility Analysis
+# Reproducibility analysis
 
-Gene stability, PCA variance, and clustering stability across operators.
+Stability metrics across operators: gene stability, PCA variance, clustering.

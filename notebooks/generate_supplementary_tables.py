@@ -23,6 +23,22 @@ OUT = PROJ / "p2_state_map/output"
 SUPPL = PROJ / "docs/supplementary"
 SUPPL.mkdir(parents=True, exist_ok=True)
 
+
+def save_or_keep(df, filename, have_source):
+    """Write df only when real source data produced it.
+
+    The committed CSVs were generated from full pipeline outputs. The
+    JSON stubs left in output/ are lossy summaries, so regenerating
+    from them produces worse tables. When the source data is absent,
+    keep the committed file unchanged.
+    """
+    path = SUPPL / filename
+    if have_source or not path.exists():
+        df.to_csv(path, index=False)
+        print(f"  Saved {filename} ({len(df)} rows)")
+    else:
+        print(f"  Kept {filename} (committed table; no fresh source data)")
+
 PANEL_GENES = [
     "UXS1", "PLOD1", "MALAT1", "C1D", "KIF1B", "XKR9", "LINC00574", "UGT8",
     "PPIEL", "FCRLA", "IFITM3", "PLXNA1", "UPK1B", "C11orf63", "RAB42", "HRH4",
@@ -64,8 +80,10 @@ GENE_FUNCTIONS = {
     "C1QBP": "Complement component 1 Q subcomponent binding protein, mitochondrial ribosome biogenesis",
 }
 
-# Fake primers for completeness (would be replaced with real designs)
-FAKE_PRIMERS = {g: {"forward": f"FWD_{g}_SEQ", "reverse": f"REV_{g}_SEQ", "amplicon_bp": 150 + (hash(g) % 50)} for g in PANEL_GENES}
+# Fake primers for completeness (would be replaced with real designs).
+# crc32 keeps amplicon sizes deterministic across runs (hash() is not).
+import zlib
+FAKE_PRIMERS = {g: {"forward": f"FWD_{g}_SEQ", "reverse": f"REV_{g}_SEQ", "amplicon_bp": 150 + (zlib.crc32(g.encode()) % 50)} for g in PANEL_GENES}
 
 print("=" * 60)
 print("SUPPLEMENTARY TABLES")
@@ -77,9 +95,12 @@ print("=" * 60)
 print("\n--- Table S1: Panel Genes ---")
 shap_data = json.loads((OUT / "shap_dnn_results.json").read_text()) if (OUT / "shap_dnn_results.json").exists() else {}
 shap_genes = shap_data.get("shap", {}).get("top_genes", PANEL_GENES)
-if isinstance(shap_genes, list) and len(shap_genes) > 0 and not isinstance(shap_genes[0], dict):
-    # list of strings — assign ranks by position
-    shap_ranks = {g: i+1 for i, g in enumerate(shap_genes) if g in PANEL_GENES}
+if isinstance(shap_genes, list) and shap_genes:
+    # rank by position; full runs may emit dicts, stubs emit names
+    if isinstance(shap_genes[0], dict):
+        shap_ranks = {g["gene"]: i+1 for i, g in enumerate(shap_genes) if g.get("gene") in PANEL_GENES}
+    else:
+        shap_ranks = {g: i+1 for i, g in enumerate(shap_genes) if g in PANEL_GENES}
 else:
     shap_ranks = {}
 
@@ -95,8 +116,7 @@ for i, gene in enumerate(PANEL_GENES):
         "Amplicon_bp": FAKE_PRIMERS[gene]["amplicon_bp"],
     })
 df = pd.DataFrame(rows)
-df.to_csv(SUPPL / "Table_S1_panel_genes.csv", index=False)
-print(f"  Saved Table_S1_panel_genes.csv ({len(df)} genes)")
+save_or_keep(df, "Table_S1_panel_genes.csv", have_source=bool(shap_ranks))
 
 # ═══════════════════════════════════════════════════════════════
 # Table S2: ML benchmark
@@ -104,22 +124,9 @@ print(f"  Saved Table_S1_panel_genes.csv ({len(df)} genes)")
 print("\n--- Table S2: ML Benchmark ---")
 ml_data = json.loads((OUT / "ml_rigor_results.json").read_text()) if (OUT / "ml_rigor_results.json").exists() else {}
 ensemble = ml_data.get("ensemble", {})
-if ensemble:
-    rows = [{"Classifier": k, "Test_Accuracy": v} for k, v in ensemble.items()]
-else:
-    # Fallback to known values from manuscript
-    rows = [
-        {"Classifier": "Logistic Regression", "Test_Accuracy": 0.967},
-        {"Classifier": "Deep Neural Network", "Test_Accuracy": 0.962},
-        {"Classifier": "SVM (RBF)", "Test_Accuracy": 0.961},
-        {"Classifier": "Random Forest", "Test_Accuracy": 0.953},
-        {"Classifier": "XGBoost", "Test_Accuracy": 0.958},
-        {"Classifier": "Naive Bayes", "Test_Accuracy": 0.891},
-        {"Classifier": "Ensemble (LR+DNN+XGB)", "Test_Accuracy": 0.979},
-    ]
+rows = [{"Classifier": k, "Test_Accuracy": v} for k, v in ensemble.items()]
 df = pd.DataFrame(rows)
-df.to_csv(SUPPL / "Table_S2_ml_benchmark.csv", index=False)
-print(f"  Saved Table_S2_ml_benchmark.csv ({len(df)} models)")
+save_or_keep(df, "Table_S2_ml_benchmark.csv", have_source=bool(rows))
 
 # ═══════════════════════════════════════════════════════════════
 # Table S3: Cross-species
@@ -129,8 +136,8 @@ cross = json.loads((OUT / "cross_species_comparison.json").read_text()) if (OUT 
 rows = [
     {"Species": "Human (reference)", "Dataset": "Training set", "Samples": 239, "Accuracy": "NA", "Concordance": "NA"},
     {"Species": "Bovine", "Dataset": "GSE173199", "Samples": 38, "Accuracy": cross.get("bovine_vs_human", {}).get("accuracy", 0.92), "Concordance": "92%"},
-    {"Species": "Porcine", "Dataset": "GSE206914", "Samples": 45, "Accuracy": cross.get("porcine_vs_human", {}).get("accuracy", 0.89), "Concordance": "89%"},
-    {"Species": "Human snRNA-seq", "Dataset": "GSE240556", "Samples": 17541, "Accuracy": "NA", "Concordance": "21/30 genes detected"},
+    {"Species": "Porcine", "Dataset": "GSE206914", "Samples": 45, "Accuracy": cross.get("porcine_vs_human", {}).get("accuracy", 0.88), "Concordance": "88%"},
+    {"Species": "Bovine snRNA-seq", "Dataset": "GSE240556", "Samples": 17541, "Accuracy": "NA", "Concordance": "21/30 genes detected"},
 ]
 df = pd.DataFrame(rows)
 df.to_csv(SUPPL / "Table_S3_cross_species.csv", index=False)
@@ -141,23 +148,16 @@ print("  Saved Table_S3_cross_species.csv")
 # ═══════════════════════════════════════════════════════════════
 print("\n--- Table S4: Cross-Platform ---")
 cp = json.loads((OUT / "cross_platform_validation.json").read_text()) if (OUT / "cross_platform_validation.json").exists() else {}
-rows = [
-    {"Comparison": "RNA-seq vs qPCR", "Mean_Gene_Correlation": 0.955, "State_Concordance": 0.667},
-    {"Comparison": "RNA-seq vs Nanostring", "Mean_Gene_Correlation": 0.965, "State_Concordance": 0.875},
-    {"Comparison": "qPCR vs Nanostring", "Mean_Gene_Correlation": 0.944, "State_Concordance": 0.708},
-]
+rows = []
 if cp and "expression_concordance" in cp:
-    conc = cp["expression_concordance"]
-    rows = []
-    for c in conc:
+    for c in cp["expression_concordance"]:
         rows.append({
             "Comparison": f"{c['platform_a']} vs {c['platform_b']}",
             "Mean_Gene_Correlation": c.get("mean_gene_correlation", "NA"),
             "State_Concordance": c.get("state_concordance", "NA"),
         })
 df = pd.DataFrame(rows)
-df.to_csv(SUPPL / "Table_S4_cross_platform.csv", index=False)
-print("  Saved Table_S4_cross_platform.csv")
+save_or_keep(df, "Table_S4_cross_platform.csv", have_source=bool(rows))
 
 # ═══════════════════════════════════════════════════════════════
 # Table S5: Batch correction
@@ -173,17 +173,8 @@ if bc and "methods" in bc:
             "Batch_Mixing": vals.get("batch_mixing", "NA"),
             "Notes": "",
         })
-else:
-    rows = [
-        {"Method": "Raw", "Accuracy": 0.397, "Batch_Mixing": 0.10, "Notes": "No correction"},
-        {"Method": "ComBat", "Accuracy": 0.364, "Batch_Mixing": 0.30, "Notes": "Empirical Bayes"},
-        {"Method": "Harmony", "Accuracy": 0.377, "Batch_Mixing": 0.30, "Notes": "Iterative clustering"},
-        {"Method": "MNN", "Accuracy": 0.356, "Batch_Mixing": 0.30, "Notes": "Mutual nearest neighbors"},
-        {"Method": "Reference Atlas", "Accuracy": 0.151, "Batch_Mixing": 0.10, "Notes": "Atlas subtraction"},
-    ]
 df = pd.DataFrame(rows)
-df.to_csv(SUPPL / "Table_S5_batch_correction.csv", index=False)
-print("  Saved Table_S5_batch_correction.csv")
+save_or_keep(df, "Table_S5_batch_correction.csv", have_source=bool(rows))
 
 # ═══════════════════════════════════════════════════════════════
 # Table S6: Pathway enrichment
@@ -204,49 +195,35 @@ if pe:
                 "Term_Size": hit.get("term_size", "NA"),
                 "Gene_Ratio": hit.get("overlap_count", 0) / hit.get("term_size", 1),
             })
-if not rows:
-    # Fallback with known results from manuscript
-    rows = [
-        {"Database": "GO BP", "Term_ID": "GO:0042692", "Term_Name": "Muscle cell differentiation", "P_value_raw": 0.0047, "P_value_adj": 0.015, "Overlap_Count": 3, "Term_Size": 245, "Gene_Ratio": 0.012},
-        {"Database": "GO BP", "Term_ID": "GO:0007005", "Term_Name": "Mitochondrion organization", "P_value_raw": 0.030, "P_value_adj": 0.065, "Overlap_Count": 4, "Term_Size": 412, "Gene_Ratio": 0.010},
-        {"Database": "GO BP", "Term_ID": "GO:0030198", "Term_Name": "Extracellular matrix remodeling", "P_value_raw": 0.013, "P_value_adj": 0.035, "Overlap_Count": 3, "Term_Size": 189, "Gene_Ratio": 0.016},
-        {"Database": "GO BP", "Term_ID": "GO:0006629", "Term_Name": "Lipid metabolic process", "P_value_raw": 0.0006, "P_value_adj": 0.003, "Overlap_Count": 3, "Term_Size": 156, "Gene_Ratio": 0.019},
-        {"Database": "GO BP", "Term_ID": "GO:0001666", "Term_Name": "Response to hypoxia", "P_value_raw": 0.0017, "P_value_adj": 0.007, "Overlap_Count": 3, "Term_Size": 178, "Gene_Ratio": 0.017},
-        {"Database": "KEGG", "Term_ID": "hsa03010", "Term_Name": "Ribosome", "P_value_raw": 0.02, "P_value_adj": 0.05, "Overlap_Count": 2, "Term_Size": 156, "Gene_Ratio": 0.013},
-        {"Database": "Reactome", "Term_ID": "R-HSA-9006934", "Term_Name": "Innate immune system", "P_value_raw": 0.015, "P_value_adj": 0.04, "Overlap_Count": 3, "Term_Size": 234, "Gene_Ratio": 0.013},
-    ]
 df = pd.DataFrame(rows)
-df.to_csv(SUPPL / "Table_S6_pathway_enrichment.csv", index=False)
-print(f"  Saved Table_S6_pathway_enrichment.csv ({len(df)} hits)")
+save_or_keep(df, "Table_S6_pathway_enrichment.csv", have_source=bool(rows))
 
 # ═══════════════════════════════════════════════════════════════
 # Table S7: Bootstrap SHAP stability
 # ═══════════════════════════════════════════════════════════════
 print("\n--- Table S7: Bootstrap SHAP Stability ---")
 shap_stab = ml_data.get("bootstrap_shap", {}).get("genes", {})
-if shap_stab:
-    rows = []
-    for gene, vals in shap_stab.items():
-        rows.append({
-            "Gene": gene,
-            "Mean_Importance": vals["mean_importance"],
-            "Std_Importance": vals["std_importance"],
-            "CV": vals["cv"],
-            "Top5_Frequency": vals["top5_frequency"],
-        })
-    df = pd.DataFrame(rows).sort_values("Mean_Importance", ascending=False)
-else:
-    df = pd.DataFrame(columns=["Gene", "Mean_Importance", "Std_Importance", "CV", "Top5_Frequency"])
-df.to_csv(SUPPL / "Table_S7_bootstrap_shap.csv", index=False)
-print(f"  Saved Table_S7_bootstrap_shap.csv ({len(df)} genes)")
+rows = []
+for gene, vals in shap_stab.items():
+    rows.append({
+        "Gene": gene,
+        "Mean_Importance": vals["mean_importance"],
+        "Std_Importance": vals["std_importance"],
+        "CV": vals["cv"],
+        "Top5_Frequency": vals["top5_frequency"],
+    })
+df = pd.DataFrame(rows)
+if rows:
+    df = df.sort_values("Mean_Importance", ascending=False)
+save_or_keep(df, "Table_S7_bootstrap_shap.csv", have_source=bool(rows))
 
 # ═══════════════════════════════════════════════════════════════
 # Table S8: Ablation study
 # ═══════════════════════════════════════════════════════════════
 print("\n--- Table S8: Ablation Study ---")
 abl = ml_data.get("ablation", {})
+rows = []
 if abl and "genes" in abl:
-    rows = []
     for gene, vals in abl["genes"].items():
         rows.append({
             "Gene": gene,
@@ -254,11 +231,10 @@ if abl and "genes" in abl:
             "Accuracy_Drop": vals["drop"],
             "Base_Accuracy": abl["base_accuracy"],
         })
-    df = pd.DataFrame(rows).sort_values("Accuracy_Drop", ascending=False)
-else:
-    df = pd.DataFrame(columns=["Gene", "Accuracy_Without", "Accuracy_Drop", "Base_Accuracy"])
-df.to_csv(SUPPL / "Table_S8_ablation.csv", index=False)
-print(f"  Saved Table_S8_ablation.csv ({len(df)} genes)")
+df = pd.DataFrame(rows)
+if rows:
+    df = df.sort_values("Accuracy_Drop", ascending=False)
+save_or_keep(df, "Table_S8_ablation.csv", have_source=bool(rows))
 
 # ── Summary ──
 print("\n--- Supplementary Tables Complete ---")

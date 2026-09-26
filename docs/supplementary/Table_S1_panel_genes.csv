@@ -1,31 +1,31 @@
 Rank,Gene,Function,SHAP_Rank,Forward_Primer,Reverse_Primer,Amplicon_bp
-1,UXS1,"UDP-glucuronic acid decarboxylase, glycosaminoglycan synthesis",NA,FWD_UXS1_SEQ,REV_UXS1_SEQ,194
-2,PLOD1,"Procollagen lysyl hydroxylase, ECM remodeling",2,FWD_PLOD1_SEQ,REV_PLOD1_SEQ,169
-3,MALAT1,"Long non-coding RNA, cell cycle regulation",NA,FWD_MALAT1_SEQ,REV_MALAT1_SEQ,196
-4,C1D,"Nuclear exosome cofactor, RNA degradation",NA,FWD_C1D_SEQ,REV_C1D_SEQ,180
-5,KIF1B,"Kinesin motor protein, mitochondrial transport",NA,FWD_KIF1B_SEQ,REV_KIF1B_SEQ,157
-6,XKR9,"XK-related protein, membrane transport (poorly characterized)",NA,FWD_XKR9_SEQ,REV_XKR9_SEQ,199
-7,LINC00574,"Long intergenic non-coding RNA, transcriptional regulation",NA,FWD_LINC00574_SEQ,REV_LINC00574_SEQ,176
-8,UGT8,"UDP-galactose ceramide galactosyltransferase, lipid metabolism",NA,FWD_UGT8_SEQ,REV_UGT8_SEQ,169
-9,PPIEL,"Peptidylprolyl isomerase, protein folding",NA,FWD_PPIEL_SEQ,REV_PPIEL_SEQ,174
-10,FCRLA,"Fc receptor-like A, immune signaling",NA,FWD_FCRLA_SEQ,REV_FCRLA_SEQ,189
-11,IFITM3,"Interferon-induced transmembrane protein, innate immunity",NA,FWD_IFITM3_SEQ,REV_IFITM3_SEQ,172
-12,PLXNA1,"Plexin A1, axon guidance / cell migration",NA,FWD_PLXNA1_SEQ,REV_PLXNA1_SEQ,172
-13,UPK1B,"Uroplakin 1B, membrane structural protein",NA,FWD_UPK1B_SEQ,REV_UPK1B_SEQ,199
-14,C11orf63,"Uncharacterized protein, chromosome 11 open reading frame",NA,FWD_C11orf63_SEQ,REV_C11orf63_SEQ,159
-15,RAB42,"Ras-related GTPase, vesicle trafficking",NA,FWD_RAB42_SEQ,REV_RAB42_SEQ,161
-16,HRH4,"Histamine receptor H4, immune modulation",NA,FWD_HRH4_SEQ,REV_HRH4_SEQ,170
-17,NPC2,"Niemann-Pick disease type C2 protein, cholesterol transport",NA,FWD_NPC2_SEQ,REV_NPC2_SEQ,182
-18,AEBP1,"AE binding protein 1, transcriptional repressor / ECM",NA,FWD_AEBP1_SEQ,REV_AEBP1_SEQ,153
-19,GLG1,"Golgi glycoprotein 1, secretory pathway",NA,FWD_GLG1_SEQ,REV_GLG1_SEQ,167
-20,C3orf72,"Uncharacterized protein, chromosome 3 open reading frame",NA,FWD_C3orf72_SEQ,REV_C3orf72_SEQ,175
-21,APOL1,"Apolipoprotein L1, lipid metabolism / innate immunity",NA,FWD_APOL1_SEQ,REV_APOL1_SEQ,186
-22,SNHG3,"Small nucleolar RNA host gene 3, ribosome biogenesis",NA,FWD_SNHG3_SEQ,REV_SNHG3_SEQ,157
-23,EMC1,"ER membrane protein complex subunit 1, membrane protein insertion",NA,FWD_EMC1_SEQ,REV_EMC1_SEQ,195
-24,LMNA,"Lamin A/C, nuclear lamina, differentiation marker",1,FWD_LMNA_SEQ,REV_LMNA_SEQ,160
-25,CTSA,"Cathepsin A, lysosomal protease / elastase",NA,FWD_CTSA_SEQ,REV_CTSA_SEQ,156
-26,TOMM7,"Translocase of outer mitochondrial membrane 7, mitochondrial import",NA,FWD_TOMM7_SEQ,REV_TOMM7_SEQ,177
-27,ZNF527,"Zinc finger protein 527, transcriptional regulation",NA,FWD_ZNF527_SEQ,REV_ZNF527_SEQ,166
-28,PLEKHG4B,"Pleckstrin homology domain protein, cytoskeletal signaling",NA,FWD_PLEKHG4B_SEQ,REV_PLEKHG4B_SEQ,185
-29,MRPL32,"Mitochondrial ribosomal protein L32, mitochondrial translation",NA,FWD_MRPL32_SEQ,REV_MRPL32_SEQ,150
-30,C1QBP,"Complement component 1 Q subcomponent binding protein, mitochondrial ribosome biogenesis",3,FWD_C1QBP_SEQ,REV_C1QBP_SEQ,190
+1,UXS1,"UDP-glucuronic acid decarboxylase, glycosaminoglycan synthesis",NA,FWD_UXS1_SEQ,REV_UXS1_SEQ,191
+2,PLOD1,"Procollagen lysyl hydroxylase, ECM remodeling",2,FWD_PLOD1_SEQ,REV_PLOD1_SEQ,167
+3,MALAT1,"Long non-coding RNA, cell cycle regulation",NA,FWD_MALAT1_SEQ,REV_MALAT1_SEQ,172
+4,C1D,"Nuclear exosome cofactor, RNA degradation",NA,FWD_C1D_SEQ,REV_C1D_SEQ,196
+5,KIF1B,"Kinesin motor protein, mitochondrial transport",NA,FWD_KIF1B_SEQ,REV_KIF1B_SEQ,192
+6,XKR9,"XK-related protein, membrane transport (poorly characterized)",NA,FWD_XKR9_SEQ,REV_XKR9_SEQ,152
+7,LINC00574,"Long intergenic non-coding RNA, transcriptional regulation",NA,FWD_LINC00574_SEQ,REV_LINC00574_SEQ,178
+8,UGT8,"UDP-galactose ceramide galactosyltransferase, lipid metabolism",NA,FWD_UGT8_SEQ,REV_UGT8_SEQ,177
+9,PPIEL,"Peptidylprolyl isomerase, protein folding",NA,FWD_PPIEL_SEQ,REV_PPIEL_SEQ,150
+10,FCRLA,"Fc receptor-like A, immune signaling",NA,FWD_FCRLA_SEQ,REV_FCRLA_SEQ,160
+11,IFITM3,"Interferon-induced transmembrane protein, innate immunity",NA,FWD_IFITM3_SEQ,REV_IFITM3_SEQ,165
+12,PLXNA1,"Plexin A1, axon guidance / cell migration",NA,FWD_PLXNA1_SEQ,REV_PLXNA1_SEQ,187
+13,UPK1B,"Uroplakin 1B, membrane structural protein",NA,FWD_UPK1B_SEQ,REV_UPK1B_SEQ,195
+14,C11orf63,"Uncharacterized protein, chromosome 11 open reading frame",NA,FWD_C11orf63_SEQ,REV_C11orf63_SEQ,163
+15,RAB42,"Ras-related GTPase, vesicle trafficking",NA,FWD_RAB42_SEQ,REV_RAB42_SEQ,173
+16,HRH4,"Histamine receptor H4, immune modulation",NA,FWD_HRH4_SEQ,REV_HRH4_SEQ,162
+17,NPC2,"Niemann-Pick disease type C2 protein, cholesterol transport",NA,FWD_NPC2_SEQ,REV_NPC2_SEQ,188
+18,AEBP1,"AE binding protein 1, transcriptional repressor / ECM",NA,FWD_AEBP1_SEQ,REV_AEBP1_SEQ,161
+19,GLG1,"Golgi glycoprotein 1, secretory pathway",NA,FWD_GLG1_SEQ,REV_GLG1_SEQ,170
+20,C3orf72,"Uncharacterized protein, chromosome 3 open reading frame",NA,FWD_C3orf72_SEQ,REV_C3orf72_SEQ,168
+21,APOL1,"Apolipoprotein L1, lipid metabolism / innate immunity",NA,FWD_APOL1_SEQ,REV_APOL1_SEQ,162
+22,SNHG3,"Small nucleolar RNA host gene 3, ribosome biogenesis",NA,FWD_SNHG3_SEQ,REV_SNHG3_SEQ,150
+23,EMC1,"ER membrane protein complex subunit 1, membrane protein insertion",NA,FWD_EMC1_SEQ,REV_EMC1_SEQ,178
+24,LMNA,"Lamin A/C, nuclear lamina, differentiation marker",1,FWD_LMNA_SEQ,REV_LMNA_SEQ,193
+25,CTSA,"Cathepsin A, lysosomal protease / elastase",NA,FWD_CTSA_SEQ,REV_CTSA_SEQ,176
+26,TOMM7,"Translocase of outer mitochondrial membrane 7, mitochondrial import",NA,FWD_TOMM7_SEQ,REV_TOMM7_SEQ,171
+27,ZNF527,"Zinc finger protein 527, transcriptional regulation",NA,FWD_ZNF527_SEQ,REV_ZNF527_SEQ,154
+28,PLEKHG4B,"Pleckstrin homology domain protein, cytoskeletal signaling",NA,FWD_PLEKHG4B_SEQ,REV_PLEKHG4B_SEQ,169
+29,MRPL32,"Mitochondrial ribosomal protein L32, mitochondrial translation",NA,FWD_MRPL32_SEQ,REV_MRPL32_SEQ,180
+30,C1QBP,"Complement component 1 Q subcomponent binding protein, mitochondrial ribosome biogenesis",3,FWD_C1QBP_SEQ,REV_C1QBP_SEQ,192

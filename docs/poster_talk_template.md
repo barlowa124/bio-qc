@@ -1,4 +1,4 @@
-# Conference Poster: 30-Gene QC Panel for Cultivated Meat Manufacturing
+# Conference poster: 30-gene QC panel for cultivated meat manufacturing
 
 ## 36" × 48" Portrait Layout
 
@@ -11,7 +11,7 @@
 
 ---
 
-### Column 1 (12" wide) — Background & Motivation
+### Column 1 (12" wide): background & motivation
 
 **The Problem**
 - Cultivated meat manufacturing lacks real-time, molecular quality control (QC)
@@ -19,7 +19,7 @@
 - Need: rapid, affordable, predictive QC at the bioreactor
 
 **Our Solution**
-- 30-gene qPCR panel: $50–100/batch, 4–6 hour turnaround
+- 30-gene qPCR panel: $50-100/batch, 4-6 hour turnaround
 - Predicts 3 manufacturing-readiness states with 96.7% accuracy
 - Cross-species validated (bovine, porcine, human)
 
@@ -28,7 +28,7 @@ UXS1, PLOD1, MALAT1, C1D, KIF1B, UPK1B, SNHG3, C1QBP, LMNA, TOMM7, MRPL32, AEBP1
 
 ---
 
-### Column 2 (12" wide) — Methods & Results
+### Column 2 (12" wide): methods & results
 
 **Data & Clustering**
 - 239 samples: scFEA pseudobulk TPM + MetaFlux metabolic flux
@@ -45,16 +45,16 @@ UXS1, PLOD1, MALAT1, C1D, KIF1B, UPK1B, SNHG3, C1QBP, LMNA, TOMM7, MRPL32, AEBP1
 - **SHAP:** MALAT1, LMNA, CTSA, C1QBP most important
 - **Minimal panel:** 10 genes = 96.6% accuracy
 - **Noise robustness:** 94.2% accuracy at 25% CV (qPCR technical variation)
-- **Cross-species:** Bovine 92%, Porcine 88%, Human 85%
+- **Cross-species:** bovine GSE173199 92%, porcine 88%, bovine snRNA GSE240556 85%
 
 **Novel Biology**
-- 0% overlap with MSigDB hallmark, KEGG, or PanglaoDB muscle gene sets
+- 0% overlap with MSigDB hallmark, KEGG and PanglaoDB muscle gene sets
 - SP1 dominates TF network (8/30 targets)
 - C1QBP is PPI hub (degree 25)
 
 ---
 
-### Column 3 (12" wide) — Impact & Future Directions
+### Column 3 (12" wide): impact & future directions
 
 **Manufacturing Impact**
 - 5× cheaper than RNA-seq per sample
@@ -83,25 +83,25 @@ UXS1, PLOD1, MALAT1, C1D, KIF1B, UPK1B, SNHG3, C1QBP, LMNA, TOMM7, MRPL32, AEBP1
 
 ---
 
-## 15-Minute Talk Deck (Google Slides / PowerPoint Outline)
+## 15-minute talk deck (Google Slides / PowerPoint outline)
 
 ### Slide 1: Title
 - Title, authors, affiliation, GitHub QR code
 
-### Slide 2: The Gap
+### Slide 2: the gap
 - No real-time molecular QC for cultivated meat
-- RNA-seq too slow/expensive; microscopy not predictive
+- RNA-seq too slow/expensive. Microscopy not predictive
 
 ### Slide 3: Hypothesis
 - A compact gene expression panel can predict manufacturing state with >95% accuracy
 
-### Slide 4: Data & Design
+### Slide 4: data & design
 - 239 samples, multi-omic (transcriptome + fluxome)
 - 3-state clustering validated by trajectory analysis
 
-### Slide 5: The 30-Gene Panel
+### Slide 5: the 30-gene panel
 - Selection criteria: variance + biological relevance + cost
-- $50–100/batch, 4–6 hours
+- $50-100/batch, 4-6 hours
 
 ### Slide 6: Performance
 - 96.7% CV accuracy
@@ -111,34 +111,34 @@ UXS1, PLOD1, MALAT1, C1D, KIF1B, UPK1B, SNHG3, C1QBP, LMNA, TOMM7, MRPL32, AEBP1
 - SHAP top genes: MALAT1, LMNA, CTSA, C1QBP
 - Per-state expression profiles
 
-### Slide 8: Cross-Species & Atlas
-- Bovine 92%, human snRNA-seq 21/30 genes
-- Independent validation = robust biology
+### Slide 8: cross-species & atlas
+- Bovine 92%, bovine snRNA-seq 21/30 genes (GSE240556)
+- Independent validation = conserved biology
 
-### Slide 9: Minimal Panel & Robustness
+### Slide 9: minimal panel & robustness
 - 10 genes = 96.6% (matches full panel)
 - qPCR noise simulation: 94.2% at 25% CV
 
-### Slide 10: Novel Biology
+### Slide 10: novel biology
 - 0% overlap with canonical gene sets
 - SP1 network, C1QBP hub, drug predictions
 
-### Slide 11: Manufacturing & Economics
-- TEA: $0.50–2.00/sample at 10,000L scale
+### Slide 11: manufacturing & economics
+- TEA: $0.50-2.00/sample at 10,000L scale
 - 5× cheaper than RNA-seq
 
-### Slide 12: Regulatory & IP
+### Slide 12: regulatory and IP path
 - FDA + SFA fast-track pathway
-- FTO: medium risk; provisional patent recommended
+- FTO: medium risk. Provisional patent recommended
 
-### Slide 13: Live Demo
+### Slide 13: live demo
 - Streamlit dashboard or API prediction
 - Upload expression → get state + confidence
 
-### Slide 14: Impact & Future
+### Slide 14: impact & future
 - Reduce manufacturing waste
 - Accelerate cultivated meat to market
 - Open-source: github.com/barlowa124/cultivated-meat-multiomic
 
-### Slide 15: Thank You / Questions
+### Slide 15: thank you / questions
 - Contact info, QR code to repo, acknowledgments

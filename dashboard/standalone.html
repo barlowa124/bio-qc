@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cultivated Meat QC Panel</title>
+<style>
+  :root {
+    --bg: #0b1120; --panel: #111a2e; --panel-2: #0f1729;
+    --line: rgba(148,163,184,0.12); --line-strong: rgba(148,163,184,0.25);
+    --ink: #e2e8f0; --muted: #94a3b8; --faint: #64748b;
+    --teal: #2dd4bf; --teal-dim: #5eead4; --navy: #0a2540;
+    --green: #34d399; --amber: #fbbf24; --red: #f87171; --sky: #38bdf8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; color: var(--ink); font: 15px/1.55 -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Inter, Roboto, sans-serif; -webkit-font-smoothing: antialiased;
+    background:
+      radial-gradient(1100px 480px at 82% -12%, rgba(45,212,191,0.09), transparent 60%),
+      radial-gradient(900px 420px at -5% -5%, rgba(59,130,246,0.07), transparent 55%),
+      var(--bg);
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 32px 24px 64px; }
+
+  .hero {
+    background:
+      radial-gradient(circle at 92% 20%, rgba(94,234,212,0.18), transparent 50%),
+      linear-gradient(115deg, #0f2137 0%, #134e4a 100%);
+    border: 1px solid rgba(94,234,212,0.18); border-radius: 16px;
+    padding: 28px 34px; margin-bottom: 22px;
+  }
+  .eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal-dim); }
+  .hero h1 { margin: 4px 0 8px; font-size: 1.85rem; font-weight: 750; letter-spacing: -0.02em; color: #f0fdfa; }
+  .hero p { margin: 0; color: rgba(204,251,241,0.75); font-size: 0.95rem; max-width: 70ch; }
+  .hero .pills { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .pill { font-size: 0.75rem; font-weight: 600; padding: 4px 11px; border-radius: 999px;
+    background: rgba(94,234,212,0.10); border: 1px solid rgba(94,234,212,0.25); color: var(--teal-dim); }
+  .pill.gray { background: rgba(148,163,184,0.10); border-color: rgba(148,163,184,0.25); color: #cbd5e1; }
+
+  .card {
+    background: rgba(17,26,46,0.55); border: 1px solid var(--line);
+    border-radius: 14px; padding: 22px 24px; margin-bottom: 18px;
+    backdrop-filter: blur(4px);
+  }
+  h2 { margin: 0 0 4px; font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em; color: #f1f5f9; }
+  .sub { color: var(--muted); font-size: 0.85rem; margin: 0 0 16px; }
+
+  .gene-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+  @media (max-width: 1100px) { .gene-grid { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 700px) { .gene-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 480px) { .gene-grid { grid-template-columns: repeat(2, 1fr); } }
+  .gene { display: flex; flex-direction: column; gap: 4px; }
+  .gene label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em; color: var(--muted); font-family: "SF Mono", Menlo, Consolas, monospace; }
+  .gene input {
+    width: 100%; background: var(--panel-2); border: 1px solid var(--line-strong);
+    color: var(--ink); border-radius: 8px; padding: 7px 8px; font-size: 13px;
+    font-variant-numeric: tabular-nums; transition: border-color .15s, box-shadow .15s;
+  }
+  .gene input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(45,212,191,0.15); }
+
+  .actions { display: flex; gap: 10px; margin-top: 18px; align-items: center; flex-wrap: wrap; }
+  button {
+    font: inherit; font-weight: 600; cursor: pointer; border-radius: 9px;
+    padding: 9px 18px; border: 1px solid var(--line-strong);
+    background: #1b2438; color: var(--ink);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: background .15s, border-color .15s;
+  }
+  button:hover { background: #232d47; border-color: rgba(148,163,184,0.4); }
+  button.primary {
+    background: linear-gradient(180deg, #14b8a6, #0d9488); border-color: var(--teal);
+    box-shadow: 0 2px 10px rgba(20,184,166,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+    color: #f0fdfa; font-weight: 700;
+  }
+  button.primary:hover { background: linear-gradient(180deg, #2dd4bf, #14b8a6); }
+  button:disabled { opacity: 0.45; cursor: default; }
+  .hint { font-size: 0.78rem; color: var(--faint); }
+
+  .result { display: none; margin-top: 20px; }
+  .result.show { display: block; }
+  .result-grid { display: grid; grid-template-columns: 300px 1fr; gap: 18px; }
+  @media (max-width: 760px) { .result-grid { grid-template-columns: 1fr; } }
+  .state-card {
+    background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--teal);
+    border-radius: 12px; padding: 20px 22px;
+  }
+  .state-card .lab { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .state-card .state { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; margin: 4px 0 2px; }
+  .state-card .conf { color: var(--muted); font-size: 0.85rem; }
+  .prob-row { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
+  .prob-row .name { width: 150px; font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+  .prob-row .track { flex: 1; height: 22px; background: rgba(148,163,184,0.08); border-radius: 6px; overflow: hidden; }
+  .prob-row .fill { height: 100%; border-radius: 6px; transition: width .4s ease; }
+  .prob-row .val { width: 52px; text-align: right; font-size: 0.82rem; font-variant-numeric: tabular-nums; color: var(--ink); }
+
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+  .metric { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .metric .lab { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .metric .val { font-size: 1.7rem; font-weight: 800; color: var(--teal-dim); margin: 4px 0 2px; font-variant-numeric: tabular-nums; }
+  .metric .sub2 { font-size: 0.75rem; color: var(--faint); }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .chip { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 0.8rem; font-weight: 600;
+    padding: 5px 12px; border-radius: 999px; background: rgba(45,212,191,0.10);
+    border: 1px solid rgba(45,212,191,0.3); color: var(--teal-dim); }
+  .chip.rank { background: rgba(251,191,36,0.10); border-color: rgba(251,191,36,0.3); color: var(--amber); }
+
+  input[type="file"] { display: none; }
+  .dropzone {
+    border: 1.5px dashed var(--line-strong); border-radius: 12px; padding: 26px;
+    text-align: center; color: var(--muted); font-size: 0.88rem; cursor: pointer;
+    background: rgba(15,23,41,0.4); transition: border-color .15s, background .15s;
+  }
+  .dropzone:hover, .dropzone.over { border-color: var(--teal); background: rgba(45,212,191,0.05); }
+  table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 0.84rem; font-variant-numeric: tabular-nums; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+  th { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid var(--line-strong); }
+  tbody tr:hover td { background: rgba(148,163,184,0.04); }
+  .pred-chip { font-weight: 700; font-size: 0.78rem; padding: 2px 9px; border-radius: 999px; }
+
+  .foot { margin-top: 26px; color: var(--faint); font-size: 0.78rem; line-height: 1.6; border-top: 1px solid var(--line); padding-top: 16px; }
+  a { color: var(--teal-dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">Manufacturing QC · 30-Gene Panel</div>
+    <h1>Cultivated Meat QC Panel</h1>
+    <p>Manufacturing-readiness state prediction for cultivated muscle tissue. The trained logistic-regression model runs entirely in your browser. No server, no network calls.</p>
+    <div class="pills">
+      <span class="pill">CV accuracy 96.7%</span>
+      <span class="pill">Bootstrap 96.3% ± 0.8% (1000 iters)</span>
+      <span class="pill gray">239 samples · 3 states</span>
+      <span class="pill gray">In-browser inference</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Expression Input</h2>
+    <p class="sub">log TPM for each of the 30 panel genes · paste "v1, v2, ..." into the box to fill all fields at once</p>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <input id="pasteBox" type="text" placeholder="Paste 30 comma-separated values…" style="flex:1;background:var(--panel-2);border:1px solid var(--line-strong);border-radius:8px;color:var(--ink);padding:8px 12px;font:13px 'SF Mono',Menlo,monospace" />
+      <button id="pasteBtn">Fill</button>
+      <button id="resetBtn">Reset</button>
+    </div>
+    <div class="gene-grid" id="geneGrid"></div>
+    <div class="actions">
+      <button class="primary" id="predictBtn">Predict state</button>
+      <span class="hint" id="predHint">All zeros predict Terminal at ~42% confidence.</span>
+    </div>
+
+    <div class="result" id="result">
+      <div class="result-grid">
+        <div class="state-card" id="stateCard">
+          <div class="lab">Predicted state</div>
+          <div class="state" id="stateName"></div>
+          <div class="conf" id="stateConf"></div>
+        </div>
+        <div id="probBars"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Batch Scoring</h2>
+    <p class="sub">CSV with a header row containing the 30 gene names; every other row is one sample.</p>
+    <div class="dropzone" id="dropzone">Drop a CSV here, or click to browse</div>
+    <input type="file" id="csvInput" accept=".csv,text/csv" />
+    <div id="batchOut"></div>
+  </div>
+
+  <div class="card">
+    <h2>Model Evidence</h2>
+    <p class="sub">Saved evaluation artifacts. The numbers below come from the committed results files, not this browser session.</p>
+    <div class="metrics" id="metrics"></div>
+    <div style="margin-top:18px">
+      <div class="lab" style="font-size:0.7rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">Top genes by SHAP importance</div>
+      <div class="chips" id="shapChips"></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    Companion demo for "A 30-gene qPCR panel predicts manufacturing-readiness states in cultivated muscle tissue".
+    Panel cost $50-100 per batch, 4-6 h turnaround. Research and education use only. Not validated for GMP, clinical and manufacturing decisions.
+    · <a href="https://github.com/barlowa124/cultivated-meat-multiomic">github.com/barlowa124/cultivated-meat-multiomic</a>
+  </div>
+
+</div>
+
+<script>
+const MODEL = {"genes": ["UXS1", "PLOD1", "MALAT1", "C1D", "KIF1B", "XKR9", "LINC00574", "UGT8", "PPIEL", "FCRLA", "IFITM3", "PLXNA1", "UPK1B", "C11orf63", "RAB42", "HRH4", "NPC2", "AEBP1", "GLG1", "C3orf72", "APOL1", "SNHG3", "EMC1", "LMNA", "CTSA", "TOMM7", "ZNF527", "PLEKHG4B", "MRPL32", "C1QBP"], "classes": ["committed", "expansion_competent", "terminal"], "coef": [[0.134622278102982, -0.12354154612056999, -0.1692797426034234, -0.10739258838838589, 0.04146639720874049, 0.05415477245451877, 0.1625859507571985, -0.05235850891129529, 0.03480606986548464, 0.2061199567946043, -0.23882325131241963, -0.5521726302089771, -0.03369856510971971, 0.33037892071984337, 0.3006510019107464, 0.1201674752249192, -0.16753781438529966, 0.0010034098667981034, -0.1727483450054832, 0.10646715175872411, -0.014736982261652095, 0.1885279723776491, -0.18043208490956317, -0.059224850201643524, 0.19875922311622352, 0.35577775359859176, 0.03322770300742823, 0.21259822998458835, 0.05800898013692112, 0.006690850610516148], [-0.1025601441231793, 0.10118559612104587, -0.02953759853557768, -0.16561305347303085, -0.034794541711123755, -0.09302431675944481, -0.11614978527423313, -0.16889482747865683, -0.34319035692000804, -0.48754144189735776, 0.14495759320979626, 0.023348360051736065, 0.16053579701661205, -0.045119691946330684, -0.24442955742913158, -0.04786242212237419, 0.3289712312762983, -0.025379058173019126, 0.13478497052986588, 0.1316554454401117, 0.0439049400869781, 0.20949809922562526, 0.14977974272145014, -0.07055325658602983, -0.2394712740133997, 0.48704890386383154, 0.124047932790307, 0.41111612861339025, -0.26779343623642937, 0.15104967006049067], [-0.03206213397980306, 0.022355949999524147, 0.19881734113900132, 0.2730056418614168, -0.0066718554976168245, 0.038869544304925265, -0.0464361654829651, 0.22125333638995254, 0.308384287054523, 0.28142148510275417, 0.09386565810262318, 0.5288242701572418, -0.1268372319068931, -0.2852592287735134, -0.056221444481615, -0.07230505310254483, -0.16143341689099855, 0.02437564830622101, 0.03796337447561682, -0.23812259719883552, -0.029167957825325757, -0.3980260716032744, 0.030652342188112955, 0.1297781067876736, 0.040712050897176236, -0.8428266574624239, -0.15727563579773543, -0.6237143585979782, 0.20978445609950813, -0.15774052067100675]], "intercept": [0.33515812048875526, -0.32614596875963914, -0.009012151729115632], "mean": [1.3916285867989062, 1.8545328411832451, 1.3981703949719668, 1.8335208441317081, 1.4815563238412142, 1.76060894690454, 1.4619980158656836, 1.838020525313914, 1.3266580059379338, 1.6124346973747015, 1.676080944389105, 1.9122413976863026, 1.8123084980994464, 1.4321960352361203, 1.7544386169314385, 2.0262884590029717, 1.6023562008142471, 1.6052310025691987, 1.6503223095834256, 1.6382005855441093, 1.6444941002875566, 1.7912443418800832, 1.5359066799655556, 1.4759226559102536, 2.1569962786883115, 2.018028061389923, 1.6159787467122078, 1.3296849267929793, 1.7968835110962391, 2.5386300398409367], "scale": [1.274578229059384, 2.6243194684426694, 1.5082554289082366, 2.059685344687204, 1.492242517097926, 2.0729903733290027, 1.5696940315487253, 2.7206232310338905, 1.325693851494252, 1.551875243531001, 1.9388187210874535, 2.088102555316756, 2.047797268282411, 1.889569757653484, 2.2673019665601175, 5.131674001739217, 2.501176166854344, 1.660951306278769, 1.742405070660385, 1.793878018949338, 1.7193321795959164, 2.230451761621737, 1.7752239116992863, 1.6640712670686748, 2.570346099090493, 3.720217236513573, 1.6824603476403004, 1.3611845219400844, 2.3912922858266152, 5.102507753677039]};
+
+const SHAP_TOP = ["LMNA", "PLOD1", "C1QBP"];
+const EVIDENCE = [
+  {lab: "CV accuracy", val: "96.7%", sub: "cross-validated, 30 genes"},
+  {lab: "Bootstrap", val: "96.3%", sub: "± 0.8% · 1000 iterations"},
+  {lab: "Samples", val: "239", sub: "61 expansion · 86 committed · 92 terminal"},
+  {lab: "DNN CV", val: "96.2%", sub: "± 1.5% CV. Held-out test 75%"},
+];
+const STATE_COLORS = { committed: "#fbbf24", expansion_competent: "#34d399", terminal: "#f87171" };
+const label = s => s.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+
+// ---- inference ----
+function predictProba(vals) {
+  const xs = vals.map((v, i) => (v - MODEL.mean[i]) / MODEL.scale[i]);
+  const logits = MODEL.coef.map((row, k) =>
+    row.reduce((a, c, j) => a + c * xs[j], MODEL.intercept[k]));
+  const mx = Math.max(...logits);
+  const ex = logits.map(l => Math.exp(l - mx));
+  const Z = ex.reduce((a, b) => a + b);
+  return ex.map(e => e / Z);
+}
+
+// ---- gene inputs ----
+const grid = document.getElementById("geneGrid");
+const inputs = MODEL.genes.map(g => {
+  const d = document.createElement("div");
+  d.className = "gene";
+  d.innerHTML = `<label>${g}</label><input type="number" step="0.1" value="0" />`;
+  grid.appendChild(d);
+  return d.querySelector("input");
+});
+const readVals = () => inputs.map(i => parseFloat(i.value) || 0);
+
+document.getElementById("resetBtn").onclick = () => inputs.forEach(i => i.value = 0);
+document.getElementById("pasteBtn").onclick = () => {
+  const parts = document.getElementById("pasteBox").value.split(/[\s,;]+/).filter(Boolean);
+  if (parts.length !== 30) { alert(`Expected 30 values, got ${parts.length}`); return; }
+  parts.forEach((v, i) => inputs[i].value = v);
+};
+
+// ---- single predict ----
+document.getElementById("predictBtn").onclick = () => {
+  const probs = predictProba(readVals());
+  const k = probs.indexOf(Math.max(...probs));
+  const cls = MODEL.classes[k];
+  const color = STATE_COLORS[cls] || "#38bdf8";
+  document.getElementById("result").classList.add("show");
+  document.getElementById("stateCard").style.borderLeftColor = color;
+  const sn = document.getElementById("stateName");
+  sn.textContent = label(cls); sn.style.color = color;
+  document.getElementById("stateConf").textContent = `confidence ${(probs[k] * 100).toFixed(1)}%`;
+  document.getElementById("probBars").innerHTML = MODEL.classes.map((c, i) => `
+    <div class="prob-row">
+      <div class="name">${label(c)}</div>
+      <div class="track"><div class="fill" style="width:${(probs[i] * 100).toFixed(1)}%;background:${STATE_COLORS[c]}"></div></div>
+      <div class="val">${(probs[i] * 100).toFixed(1)}%</div>
+    </div>`).join("");
+};
+
+// ---- batch CSV ----
+const dz = document.getElementById("dropzone"), fi = document.getElementById("csvInput");
+dz.onclick = () => fi.click();
+dz.ondragover = e => { e.preventDefault(); dz.classList.add("over"); };
+dz.ondragleave = () => dz.classList.remove("over");
+dz.ondrop = e => { e.preventDefault(); dz.classList.remove("over"); handleCsv(e.dataTransfer.files[0]); };
+fi.onchange = () => fi.files[0] && handleCsv(fi.files[0]);
+
+function parseCsv(text) {
+  const rows = [];
+  for (const line of text.split(/\r?\n/)) {
+    if (!line.trim()) continue;
+    const cells = []; let cur = "", q = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (q) { if (ch === '"' && line[i+1] === '"') { cur += '"'; i++; } else if (ch === '"') q = false; else cur += ch; }
+      else if (ch === '"') q = true;
+      else if (ch === ",") { cells.push(cur); cur = ""; }
+      else cur += ch;
+    }
+    cells.push(cur); rows.push(cells);
+  }
+  return rows;
+}
+
+function handleCsv(file) {
+  const out = document.getElementById("batchOut");
+  file.text().then(text => {
+    const rows = parseCsv(text);
+    if (rows.length < 2) { out.innerHTML = "<p class='sub'>No data rows found.</p>"; return; }
+    const header = rows[0].map(h => h.trim());
+    const idx = MODEL.genes.map(g => header.indexOf(g));
+    const missing = MODEL.genes.filter((_, i) => idx[i] < 0);
+    if (missing.length) { out.innerHTML = `<p class='sub' style="color:var(--amber)">Missing ${missing.length} gene columns: ${missing.join(", ")}</p>`; return; }
+    const results = rows.slice(1).map(r => {
+      const probs = predictProba(idx.map(i => parseFloat(r[i]) || 0));
+      const k = probs.indexOf(Math.max(...probs));
+      return { row: r, pred: MODEL.classes[k], conf: probs[k] };
+    });
+    out.innerHTML = `<table><thead><tr><th>#</th><th>Prediction</th><th>Confidence</th></tr></thead>
+      <tbody>${results.map((r, i) => `<tr><td>${i + 1}</td>
+        <td><span class="pred-chip" style="color:${STATE_COLORS[r.pred]};background:${STATE_COLORS[r.pred]}22">${label(r.pred)}</span></td>
+        <td>${(r.conf * 100).toFixed(1)}%</td></tr>`).join("")}</tbody></table>
+      <div class="actions"><button id="dlBtn">Download CSV</button><span class="hint">${results.length} samples scored</span></div>`;
+    document.getElementById("dlBtn").onclick = () => {
+      const csv = header.join(",") + ",prediction,confidence\n" +
+        results.map(r => r.row.join(",") + `,${r.pred},${r.conf.toFixed(4)}`).join("\n");
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+      a.download = "predictions.csv"; a.click(); URL.revokeObjectURL(a.href);
+    };
+  });
+}
+
+// ---- evidence cards ----
+document.getElementById("metrics").innerHTML = EVIDENCE.map(m => `
+  <div class="metric"><div class="lab">${m.lab}</div><div class="val">${m.val}</div><div class="sub2">${m.sub}</div></div>`).join("");
+document.getElementById("shapChips").innerHTML =
+  SHAP_TOP.map((g, i) => `<span class="chip ${i === 0 ? "rank" : ""}">${i + 1} · ${g}</span>`).join("");
+</script>
+</body>
+</html>

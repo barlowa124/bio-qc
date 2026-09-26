@@ -45,7 +45,7 @@ fig = px.scatter(df, x="UMAP1", y="UMAP2", color="State",
                  labels={"State": "Cell State"},
                  hover_data={"UMAP1": ":.2f", "UMAP2": ":.2f"})
 fig.update_layout(width=800, height=600, template="plotly_white")
-fig.write_html(FIGS / "fig1_state_map.html")
+fig.write_html(FIGS / "fig1_state_map.html", include_plotlyjs="cdn")
 print("  Saved fig1_state_map.html")
 
 # ── Figure 2: QC Panel Performance ──
@@ -61,7 +61,7 @@ fig = go.Figure(data=[
 fig.update_layout(title="30-Gene QC Panel: Cross-Validation Performance",
                   yaxis_title="Accuracy", yaxis_range=[0.85, 1.0], template="plotly_white",
                   width=800, height=500)
-fig.write_html(FIGS / "fig2_qc_performance.html")
+fig.write_html(FIGS / "fig2_qc_performance.html", include_plotlyjs="cdn")
 print("  Saved fig2_qc_performance.html")
 
 # ── Figure 3: SHAP Gene Importance ──
@@ -85,12 +85,12 @@ if "shap_dnn_results" in results:
                          labels={"importance": "Mean |SHAP| Value (relative)", "gene": "Gene"},
                          color="importance", color_continuous_scale="Viridis")
         fig.update_layout(width=700, height=600, template="plotly_white")
-        fig.write_html(FIGS / "fig3_shap_importance.html")
+        fig.write_html(FIGS / "fig3_shap_importance.html", include_plotlyjs="cdn")
         print("  Saved fig3_shap_importance.html")
 
 # ── Figure 4: Cross-Species Validation ──
 print("\n--- Fig 4: Cross-Species ---")
-species = ["Bovine\n(GSE173199)", "Porcine", "Human\n(GSE240556)"]
+species = ["Bovine\n(GSE173199)", "Porcine\n(GSE206914)", "Bovine snRNA\n(GSE240556)"]
 acc = [0.92, 0.88, 0.85]
 n_samples = [38, 45, 17541]
 fig = make_subplots(specs=[[{"secondary_y": True}]])
@@ -100,7 +100,7 @@ fig.add_trace(go.Scatter(x=species, y=n_samples, name="N Samples", mode="markers
 fig.update_layout(title="Cross-Species Panel Validation", template="plotly_white", width=700, height=500)
 fig.update_yaxes(title_text="Accuracy", secondary_y=False, range=[0.7, 1.0])
 fig.update_yaxes(title_text="Number of Samples", secondary_y=True)
-fig.write_html(FIGS / "fig4_cross_species.html")
+fig.write_html(FIGS / "fig4_cross_species.html", include_plotlyjs="cdn")
 print("  Saved fig4_cross_species.html")
 
 # ── Figure 5: Noise Robustness ──
@@ -121,7 +121,7 @@ if "literature_drug_panel_noise" in results:
                       labels={"x": "Coefficient of Variation (%)", "y": "Accuracy"})
         fig.update_traces(line=dict(color="#e74c3c", width=3), marker=dict(size=10))
         fig.update_layout(width=700, height=500, template="plotly_white", yaxis_range=[0.8, 1.0])
-        fig.write_html(FIGS / "fig5_noise_robustness.html")
+        fig.write_html(FIGS / "fig5_noise_robustness.html", include_plotlyjs="cdn")
         print("  Saved fig5_noise_robustness.html")
 
 # ── Figure 6: Drug Prediction Scores ──
@@ -145,7 +145,7 @@ if "literature_drug_panel_noise" in results:
                      title="LINCS/Connectivity Map Drug Predictions",
                      color_discrete_sequence=px.colors.qualitative.Set2)
         fig.update_layout(width=800, height=700, template="plotly_white")
-        fig.write_html(FIGS / "fig6_drug_predictions.html")
+        fig.write_html(FIGS / "fig6_drug_predictions.html", include_plotlyjs="cdn")
         print("  Saved fig6_drug_predictions.html")
 
 # ── Figure 7: TEA Sensitivity ──
@@ -159,14 +159,14 @@ if tea and "sensitivity" in tea:
                   labels={"panel_cost_per_batch": "Panel Cost ($/batch)", "cost_per_sample": "Cost per Sample ($)"})
     fig.update_traces(line=dict(color="#2ecc71", width=3), marker=dict(size=10))
     fig.update_layout(width=700, height=500, template="plotly_white")
-    fig.write_html(FIGS / "fig7_tea_sensitivity.html")
+    fig.write_html(FIGS / "fig7_tea_sensitivity.html", include_plotlyjs="cdn")
     print("  Saved fig7_tea_sensitivity.html")
 
 # ── Figure 8: PPI Network (basic) ──
 print("\n--- Fig 8: PPI Network ---")
 if "tf_ppi_results" in results:
     ppi = results["tf_ppi_results"]["ppi_network"]
-    edges = ppi.get("edges", [])
+    edges = ppi.get("interactions", ppi.get("edges", []))
     if edges:
         nodes = list(set([e["source"] for e in edges[:50]] + [e["target"] for e in edges[:50]]))
         fig = go.Figure(data=go.Scatter(
@@ -183,7 +183,7 @@ if "tf_ppi_results" in results:
                     mode="lines", line=dict(color="lightgray", width=1), showlegend=False, hoverinfo="skip"
                 ))
         fig.update_layout(title="PPI Network (top 50 edges)", template="plotly_white", width=800, height=600)
-        fig.write_html(FIGS / "fig8_ppi_network.html")
+        fig.write_html(FIGS / "fig8_ppi_network.html", include_plotlyjs="cdn")
         print("  Saved fig8_ppi_network.html")
 
 # ── Figure 9: Batch Correction Benchmark ──
@@ -204,7 +204,7 @@ if bc:
                       showlegend=False, width=900, height=450)
     fig.update_yaxes(title_text="Accuracy", row=1, col=1, range=[0, 1])
     fig.update_yaxes(title_text="Batch Mixing", row=1, col=2, range=[0, 1])
-    fig.write_html(FIGS / "fig9_batch_correction.html")
+    fig.write_html(FIGS / "fig9_batch_correction.html", include_plotlyjs="cdn")
     print("  Saved fig9_batch_correction.html")
 
 # ── Figure 10: Pathway Enrichment Dot Plot ──
@@ -230,7 +230,7 @@ if pe:
                      color_continuous_scale="RdYlBu_r", size_max=25, height=600)
     fig.update_layout(template="plotly_white", width=1100)
     fig.update_yaxes(tickfont=dict(size=10))
-    fig.write_html(FIGS / "fig10_pathway_enrichment.html")
+    fig.write_html(FIGS / "fig10_pathway_enrichment.html", include_plotlyjs="cdn")
     print("  Saved fig10_pathway_enrichment.html")
 
 # ── Figure 11: Cross-Platform Validation Heatmap ──
@@ -250,7 +250,7 @@ if cp:
     ])
     fig.update_layout(title="Cross-Platform Gene Expression Concordance (Pearson r)", template="plotly_white",
                       yaxis_title="Mean Gene Correlation", yaxis_range=[0.9, 1.0], width=700, height=450)
-    fig.write_html(FIGS / "fig11_cross_platform.html")
+    fig.write_html(FIGS / "fig11_cross_platform.html", include_plotlyjs="cdn")
     print("  Saved fig11_cross_platform.html")
 
     # Also generate gene bias heatmap
@@ -263,7 +263,7 @@ if cp:
                         title="Gene Expression Bias Across Platforms (log TPM, top 20 genes)",
                         color_continuous_scale="Viridis", height=700)
         fig.update_layout(template="plotly_white", width=500)
-        fig.write_html(FIGS / "fig11b_platform_heatmap.html")
+        fig.write_html(FIGS / "fig11b_platform_heatmap.html", include_plotlyjs="cdn")
         print("  Saved fig11b_platform_heatmap.html")
 
 # ── Summary ──

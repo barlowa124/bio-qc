@@ -1,8 +1,8 @@
-# Cultivated Meat Multi-Omic Analysis Pipeline
+# Cultivated meat multi-omic analysis pipeline
 
-## A Manufacturing-Readiness State Map with 30-Gene qPCR QC Panel
+## A manufacturing-readiness state map with 30-gene qPCR QC panel
 
-**barlowa124** — developed independently while affiliated with the Rao Lab, North Carolina State University; the lab is not an author
+**barlowa124**. Developed independently while affiliated with the Rao Lab, North Carolina State University. The lab is not an author
 
 ---
 
@@ -13,7 +13,7 @@
 | Multi-omic state map accuracy | **96.7%** (5-fold CV) |
 | 30-gene panel accuracy | **96.7%** ± 1.0% |
 | Cross-species validation | Bovine 3-state conservation confirmed |
-| snRNA-seq validation | 17,541 nuclei, 21/30 panel genes detected |
+| snRNA-seq validation | 17,541 bovine nuclei, 21/30 panel genes detected |
 | Bayesian confidence | 97.9% confident assignments |
 | Assay cost | \$50-100/batch |
 | Turnaround time | 4-6 hours |

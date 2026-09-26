@@ -150,7 +150,6 @@ Additional exploratory scripts (illustrative only): `patent_claims.py`, `patent_
 | Fig 5 | Noise Robustness (CV vs accuracy) | `docs/figures/fig5_noise_robustness.html` |
 | Fig 6 | Drug Prediction Scores (LINCS/CMap) | `docs/figures/fig6_drug_predictions.html` |
 | Fig 7 | Techno-Economic Sensitivity | `docs/figures/fig7_tea_sensitivity.html` |
-| Fig 8 | PPI Network Visualization | `docs/figures/fig8_ppi_network.html` |
 | Fig 9 | Batch Correction Benchmark | `docs/figures/fig9_batch_correction.html` |
 | Fig 10 | Pathway Enrichment Dot Plot | `docs/figures/fig10_pathway_enrichment.html` |
 | Fig 11 | Cross-Platform Comparison | `docs/figures/fig11_cross_platform.html` |
