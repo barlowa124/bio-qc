@@ -132,7 +132,7 @@ cultivated_meat_projects/
 | Conformal Prediction | 91.2% coverage, 78% singleton sets |
 | Adversarial Robustness | FGSM perturbation (epsilon 0.01–0.1) stability |
 | Pareto Optimization | Cost-accuracy-gene count tradeoff front |
-| CRISPR Screen Mining | DepMap essentiality scores for 7/30 genes |
+| CRISPR Screen Mining | Panel-overlap workflow on *simulated* DepMap-style scores (`crispr_screen_mining.py` seeds np.random — wiring real DepMap/Avana data is a TODO; treat scores as demo only) |
 | Alternative Splicing | Isoform ratio state discrimination (12/30 genes) |
 | Reference Atlas | Human Protein Atlas outlier flagging |
 | Concept Drift | KS-test + Mahalanobis monthly retraining triggers |
