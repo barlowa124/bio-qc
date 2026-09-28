@@ -71,6 +71,8 @@ uvicorn cytof_qc.service:app --port 8000           # http://127.0.0.1:8000
 ```
 
 or `docker build -t cytof-qc . && docker run -p 8000:8000 cytof-qc`.
+CI also publishes the image: `docker run -p 8000:8000
+ghcr.io/barlowa124/cytof-qc:latest`.
 
 Uploaded data has no manual gates, so the service reports descriptive
 QC and cluster structure only — never agreement metrics it cannot

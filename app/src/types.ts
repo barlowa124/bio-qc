@@ -20,9 +20,11 @@ export interface Report {
   qc_only_channels: string[];
   n_clusters_found: number;
   cluster_sizes: Record<string, number>;
+  cluster_profiles: Record<string, Record<string, number>>;
   embedding: number[][];
   embedding_clusters: (string | number)[];
   channels: Record<string, ChannelQc>;
   acquisition_drift: Record<string, DriftQc> | Record<string, Record<string, DriftQc>>;
+  timing?: { load_ms: number; analyze_ms: number };
   scope: string;
 }

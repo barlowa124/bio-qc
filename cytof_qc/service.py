@@ -55,6 +55,14 @@ def analyze_events(events: pd.DataFrame) -> dict:
     clusters = adata.obs["cluster"].to_numpy()
     embed = adata.obsm["X_umap"]
 
+    # what defines each cluster: per-channel median arcsinh intensity,
+    # so the report answers "which markers are these" not just "how many"
+    labeled = transformed[channels].assign(cluster=clusters)
+    profiles = {
+        str(cl): {ch: round(float(v), 3) for ch, v in row.items()}
+        for cl, row in labeled.groupby("cluster")[channels].median().iterrows()
+    }
+
     # the browser renders a deterministic subsample; full clusters are
     # reported in the counts table either way
     if len(embed) > MAX_EMBED_POINTS:
@@ -75,6 +83,7 @@ def analyze_events(events: pd.DataFrame) -> dict:
         },
         "embedding": embed[keep].astype(float).tolist(),
         "embedding_clusters": clusters[keep].tolist(),
+        "cluster_profiles": profiles,
         "channels": channel_report,
         "acquisition_drift": drift_report,
         "scope": (
@@ -110,7 +119,7 @@ def create_app():
     the web-framework import cost."""
     from typing import List
 
-    from fastapi import FastAPI, File, UploadFile
+    from fastapi import FastAPI, File, Request, UploadFile
     from fastapi.middleware.cors import CORSMiddleware
     from fastapi.responses import FileResponse, JSONResponse
     from fastapi.staticfiles import StaticFiles
@@ -134,6 +143,9 @@ def create_app():
             "status": response.status_code,
             "ms": round((time.time() - start) * 1000),
         }
+        n_events = getattr(request.state, "n_events", None)
+        if n_events is not None:
+            entry["n_events"] = n_events
         try:
             with _REQUEST_LOG.open("a") as fh:
                 fh.write(json.dumps(entry) + "\n")
@@ -153,11 +165,16 @@ def create_app():
         return JSONResponse({"service": "cytof-qc", "docs": "/docs"})
 
     @app.post("/api/analyze")
-    async def analyze(files: List[UploadFile] = File(...)):
+    async def analyze(
+        request: Request, files: List[UploadFile] = File(...)
+    ):
         if not files or len(files) > MAX_UPLOAD_FILES:
             return JSONResponse(
                 {"error": f"upload 1–{MAX_UPLOAD_FILES} files"}, status_code=400
             )
+        # stage timing goes into the request log and the response, so
+        # "analyze took 40s" is attributable to parse vs cluster vs embed
+        t_load = time.time()
         frames = []
         for f in files:
             body = await f.read()
@@ -165,8 +182,16 @@ def create_app():
                 frames.append(_load_uploaded(f.filename or "upload", body))
             except Exception as exc:
                 return JSONResponse({"error": str(exc)}, status_code=400)
+        load_ms = round((time.time() - t_load) * 1000)
         try:
-            return analyze_events(pd.concat(frames, ignore_index=True))
+            t_analyze = time.time()
+            report = analyze_events(pd.concat(frames, ignore_index=True))
+            report["timing"] = {
+                "load_ms": load_ms,
+                "analyze_ms": round((time.time() - t_analyze) * 1000),
+            }
+            request.state.n_events = report["n_events"]
+            return report
         except ValueError as exc:
             return JSONResponse({"error": str(exc)}, status_code=400)
 

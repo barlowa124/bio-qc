@@ -38,6 +38,58 @@ function DriftTable({ drift }: { drift: Report['acquisition_drift'] }) {
   );
 }
 
+function ClusterProfiles({ report }: { report: Report }) {
+  const channels = report.phenotypic_channels;
+  const clusters = Object.keys(report.cluster_profiles).sort(
+    (a, b) => Number(a) - Number(b)
+  );
+  // per-channel range normalization so each column reads as its own scale
+  const maxOf: Record<string, number> = {};
+  for (const ch of channels) {
+    maxOf[ch] = Math.max(
+      ...clusters.map((c) => report.cluster_profiles[c][ch] ?? 0)
+    ) || 1;
+  }
+  return (
+    <section>
+      <h3>Cluster marker profiles (median arcsinh)</h3>
+      <table className="heatmap">
+        <thead>
+          <tr>
+            <th>cluster</th>
+            {channels.map((ch) => (
+              <th key={ch}>{ch}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {clusters.map((c) => (
+            <tr key={c}>
+              <td>
+                {c} ({report.cluster_sizes[c]?.toLocaleString()})
+              </td>
+              {channels.map((ch) => {
+                const v = report.cluster_profiles[c][ch] ?? 0;
+                const t = Math.min(1, v / maxOf[ch]);
+                return (
+                  <td
+                    key={ch}
+                    style={{
+                      background: `rgba(78, 121, 167, ${(0.08 + 0.75 * t).toFixed(2)})`,
+                    }}
+                  >
+                    {v.toFixed(1)}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  );
+}
+
 export function ReportView({ report }: { report: Report }) {
   const channelRows = Object.entries(report.channels);
   const flaggedChannels = channelRows.filter(
@@ -51,6 +103,11 @@ export function ReportView({ report }: { report: Report }) {
           {report.n_clusters_found} clusters · {report.n_channels} markers
         </h2>
         <p className="scope">{report.scope}</p>
+        {report.timing && (
+          <p className="scope">
+            analyzed in {(report.timing.analyze_ms / 1000).toFixed(1)}s
+          </p>
+        )}
       </header>
 
       <section>
@@ -60,6 +117,8 @@ export function ReportView({ report }: { report: Report }) {
           clusters={report.embedding_clusters}
         />
       </section>
+
+      <ClusterProfiles report={report} />
 
       <DriftTable drift={report.acquisition_drift} />
 
