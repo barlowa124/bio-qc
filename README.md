@@ -63,3 +63,7 @@ demonstrates the standard analysis path (FCS -> transform -> QC ->
 cluster -> compare to gates) but is not validated against a clinical or
 production gating workflow, and the Leiden clustering is intentionally
 unoptimized: no marker weighting and no per-population tuning.
+
+## Related work
+
+- [organoid-qc](https://github.com/barlowa124/organoid-qc) runs the same AnnData/scanpy path (transform, cluster, compare to reference labels) on organoid fidelity instead of gated CyTOF populations.
