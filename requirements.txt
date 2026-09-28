@@ -10,3 +10,9 @@ scanpy==1.10.3
 scikit-learn==1.6.1
 scipy==1.13.1
 seaborn==0.13.2
+
+# web service surface (cytof_qc/service.py) — not needed for the pipeline
+fastapi==0.115.12
+uvicorn==0.34.2
+python-multipart==0.0.20
+httpx==0.28.1

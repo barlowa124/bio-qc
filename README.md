@@ -57,8 +57,25 @@ pip install -r requirements.txt
 bash scripts/fetch_data.sh                            # both panels
 python -m cytof_qc.pipeline --panel levine_13dim      # writes results/levine_13dim/
 python -m cytof_qc.pipeline --panel levine_32dim      # writes results/levine_32dim/
-python -m pytest tests/ -q                            # 22 tests
+python -m pytest tests/ -q                            # 35 tests
 ```
+
+### Web service
+
+Upload `.fcs` or `.csv` events and get channel QC, drift flags, and
+Leiden clusters with a UMAP view:
+
+```bash
+cd app && npm install && npm run build && cd ..    # build the React app once
+uvicorn cytof_qc.service:app --port 8000           # http://127.0.0.1:8000
+```
+
+or `docker build -t cytof-qc . && docker run -p 8000:8000 cytof-qc`.
+
+Uploaded data has no manual gates, so the service reports descriptive
+QC and cluster structure only — never agreement metrics it cannot
+support. Requests are logged to `service_requests.jsonl` (path, status,
+latency; no payload data).
 
 ## Layout
 
@@ -79,6 +96,9 @@ python -m pytest tests/ -q                            # 22 tests
 - `cytof_qc/mapping.py`: ARI/NMI, contingency table, Hungarian
   cluster-to-population matching, per-population recall/purity.
 - `cytof_qc/pipeline.py`: the whole run and figure output.
+- `cytof_qc/service.py` + `app/`: FastAPI upload endpoint and a
+  React/TypeScript report viewer (canvas-rendered UMAP, channel QC and
+  drift tables). Docker build bundles both.
 
 ## Honest scope
 
