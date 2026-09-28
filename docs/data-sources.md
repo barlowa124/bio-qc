@@ -16,17 +16,17 @@ are fixture values, never biological findings.
 `organoid_qc.data.fetch`: a subsample of the human intestine organoid cell
 atlas (dataset `776a1e4a…`, 353k cells) and a reference slice of human
 small/large-intestinal tissue filtered to the panel's cell types. Sample
-sizes, census version, and filters are under `fetch:` in config. The run
+sizes, census version and filters are under `fetch:` in config. The run
 is reproducible modulo census version (pinned).
 
 Notes from the real run:
 
-- Census obs filters scan the full human obs table (~75M cells); the data
+- Census obs filters scan the full human obs table (~75M cells). The data
   stage takes ~25 min. Subsequent stages take seconds.
-- Cell-type labels are census-normalized, not the atlas's own labels —
-  e.g. intestinal stem cells are `stem cell`, not `intestinal stem cell`.
+- Cell-type labels are census-normalized, not the atlas's own labels.
+  For example, intestinal stem cells are `stem cell`, not `intestinal stem cell`.
   Check `reference.obs.cell_type.value_counts()` before writing a panel.
-- Census `var` indexes by Ensembl `feature_id`; `fetch.py` renames vars to
+- Census `var` indexes by Ensembl `feature_id`. `fetch.py` renames vars to
   HGNC `feature_name` so config marker panels resolve.
 
 ## Real data: h5ad mode
@@ -43,7 +43,7 @@ Practical sources:
 - **CELLxGENE Census** (`cellxgene-census` package): query human tissue by
   `tissue`/`cell_type`, export `.h5ad` slices. Curated, consistently
   annotated, the best reference source.
-- **GEO**: organoid atlas papers deposit count matrices + metadata; assemble
+- **GEO**: organoid atlas papers deposit count matrices + metadata. Assemble
   into AnnData. Check each study's own cell-type labels before merging.
 - **Human Cell Atlas data portal**: larger reference collections, more
   assembly work.

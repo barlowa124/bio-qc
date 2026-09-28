@@ -22,7 +22,7 @@ uv venv --python 3.11 && uv pip install -e ".[dev]"
 Runs the deterministic **demo dataset** (synthetic organoid with known
 ground truth: one missing cell type, one aberrant population) and writes:
 
-- `results/fidelity.json` - per-cluster mappings, aggregate scores, and flags
+- `results/fidelity.json` - per-cluster mappings, aggregate scores and flags
 - `results/umap.png` - joint embedding, organoid cells colored mapped/unmapped
 
 To score real data, set `dataset.mode: h5ad` in `config/config.yaml` and
@@ -75,7 +75,7 @@ triplicate with vehicle-only control columns. `simulate.py` runs it
 through the official Protocol Engine simulator, producing an audited
 liquid-handling run log (278 steps: every aspirate/dispense/blow-out).
 The same file runs on the physical robot. The tests assert step counts,
-dose volumes, well mapping, and that control columns stay untouched.
+dose volumes, well mapping and that control columns stay untouched.
 Requires `pip install -e .[automation]`.
 
 ## Structure

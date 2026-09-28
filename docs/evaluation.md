@@ -16,7 +16,7 @@ Aggregate:
 - **per_type_marker_detection**: fraction of each type's expected marker
   panel detected in its best-matching organoid cluster. Catches immature
   phenotypes that map by profile but lack markers.
-- **qc_flags / qc_pass**: each signal vs its config threshold; the run
+- **qc_flags / qc_pass**: each signal vs its config threshold. The run
   passes only if all pass.
 
 ## What a pass does NOT mean
@@ -24,16 +24,16 @@ Aggregate:
 - Not functional equivalence. Transcriptome correlation says nothing about
   barrier function, secretion, morphology, or response to stimulus.
 - Not batch-comparable across datasets. Scores depend on the reference
-  composition, sequencing depth, and preprocessing choices. Compare
+  composition, sequencing depth and preprocessing choices. Compare
   cultures scored against the *same* reference with the *same* config.
 - Not a release criterion. This is a research QC signal for flagging
   cultures worth investigating, not a gate.
 
 ## Known failure modes
 
-- Leiden resolution changes cluster granularity and therefore mapping;
+- Leiden resolution changes cluster granularity and therefore mapping.
   it is config-controlled, not tuned per-run.
 - Correlation-to-centroid assumes reference types are transcriptionally
-  distinct; subtypes within one reference label blur into one centroid.
-- Marker detection thresholds on mean expression are sensitive to dropout;
+  distinct. Subtypes within one reference label blur into one centroid.
+- Marker detection thresholds on mean expression are sensitive to dropout.
   a sparse cluster can under-report markers it expresses.
