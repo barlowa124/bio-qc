@@ -95,3 +95,7 @@ docs/                   data sources, evaluation semantics
 ```
 
 MIT licensed.
+
+## Related work
+
+- [cytof-qc](https://github.com/barlowa124/cytof-qc) applies the same AnnData/scanpy pipeline shape to mass-cytometry gates; its per-population agreement table is the same "report per cluster, not pooled" discipline this repo applies to fidelity scores.
