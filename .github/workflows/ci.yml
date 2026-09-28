@@ -26,7 +26,9 @@ jobs:
       - name: Type check with mypy
         run: mypy notebooks/ --ignore-missing-imports || true
       - name: Generate CI fixtures
-        run: python ci_fixtures.py
+        run: |
+          python ci_fixtures.py
+          git diff --exit-code -- api/app.py
       - name: Run tests
         run: pytest tests/ -v --tb=short
       - name: Verify API artifacts exist

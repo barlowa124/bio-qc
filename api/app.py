@@ -11,11 +11,11 @@ meta = json.load(open(API_DIR / "model_metadata.json"))
 
 @app.route("/")
 def index():
-    return jsonify({"service": "Cultivated Meat 30-Gene QC Panel", "genes": meta["genes"], "states": meta["classes"], "endpoints": {"/predict": "POST gene expression values", "/health": "GET health check"}})
+    return jsonify({"service": "Cultivated Meat 30-Gene QC Panel", "genes": meta["genes"], "states": meta["classes"], "data_source": meta.get("data_source", "unverified"), "endpoints": {"/predict": "POST gene expression values", "/health": "GET health check"}})
 
 @app.route("/health")
 def health():
-    return jsonify({"status": "healthy", "model_accuracy": 0.967})
+    return jsonify({"status": "healthy", "model_accuracy": None, "data_source": meta.get("data_source", "unverified")})
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -36,7 +36,7 @@ def predict():
     expr_scaled = scaler.transform(expr)
     probs = model.predict_proba(expr_scaled)[0]
     pred = model.classes_[probs.argmax()]
-    return jsonify({"prediction": pred, "probabilities": {model.classes_[i]: float(p) for i, p in enumerate(probs)}, "confidence": float(probs.max())})
+    return jsonify({"prediction": pred, "probabilities": {model.classes_[i]: float(p) for i, p in enumerate(probs)}, "confidence": float(probs.max()), "data_source": meta.get("data_source", "unverified")})
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=False)
