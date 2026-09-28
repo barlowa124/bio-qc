@@ -77,7 +77,18 @@ cd api && pip install -r requirements.txt && python app.py
 # local/research use and is not a hardened service.
 ```
 
-### Docker
+### React web app
+
+`web/` holds the production frontend, a Vite + React + TypeScript app backed by the Flask API.
+
+```bash
+cd web
+npm install
+npm run dev    # http://localhost:5173 — proxies /api/* to 127.0.0.1:5000
+npm run build  # production bundle in web/dist/
+```
+
+Set `VITE_API_BASE` to point a built bundle at a non-proxied API (the API answers CORS only for loopback origins). `dashboard/app.py` (Streamlit) remains as the internal analysis dashboard. `dashboard/standalone.html` is the zero-dependency single-file variant with embedded weights.
 
 ```bash
 docker build -t cultivated-meat .
@@ -100,6 +111,8 @@ cultivated_meat_projects/
 │   ├── app.py                     # Server
 │   ├── model.pkl                  # Trained model
 │   └── test_client.py             # Test client
+├── web/                       # React/TypeScript production UI
+├── dashboard/                 # Streamlit dashboard + standalone.html variant
 ├── docs/                      # Jupyter Book documentation
 ├── cross_species_validation/  # Bovine/porcine GEO data
 ├── p2_state_map/output/       # State-map results, figures, reports

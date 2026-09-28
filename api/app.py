@@ -5,6 +5,21 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 API_DIR = Path(__file__).parent
+
+# CORS: the API binds 127.0.0.1, so only same-machine browser pages can reach it.
+# Reflect loopback origins (vite dev server, file:// has no origin and gets none).
+from urllib.parse import urlparse
+
+@app.after_request
+def add_cors(response):
+    origin = request.headers.get("Origin", "")
+    host = urlparse(origin).hostname or ""
+    if host in ("127.0.0.1", "localhost", "::1"):
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Vary"] = "Origin"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    return response
 model = pickle.load(open(API_DIR / "model.pkl", "rb"))
 scaler = pickle.load(open(API_DIR / "scaler.pkl", "rb"))
 meta = json.load(open(API_DIR / "model_metadata.json"))
