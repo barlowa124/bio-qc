@@ -204,6 +204,12 @@ All supplementary tables are generated programmatically from JSON outputs:
 
 Developed independently by barlowa124 while affiliated with the Rao Lab, North Carolina State University. Public data from GEO as listed above. The lab is not an author of this repository.
 
+
+## Related work
+
+- [labStackDev](https://github.com/barlowa124/labStackDev) contains the METAFlux/RNA-seq quantification pipelines this analysis builds on.
+- [organoid-qc](https://github.com/barlowa124/organoid-qc) shares the single-cell reference-comparison approach.
+
 ## License
 
 MIT License. See [LICENSE](LICENSE) file for details.
