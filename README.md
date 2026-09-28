@@ -12,8 +12,8 @@ the published manual gates.
 ## Results
 
 - 167,044 events clustered (the full file, gated and ungated), 81,747 of
-  them carrying manual-gate labels; scoring runs only on the labeled
-  subset. This matches the usual benchmark protocol — clustering gated
+  them carrying manual-gate labels. Scoring runs only on the labeled
+  subset. This matches the usual benchmark protocol: clustering gated
   cells only would inflate the agreement numbers.
 - 24 gated populations, 21 Leiden clusters
 - Agreement with manual gates: **ARI 0.867, NMI 0.867**
