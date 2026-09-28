@@ -1,9 +1,9 @@
 # cytof-qc service: FastAPI backend + built React frontend
 FROM node:20-slim AS frontend
 WORKDIR /app
-COPY app/package.json app/tsconfig.json app/vite.config.ts app/index.html ./
+COPY app/package.json app/package-lock.json app/tsconfig.json app/vite.config.ts app/index.html ./
 COPY app/src ./src
-RUN npm install && npm run build
+RUN npm ci && npm run build
 
 FROM python:3.11-slim
 WORKDIR /srv

@@ -1,0 +1,13 @@
+.git
+data
+.venv
+venv
+__pycache__
+*.egg-info
+.DS_Store
+app/node_modules
+app/dist
+app/tsconfig.tsbuildinfo
+service_requests.jsonl
+results
+tests
