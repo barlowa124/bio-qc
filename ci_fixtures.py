@@ -85,7 +85,7 @@ json.dump({
 }, open(OUT / "tf_ppi_results.json", "w"))
 
 # grant_proposal_draft.md
-(OUT / "grant_proposal_draft.md").write_text("# Grant Proposal Draft\n\nNIH R21 application for cultivated meat QC panel.\n\nBudget: $275,000 over 2 years.")
+(OUT / "grant_proposal_draft.md").write_text("Synthetic CI fixture. Not a research proposal.\n\n# Grant Proposal Draft\n\nNIH R21 application for cultivated meat QC panel.\n\nBudget: $275,000 over 2 years.")
 
 # vae_bayesian_results.json (script constants: LATENT_DIM=8, GMM n_components=3)
 json.dump({
@@ -109,8 +109,8 @@ json.dump({
 # cross_species_comparison.json (GSE240556 is bovine snRNA-seq, not human)
 json.dump({
     "data_source": "ci_fixture_synthetic",
-    "bovine_vs_human": {"accuracy": 0.92, "n_genes": 30},
-    "porcine_vs_human": {"accuracy": 0.88, "n_genes": 30},
+    "bovine_vs_human": {"accuracy": 0.92, "n_genes": 30, "n_samples": 38},
+    "porcine_vs_human": {"accuracy": 0.88, "n_genes": 30, "n_samples": 45},
     "bovine_snrna_vs_human": {"accuracy": 0.85, "n_genes": 30,
                               "n_samples": 17541, "note": "GSE240556 is Bos taurus"}
 }, open(OUT / "cross_species_comparison.json", "w"))
@@ -131,6 +131,7 @@ json.dump({
 
 # qc_panel_239.json
 json.dump({
+    "data_source": "ci_fixture_synthetic",
     "panel_genes": [{"gene": g, "importance": np.random.random()} for g in panel_genes],
     "n_genes": 30,
     "method": "variance_ranking"

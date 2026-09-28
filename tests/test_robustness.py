@@ -112,6 +112,16 @@ class TestHealthEndpoint:
         body = client.get("/health").get_json()
         assert body["status"] == "healthy"
 
+    def test_provenance_marker_propagates(self, client, monkeypatch):
+        import app as app_module
+        monkeypatch.setitem(app_module.meta, "data_source", "ci_fixture_synthetic")
+        health = client.get("/health").get_json()
+        assert health["data_source"] == "ci_fixture_synthetic"
+        assert health["model_accuracy"] is None
+        r = client.post("/predict", json={"expression": [1.0] * 30})
+        assert r.status_code == 200
+        assert r.get_json()["data_source"] == "ci_fixture_synthetic"
+
     def test_index_lists_genes(self, client, meta):
         body = client.get("/").get_json()
         assert body["genes"] == meta["genes"]

@@ -1,6 +1,7 @@
 """Streamlit dashboard for the 30-gene QC panel state prediction."""
 import json
 import pickle
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -13,6 +14,8 @@ import streamlit as st
 PROJ = Path(__file__).resolve().parents[1]
 API_DIR = PROJ / "api"
 OUT = PROJ / "p2_state_map/output"
+sys.path.insert(0, str(PROJ / "notebooks"))
+from artifact_provenance import data_source, is_synthetic, provenance_label, annotate_figure
 
 st.set_page_config(
     page_title="Cultivated Meat QC Panel",
@@ -119,7 +122,8 @@ except Exception as e:
     st.error(f"Failed to load model: {e}")
     loaded = False
 
-def styled_fig(fig):
+def styled_fig(fig, source=None):
+    annotate_figure(fig, source or {})
     fig.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
                       font_color="#cbd5e1", margin=dict(l=10, r=10, t=44, b=10))
     return fig
@@ -133,7 +137,13 @@ if loaded:
     st.sidebar.subheader("Model Info")
     st.sidebar.write(f"**Genes:** {len(genes)}")
     st.sidebar.write(f"**States:** {', '.join(classes)}")
-    st.sidebar.write("**CV Accuracy:** 96.7%")
+    if is_synthetic(meta):
+        st.sidebar.write("**Model:** synthetic CI fixture (not validated)")
+    else:
+        st.sidebar.write("**CV Accuracy:** 96.7%")
+    for name, artifact in {"model_metadata.json": meta, **{f"{key}.json": value for key, value in results.items()}}.items():
+        if is_synthetic(artifact) or data_source(artifact) == "unverified":
+            st.warning(f"{name}: {provenance_label(artifact)}. Do not interpret these outputs as experimental validation.")
 
 # ── Page: Prediction ──
 if page == "Prediction" and loaded:
@@ -174,7 +184,7 @@ if page == "Prediction" and loaded:
             fig = px.bar(prob_df, x="State", y="Probability", color="State",
                          color_discrete_map={c.replace("_", " ").title(): state_colors.get(c, "#38bdf8") for c in model.classes_})
             fig.update_layout(showlegend=False, yaxis_range=[0, 1])
-            st.plotly_chart(styled_fig(fig), use_container_width=True)
+            st.plotly_chart(styled_fig(fig, meta), use_container_width=True)
 
     # Batch upload
     with st.container(border=True):
@@ -194,6 +204,7 @@ if page == "Prediction" and loaded:
                 conf = probs.max(axis=1)
                 df["prediction"] = preds
                 df["confidence"] = conf
+                df["model_data_source"] = data_source(meta)
                 st.dataframe(df)
                 st.download_button("Download results", df.to_csv(index=False), "predictions.csv", "text/csv")
 
@@ -220,7 +231,7 @@ elif page == "Performance" and loaded:
                       labels={"cv_level": "qPCR noise CV", "mean_accuracy": "Accuracy"},
                       title="qPCR Noise Robustness")
         fig.update_layout(yaxis_range=[0.8, 1.0])
-        st.plotly_chart(styled_fig(fig), use_container_width=True)
+        st.plotly_chart(styled_fig(fig, results.get('literature_drug_panel_noise', {})), use_container_width=True)
 
 # ── Page: Explainability ──
 elif page == "Explainability" and loaded:
@@ -231,8 +242,8 @@ elif page == "Explainability" and loaded:
         if top:
             st.caption("Top genes by SHAP importance (ranked)")
             cols = st.columns(len(top))
-            for col, g in zip(cols, top):
-                col.metric(label=f"#{top.index(g) + 1}", value=g)
+            for rank, (col, g) in enumerate(zip(cols, top), start=1):
+                col.metric(label=f"#{rank}", value=g["gene"] if isinstance(g, dict) else g)
 
 # ── Page: Cross-Species ──
 elif page == "Cross-Species" and loaded:
