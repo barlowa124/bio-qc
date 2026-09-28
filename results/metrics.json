@@ -1,120 +1,125 @@
 {
   "dataset": "Levine_13dim (Levine et al. 2015, human bone marrow, manually gated populations)",
-  "n_events": 81747,
+  "n_events_clustered": 167044,
+  "n_events_scored": 81747,
   "n_channels": 13,
   "n_gated_populations": 24,
-  "n_clusters_found": 14,
+  "n_clusters_found": 21,
   "agreement": {
-    "adjusted_rand_index": 0.9143,
-    "normalized_mutual_info": 0.9065
+    "adjusted_rand_index": 0.867,
+    "normalized_mutual_info": 0.8672
   },
   "channels": {
     "CD45": {
-      "n_events": 81747,
-      "negative_fraction": 0.1368,
+      "n_events": 167044,
+      "negative_fraction": 0.0798,
       "zero_fraction": 0.0,
-      "median": 200.7349853515625,
+      "median": 201.7772674560547,
       "flag_negative": false,
       "flag_zero": false
     },
     "CD45RA": {
-      "n_events": 81747,
-      "negative_fraction": 0.1849,
+      "n_events": 167044,
+      "negative_fraction": 0.1729,
       "zero_fraction": 0.0,
-      "median": 7.61625862121582,
+      "median": 8.086511135101318,
       "flag_negative": false,
       "flag_zero": false
     },
     "CD19": {
-      "n_events": 81747,
-      "negative_fraction": 0.6327,
+      "n_events": 167044,
+      "negative_fraction": 0.5951,
       "zero_fraction": 0.0,
-      "median": -0.24647332727909088,
+      "median": -0.1889493763446808,
       "flag_negative": true,
       "flag_zero": false
     },
     "CD11b": {
-      "n_events": 81747,
-      "negative_fraction": 0.4029,
+      "n_events": 167044,
+      "negative_fraction": 0.2973,
       "zero_fraction": 0.0,
-      "median": 1.340169906616211,
-      "flag_negative": true,
+      "median": 3.790876030921936,
+      "flag_negative": false,
       "flag_zero": false
     },
     "CD4": {
-      "n_events": 81747,
-      "negative_fraction": 0.3937,
+      "n_events": 167044,
+      "negative_fraction": 0.3416,
       "zero_fraction": 0.0,
-      "median": 2.405167818069458,
+      "median": 4.295822620391846,
       "flag_negative": true,
       "flag_zero": false
     },
     "CD8": {
-      "n_events": 81747,
-      "negative_fraction": 0.3748,
+      "n_events": 167044,
+      "negative_fraction": 0.3629,
       "zero_fraction": 0.0,
-      "median": 2.594594717025757,
+      "median": 2.7840667963027954,
       "flag_negative": true,
       "flag_zero": false
     },
     "CD34": {
-      "n_events": 81747,
-      "negative_fraction": 0.4331,
+      "n_events": 167044,
+      "negative_fraction": 0.3698,
       "zero_fraction": 0.0,
-      "median": 0.7960492372512817,
+      "median": 1.3858590722084045,
       "flag_negative": true,
       "flag_zero": false
     },
     "CD20": {
-      "n_events": 81747,
-      "negative_fraction": 0.4651,
+      "n_events": 167044,
+      "negative_fraction": 0.4361,
       "zero_fraction": 0.0,
-      "median": 0.5245699882507324,
+      "median": 0.9049566388130188,
       "flag_negative": true,
       "flag_zero": false
     },
     "CD33": {
-      "n_events": 81747,
-      "negative_fraction": 0.425,
+      "n_events": 167044,
+      "negative_fraction": 0.3073,
       "zero_fraction": 0.0,
-      "median": 1.2688486576080322,
+      "median": 4.9387853145599365,
       "flag_negative": true,
       "flag_zero": false
     },
     "CD123": {
-      "n_events": 81747,
-      "negative_fraction": 0.4977,
+      "n_events": 167044,
+      "negative_fraction": 0.3833,
       "zero_fraction": 0.0,
-      "median": 0.04671500250697136,
+      "median": 1.8829501867294312,
       "flag_negative": true,
       "flag_zero": false
     },
     "CD38": {
-      "n_events": 81747,
-      "negative_fraction": 0.0484,
+      "n_events": 167044,
+      "negative_fraction": 0.0325,
       "zero_fraction": 0.0,
-      "median": 22.262176513671875,
+      "median": 43.44730186462402,
       "flag_negative": false,
       "flag_zero": false
     },
     "CD90": {
-      "n_events": 81747,
-      "negative_fraction": 0.3115,
+      "n_events": 167044,
+      "negative_fraction": 0.2512,
       "zero_fraction": 0.0,
-      "median": 1.79108464717865,
-      "flag_negative": true,
+      "median": 2.6793994903564453,
+      "flag_negative": false,
       "flag_zero": false
     },
     "CD3": {
-      "n_events": 81747,
-      "negative_fraction": 0.1982,
+      "n_events": 167044,
+      "negative_fraction": 0.1742,
       "zero_fraction": 0.0,
-      "median": 42.387176513671875,
+      "median": 38.75164985656738,
       "flag_negative": false,
       "flag_zero": false
     }
   },
   "populations": {
+    "NotGated": {
+      "n_events": 85297,
+      "flag_sparse": false
+    },
     "Mature CD4+ T": {
       "n_events": 13964,
       "flag_sparse": false
@@ -216,162 +221,169 @@
     "CD11b- Monocyte": {
       "n_events": 912,
       "dominant_cluster": "0",
-      "recall": 0.9682,
-      "purity": 0.0987
+      "recall": 0.9331,
+      "purity": 0.5273
     },
     "CD11bhi Monocyte": {
       "n_events": 6779,
-      "dominant_cluster": "0",
-      "recall": 0.9988,
-      "purity": 0.7569
+      "dominant_cluster": "1",
+      "recall": 0.9742,
+      "purity": 0.9134
     },
     "CD11bmid Monocyte": {
       "n_events": 1278,
       "dominant_cluster": "0",
-      "recall": 0.975,
-      "purity": 0.1393
+      "recall": 0.4804,
+      "purity": 0.3804
     },
     "CMP": {
       "n_events": 253,
-      "dominant_cluster": "7",
-      "recall": 0.9684,
-      "purity": 0.2829
+      "dominant_cluster": "3",
+      "recall": 0.9051,
+      "purity": 0.2827
     },
     "Erythroblast": {
       "n_events": 12030,
       "dominant_cluster": "4",
-      "recall": 0.9906,
-      "purity": 0.8734
+      "recall": 0.9766,
+      "purity": 0.8485
     },
     "GMP": {
       "n_events": 73,
-      "dominant_cluster": "6",
-      "recall": 0.6027,
-      "purity": 0.0119
+      "dominant_cluster": "13",
+      "recall": 0.6301,
+      "purity": 0.0123
     },
     "HSC": {
       "n_events": 261,
-      "dominant_cluster": "7",
-      "recall": 0.4291,
-      "purity": 0.1293
+      "dominant_cluster": "2",
+      "recall": 0.3985,
+      "purity": 0.067
     },
     "Immature B": {
       "n_events": 502,
-      "dominant_cluster": "2",
-      "recall": 0.3267,
-      "purity": 0.1076
+      "dominant_cluster": "4",
+      "recall": 0.3227,
+      "purity": 0.0117
     },
     "MEP": {
       "n_events": 194,
-      "dominant_cluster": "7",
-      "recall": 0.9742,
-      "purity": 0.2182
+      "dominant_cluster": "3",
+      "recall": 0.9227,
+      "purity": 0.221
     },
     "MPP": {
       "n_events": 152,
-      "dominant_cluster": "7",
-      "recall": 0.5,
-      "purity": 0.0878
+      "dominant_cluster": "3",
+      "recall": 0.4145,
+      "purity": 0.0778
     },
     "Mature CD38lo B": {
       "n_events": 7796,
-      "dominant_cluster": "9",
-      "recall": 0.9835,
-      "purity": 0.9715
+      "dominant_cluster": "17",
+      "recall": 0.9818,
+      "purity": 0.9426
     },
     "Mature CD38mid B": {
       "n_events": 608,
-      "dominant_cluster": "8",
-      "recall": 0.9326,
-      "purity": 0.2838
+      "dominant_cluster": "12",
+      "recall": 0.5905,
+      "purity": 0.2047
     },
     "Mature CD4+ T": {
       "n_events": 13964,
-      "dominant_cluster": "5",
-      "recall": 0.9911,
-      "purity": 0.9983
+      "dominant_cluster": "10",
+      "recall": 0.939,
+      "purity": 0.9978
     },
     "Mature CD8+ T": {
       "n_events": 7821,
-      "dominant_cluster": "12",
-      "recall": 0.9974,
-      "purity": 0.9917
+      "dominant_cluster": "15",
+      "recall": 0.9978,
+      "purity": 0.8917
     },
     "Megakaryocyte": {
       "n_events": 3684,
-      "dominant_cluster": "3",
-      "recall": 0.994,
-      "purity": 0.8629
+      "dominant_cluster": "8",
+      "recall": 0.9577,
+      "purity": 0.8418
     },
     "Myelocyte": {
       "n_events": 3025,
       "dominant_cluster": "4",
-      "recall": 0.4678,
-      "purity": 0.1037
+      "recall": 0.5537,
+      "purity": 0.121
     },
     "NK": {
       "n_events": 3864,
-      "dominant_cluster": "6",
-      "recall": 0.9076,
-      "purity": 0.9445
+      "dominant_cluster": "13",
+      "recall": 0.8939,
+      "purity": 0.9221
     },
     "Naive CD4+ T": {
       "n_events": 6987,
-      "dominant_cluster": "10",
-      "recall": 0.9918,
-      "purity": 0.9863
+      "dominant_cluster": "9",
+      "recall": 0.9894,
+      "purity": 0.902
     },
     "Naive CD8+ T": {
       "n_events": 9564,
-      "dominant_cluster": "11",
-      "recall": 0.9935,
-      "purity": 0.9975
+      "dominant_cluster": "16",
+      "recall": 0.8937,
+      "purity": 0.9993
     },
     "Plasma cell": {
       "n_events": 468,
-      "dominant_cluster": "8",
+      "dominant_cluster": "12",
       "recall": 1.0,
-      "purity": 0.2342
+      "purity": 0.2668
     },
     "Plasmacytoid DC": {
       "n_events": 293,
-      "dominant_cluster": "1",
-      "recall": 0.9966,
-      "purity": 0.4756
+      "dominant_cluster": "11",
+      "recall": 1.0,
+      "purity": 0.4515
     },
     "Platelet": {
       "n_events": 5,
-      "dominant_cluster": "3",
+      "dominant_cluster": "8",
       "recall": 1.0,
       "purity": 0.0012
     },
     "Pre-B I": {
       "n_events": 240,
-      "dominant_cluster": "7",
-      "recall": 0.9125,
-      "purity": 0.2529
+      "dominant_cluster": "3",
+      "recall": 0.9083,
+      "purity": 0.2691
     },
     "Pre-B II": {
       "n_events": 994,
-      "dominant_cluster": "8",
-      "recall": 0.9074,
-      "purity": 0.4515
+      "dominant_cluster": "12",
+      "recall": 0.9034,
+      "purity": 0.512
     }
   },
   "cluster_to_population": {
-    "0": "CD11bhi Monocyte",
-    "13": "CD11bmid Monocyte",
-    "7": "CMP",
+    "0": "CD11b- Monocyte",
+    "1": "CD11bhi Monocyte",
+    "5": "CD11bmid Monocyte",
+    "3": "CMP",
     "4": "Erythroblast",
-    "9": "Mature CD38lo B",
-    "5": "Mature CD4+ T",
-    "12": "Mature CD8+ T",
-    "3": "Megakaryocyte",
+    "19": "GMP",
+    "20": "HSC",
+    "6": "Immature B",
+    "7": "MEP",
+    "14": "MPP",
+    "17": "Mature CD38lo B",
+    "18": "Mature CD38mid B",
+    "10": "Mature CD4+ T",
+    "15": "Mature CD8+ T",
+    "8": "Megakaryocyte",
     "2": "Myelocyte",
-    "6": "NK",
-    "10": "Naive CD4+ T",
-    "11": "Naive CD8+ T",
-    "1": "Plasmacytoid DC",
-    "8": "Pre-B II"
+    "13": "NK",
+    "9": "Naive CD4+ T",
+    "16": "Naive CD8+ T",
+    "11": "Plasmacytoid DC",
+    "12": "Pre-B II"
   }
 }

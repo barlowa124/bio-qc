@@ -11,8 +11,12 @@ the published manual gates.
 
 ## Results
 
-- 81,747 gated events, 24 gated populations, 14 Leiden clusters
-- Agreement with manual gates: **ARI 0.914, NMI 0.907**
+- 167,044 events clustered (the full file, gated and ungated), 81,747 of
+  them carrying manual-gate labels; scoring runs only on the labeled
+  subset. This matches the usual benchmark protocol — clustering gated
+  cells only would inflate the agreement numbers.
+- 24 gated populations, 21 Leiden clusters
+- Agreement with manual gates: **ARI 0.867, NMI 0.867**
 - Mature lineages (T cells, monocytes, NK, B cells, plasma cells) map
   roughly one-to-one onto clusters. The gated progenitor populations
   (HSC, MPP, GMP, MEP, immature B, myelocyte) partially merge. That merge is the
