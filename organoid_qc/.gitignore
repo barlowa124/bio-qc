@@ -1,0 +1,10 @@
+__pycache__/
+*.egg-info/
+.venv/
+.snakemake/
+data/raw/
+data/processed/
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+*.h5ad
+.DS_Store

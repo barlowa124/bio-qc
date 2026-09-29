@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "organoid-qc"
+version = "0.1.0"
+description = "Transcriptomic fidelity scoring for organoid cultures against human tissue reference"
+requires-python = ">=3.10"
+dependencies = [
+    "anndata>=0.10",
+    "scanpy>=1.10",
+    "numpy",
+    "pandas",
+    "scipy",
+    "matplotlib",
+    "pyyaml",
+    "igraph",
+    "leidenalg",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "snakemake>=8"]
+automation = ["opentrons>=9.0"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

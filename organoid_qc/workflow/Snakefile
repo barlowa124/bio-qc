@@ -1,0 +1,54 @@
+"""organoid-qc DAG:
+
+    demo_data / load -> preprocess -> score -> report
+"""
+
+PY = ".venv/bin/python"
+
+
+rule all:
+    input:
+        "results/fidelity.json",
+        "results/umap.png",
+
+
+rule data:
+    output:
+        organoid="data/processed/organoid.h5ad",
+        reference="data/processed/reference.h5ad",
+    shell:
+        "{PY} -m organoid_qc.data.load {output.organoid} {output.reference}"
+
+
+rule preprocess:
+    input:
+        organoid="data/processed/organoid.h5ad",
+        reference="data/processed/reference.h5ad",
+    output:
+        organoid="data/processed/organoid_pp.h5ad",
+        reference="data/processed/reference_pp.h5ad",
+    shell:
+        "{PY} -m organoid_qc.qc.preprocess {input.organoid} {input.reference}"
+        " {output.organoid} {output.reference}"
+
+
+rule score:
+    input:
+        organoid="data/processed/organoid_pp.h5ad",
+        reference="data/processed/reference_pp.h5ad",
+    output:
+        "results/fidelity.json",
+    shell:
+        "{PY} -m organoid_qc.qc.score {input.organoid} {input.reference} {output}"
+
+
+rule report:
+    input:
+        organoid="data/processed/organoid_pp.h5ad",
+        reference="data/processed/reference_pp.h5ad",
+        fidelity="results/fidelity.json",
+    output:
+        "results/umap.png",
+    shell:
+        "{PY} -m organoid_qc.qc.report {input.organoid} {input.reference}"
+        " {input.fidelity} {output}"

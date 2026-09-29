@@ -1,0 +1,70 @@
+{
+  "n_organoid_cells": 600,
+  "n_reference_cells": 900,
+  "reference_types": [
+    "enterocyte",
+    "goblet",
+    "stem"
+  ],
+  "clusters": [
+    {
+      "cluster": "0",
+      "n_cells": 225,
+      "best_match": "enterocyte",
+      "best_correlation": 0.9724,
+      "mapped": true,
+      "correlations": {
+        "enterocyte": 0.9724,
+        "goblet": -0.0243,
+        "stem": -0.0234
+      }
+    },
+    {
+      "cluster": "1",
+      "n_cells": 225,
+      "best_match": "goblet",
+      "best_correlation": 0.9722,
+      "mapped": true,
+      "correlations": {
+        "enterocyte": -0.0233,
+        "goblet": 0.9722,
+        "stem": -0.0322
+      }
+    },
+    {
+      "cluster": "2",
+      "n_cells": 150,
+      "best_match": null,
+      "best_correlation": -0.0225,
+      "mapped": false,
+      "correlations": {
+        "enterocyte": -0.0291,
+        "goblet": -0.0258,
+        "stem": -0.0225
+      }
+    }
+  ],
+  "aggregate": {
+    "celltype_coverage": 0.6667,
+    "unmapped_fraction": 0.25,
+    "mean_marker_detection": 0.6667,
+    "per_type_marker_detection": {
+      "enterocyte": 1.0,
+      "goblet": 1.0,
+      "stem": 0.0
+    }
+  },
+  "qc_flags": {
+    "celltype_coverage": false,
+    "unmapped_fraction": true,
+    "marker_detection": true
+  },
+  "qc_pass": false,
+  "thresholds": {
+    "mapping_correlation_min": 0.3,
+    "min_celltype_coverage": 0.75,
+    "max_unmapped_fraction": 0.25,
+    "min_marker_detection": 0.5,
+    "marker_expression_ratio": 0.25
+  }
+}
