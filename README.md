@@ -80,9 +80,30 @@ Analysis runs as a job: the POST parses uploads and returns a
 `{job_id}` immediately, `GET /api/jobs/{id}` polls to the report.
 Uploaded data has no manual gates, so the service reports descriptive
 QC and cluster structure only — never agreement metrics it cannot
-support. Requests are logged to `service_requests.jsonl` (path, status,
-latency; no payload data); `scripts/summarize_requests.py` reads the
-log back. Measured iterations live in CHANGELOG.md.
+support. Measured iterations live in CHANGELOG.md.
+
+### Ops notes
+
+- **Limits**: ≤200 files/upload, ≤200 MB/file, ≤500k total events,
+  ≥16 events. At most 2 analyses run at once; a third POST gets 429.
+- **Rate limit**: 12 submits/hour per client IP (rightmost
+  `X-Forwarded-For` — the entry appended by Railway's edge, not a
+  client-supplied one). Excess submits get `429` before any parse work.
+- **Durable state**: job transitions and the request log append to
+  `jobs.jsonl` / `service_requests.jsonl` under `CYTOF_STATE_DIR`
+  (else a mounted volume's `RAILWAY_VOLUME_MOUNT_PATH`, else the repo
+  dir). On a volume they survive redeploys — a job still `running` at
+  restart replays as `error: interrupted by restart` rather than
+  silently resuming or 404ing. Without a volume this degrades to
+  per-container state.
+- **Logs**: every request emits one JSON line to stdout (`ts`, `path`,
+  `status`, `ms`, `n_events` when known) — platform log capture
+  retains it across redeploys. `GET /api/stats` serves the aggregate
+  (counts, status split, p50/p95 latency, event range);
+  `scripts/summarize_requests.py` reads the file form back.
+- **Honest ceiling**: this is a hardened demo service, not a staffed
+  production system — no auth on submits, in-process job workers
+  (not a queue), and no uptime history behind it.
 
 ## Layout
 

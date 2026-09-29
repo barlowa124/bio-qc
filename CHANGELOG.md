@@ -49,3 +49,22 @@ fields (`load_ms`, `cluster_embed_ms`, `analyze_ms`).
   is inspectable, not just claimed. Guard paths that were previously
   untested now covered: file-size cap via bounded read, 429 at the
   concurrency limit, TTL expiry of finished jobs.
+
+### Production-shaped pass — durability, rate limit, structured logs
+- Job transitions and the request log append to JSONL files under a
+  configurable state dir (`CYTOF_STATE_DIR`, else a mounted volume).
+  On boot the job log replays; jobs caught `running` at load are
+  marked `error: interrupted by restart`. Verified live: submitted a
+  job, forced a redeploy, and the finished report still resolved —
+  previously it would have 404'd.
+- Per-IP submit throttle (12/hour) checked before any parse work,
+  keyed on the rightmost `X-Forwarded-For` entry — verified live:
+  requests 13–15 in a burst returned `429`. A leftmost-XFF lookup
+  (client-spoofable) was caught and fixed in review before this
+  shipped.
+- Request log entries also emit as JSON on stdout so platform log
+  capture retains them across redeploys — caught and fixed: the
+  logger needed an explicit handler or entries were silently dropped.
+- Worker completion tolerates its job record being evicted mid-run
+  (compact/evict race surfaced as a `KeyError` in a background
+  thread); a focused regression test covers it.

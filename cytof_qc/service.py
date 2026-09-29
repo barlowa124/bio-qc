@@ -254,6 +254,14 @@ def create_app():
         _STATE_DIR.mkdir(parents=True, exist_ok=True)
     except OSError:
         pass
+    # root defaults to WARNING with no handler under uvicorn; without
+    # this the request-log entries below never reach stdout
+    _req_logger = logging.getLogger("cytof_qc.requests")
+    if not _req_logger.handlers:
+        handler = logging.StreamHandler()
+        handler.setFormatter(logging.Formatter("%(message)s"))
+        _req_logger.addHandler(handler)
+        _req_logger.propagate = False
     _load_jobs()
 
     dist = Path(__file__).resolve().parent.parent / "app" / "dist"
@@ -332,8 +340,13 @@ def create_app():
     async def analyze(
         request: Request, files: List[UploadFile] = File(...)
     ):
-        # throttle before any parse work — counts attempts, not successes
-        fwd = (request.headers.get("x-forwarded-for") or "").split(",")[0].strip()
+        # throttle before any parse work — counts attempts, not successes.
+        # XFF trust boundary: the leftmost entry is client-controlled, so
+        # take the rightmost (appended by Railway's edge). Without a
+        # trusted-proxy config this still isn't spoof-proof — a client
+        # could send XFF and Railway may append to it — but rightmost is
+        # the best available signal at this layer.
+        fwd = (request.headers.get("x-forwarded-for") or "").split(",")[-1].strip()
         client_ip = fwd or (request.client.host if request.client else "unknown")
         if not _rate_limit_ok(client_ip):
             return JSONResponse(

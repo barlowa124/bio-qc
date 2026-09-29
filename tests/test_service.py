@@ -211,6 +211,26 @@ def test_submit_rate_limit(monkeypatch):
     assert codes[2] == 429
 
 
+def test_rate_limit_uses_rightmost_xff(monkeypatch):
+    # a client-supplied XFF entry must not let the sender pick its
+    # bucket — the proxy-appended (rightmost) address governs
+    monkeypatch.setattr(service, "RATE_LIMIT_MAX", 1)
+    df = _two_pop_events(n=40)
+    buf = stdio.BytesIO(df.to_csv(index=False).encode())
+    headers = {"X-Forwarded-For": "1.2.3.4, 10.0.0.9"}
+    r1 = _client().post(
+        "/api/analyze", files=[("files", ("ok.csv", buf, "text/csv"))],
+        headers=headers,
+    )
+    buf = stdio.BytesIO(df.to_csv(index=False).encode())
+    r2 = _client().post(
+        "/api/analyze", files=[("files", ("ok.csv", buf, "text/csv"))],
+        headers={"X-Forwarded-For": "9.9.9.9, 10.0.0.9"},
+    )
+    assert r1.status_code == 200
+    assert r2.status_code == 429
+
+
 def test_jobs_replay_from_durable_log(tmp_path, monkeypatch):
     jf = tmp_path / "jobs.jsonl"
     jf.write_text(
