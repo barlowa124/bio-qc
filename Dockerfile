@@ -3,6 +3,7 @@ FROM node:20-slim AS frontend
 WORKDIR /app
 COPY app/package.json app/package-lock.json app/tsconfig.json app/vite.config.ts app/index.html ./
 COPY app/src ./src
+COPY app/public ./public
 RUN npm ci && npm run build
 
 FROM python:3.11-slim
