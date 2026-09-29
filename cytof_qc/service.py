@@ -23,6 +23,8 @@ from . import io, qc, transform
 MAX_UPLOAD_FILES = 200
 MAX_EVENTS = 500_000
 MAX_EMBED_POINTS = 20_000
+MAX_FILE_BYTES = 200_000_000  # per uploaded file, before parse
+MIN_EVENTS = 16               # clustering needs >= n_neighbors events
 
 _REQUEST_LOG = Path(__file__).resolve().parent.parent / "service_requests.jsonl"
 
@@ -50,6 +52,9 @@ def analyze_events(events: pd.DataFrame) -> dict:
     channels, qc_only = qc.split_channels(all_channels)
     if not channels:
         msg = "no phenotypic channels found in upload"
+        raise ValueError(msg)
+    if len(events) < MIN_EVENTS:
+        msg = f"{len(events)} events is too few to cluster (need >= {MIN_EVENTS})"
         raise ValueError(msg)
 
     transformed = transform.arcsinh(numeric)
@@ -192,7 +197,19 @@ def create_app():
         t_load = time.time()
         frames = []
         for f in files:
-            body = await f.read()
+            if f.size is not None and f.size > MAX_FILE_BYTES:
+                return JSONResponse(
+                    {"error": f"{f.filename} exceeds the "
+                     f"{MAX_FILE_BYTES // 1_000_000}MB file cap"},
+                    status_code=400,
+                )
+            body = await f.read(MAX_FILE_BYTES + 1)
+            if len(body) > MAX_FILE_BYTES:
+                return JSONResponse(
+                    {"error": f"{f.filename} exceeds the "
+                     f"{MAX_FILE_BYTES // 1_000_000}MB file cap"},
+                    status_code=400,
+                )
             try:
                 frames.append(_load_uploaded(f.filename or "upload", body))
             except Exception as exc:
@@ -207,6 +224,12 @@ def create_app():
                 {"error": f"{n_events} events exceeds the {MAX_EVENTS} cap"},
                 status_code=400,
             )
+        if n_events < MIN_EVENTS:
+            return JSONResponse(
+                {"error": f"{n_events} events is too few to cluster "
+                 f"(need >= {MIN_EVENTS})"},
+                status_code=400,
+            )
 
         with _JOBS_LOCK:
             running = sum(1 for j in _JOBS.values() if j["status"] == "running")
@@ -214,6 +237,15 @@ def create_app():
                 return JSONResponse(
                     {"error": "service busy, retry shortly"}, status_code=429
                 )
+            # expire finished jobs past TTL, then bound the map by count
+            stale = [
+                jid
+                for jid, j in _JOBS.items()
+                if j["status"] != "running"
+                and time.time() - j["started"] > JOB_TTL_S
+            ]
+            for jid in stale:
+                _JOBS.pop(jid, None)
             done = sorted(
                 (jid for jid, j in _JOBS.items() if j["status"] != "running"),
                 key=lambda jid: _JOBS[jid]["started"],

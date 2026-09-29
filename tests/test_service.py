@@ -101,6 +101,21 @@ def test_unknown_job_404():
     assert resp.status_code == 404
 
 
+def test_analyze_endpoint_rejects_tiny_upload():
+    df = _two_pop_events(n=5)  # 10 events < MIN_EVENTS
+    buf = stdio.BytesIO(df.to_csv(index=False).encode())
+    resp = _client().post(
+        "/api/analyze", files=[("files", ("tiny.csv", buf, "text/csv"))]
+    )
+    assert resp.status_code == 400
+    assert "too few" in resp.json()["error"]
+
+
+def test_analyze_events_rejects_tiny_input():
+    with pytest.raises(ValueError, match="too few"):
+        service.analyze_events(_two_pop_events(n=5))
+
+
 def test_analyze_endpoint_rejects_bad_file():
     resp = _client().post(
         "/api/analyze",
