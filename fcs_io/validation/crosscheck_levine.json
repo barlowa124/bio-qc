@@ -1,0 +1,10 @@
+{
+ "n_files": 55,
+ "n_events": 432671,
+ "max_abs_diff": 0.0,
+ "n_exact": 55,
+ "n_allclose": 0,
+ "channels_ok": 55,
+ "mismatches": [],
+ "ok": true
+}

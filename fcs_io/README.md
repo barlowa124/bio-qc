@@ -28,6 +28,9 @@ raise), only the first dataset of multi-set files is read, and no log
 amplification is applied. $PnE stays metadata.
 
 Tests build minimal FCS files in-memory (the fixture writer is part of
-the evidence the format is understood); real-file validation against the
-Levine_13dim CyTOF set runs when `scripts/fetch_data.sh` has been run in
-cytof_qc.
+the evidence the format is understood). Real-file validation:
+`scripts/crosscheck_fcsparser.py` compared every event value and
+channel name against `fcsparser` on all 55 Levine_13dim/Levine_32dim
+benchmark files — 432,671 events, bit-exact
+(`validation/crosscheck_levine.json`). Rerun it after fetching the data
+with `cytof_qc/scripts/fetch_data.sh`.
