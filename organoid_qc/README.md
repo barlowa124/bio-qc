@@ -98,4 +98,4 @@ MIT licensed.
 
 ## Related work
 
-- [cytof-qc](https://github.com/barlowa124/cytof-qc) applies the same AnnData/scanpy pipeline shape to mass-cytometry gates. Its per-population agreement table is the same "report per cluster, not pooled" discipline this repo applies to fidelity scores.
+- [cytof-qc](https://github.com/barlowa124/bio-qc/tree/main/cytof_qc) applies the same AnnData/scanpy pipeline shape to mass-cytometry gates. Its per-population agreement table is the same "report per cluster, not pooled" discipline this repo applies to fidelity scores.

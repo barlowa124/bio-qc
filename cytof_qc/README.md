@@ -147,4 +147,4 @@ warping.
 
 ## Related work
 
-- [organoid-qc](https://github.com/barlowa124/organoid-qc) runs the same AnnData/scanpy path (transform, cluster, compare to reference labels) on organoid fidelity instead of gated CyTOF populations.
+- [organoid-qc](https://github.com/barlowa124/bio-qc/tree/main/organoid_qc) runs the same AnnData/scanpy path (transform, cluster, compare to reference labels) on organoid fidelity instead of gated CyTOF populations.
