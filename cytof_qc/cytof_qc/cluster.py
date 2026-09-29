@@ -28,15 +28,27 @@ def cluster_events(
     adata.var_names = channels
     adata.obs_names = [str(i) for i in events_t.index]
     sc.pp.neighbors(adata, n_neighbors=n_neighbors, random_state=random_state)
-    sc.tl.leiden(
-        adata,
-        resolution=resolution,
-        random_state=random_state,
-        flavor="igraph",
-        n_iterations=2,
-        directed=False,
-        key_added="cluster",
-    )
+    try:
+        sc.tl.leiden(
+            adata,
+            resolution=resolution,
+            random_state=random_state,
+            flavor="igraph",
+            n_iterations=2,
+            directed=False,
+            key_added="cluster",
+        )
+    except TypeError:
+        # scanpy<1.10 lacks the flavor kwarg; leidenalg partition
+        # defaults are equivalent for this use
+        sc.tl.leiden(
+            adata,
+            resolution=resolution,
+            random_state=random_state,
+            n_iterations=2,
+            directed=False,
+            key_added="cluster",
+        )
     if umap:
         sc.tl.umap(adata, random_state=random_state)
     return adata

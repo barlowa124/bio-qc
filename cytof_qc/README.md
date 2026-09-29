@@ -78,6 +78,24 @@ or `docker build -t cytof-qc . && docker run -p 8000:8000 cytof-qc`.
 CI also publishes the image: `docker run -p 8000:8000
 ghcr.io/barlowa124/cytof-qc:latest`.
 
+### Workflow DAG
+
+`workflow/Snakefile` runs the pipeline as a two-rule DAG with no
+downloads. `demo_data` writes six small gated-population FCS files with
+fcsio (sibling package, `../fcs_io`), `qc` parses them back through
+`io.load_fcs` and produces `results/demo_qc/metrics.json` plus figures.
+When `fcsparser` is not installed, `load_fcs` falls back to `fcsio`, so
+the demo exercises this repo's own parser end to end:
+
+```bash
+snakemake -s workflow/Snakefile -c1        # demo run, ~1 min
+DATA_DIR=/path/to/fcs snakemake -s workflow/Snakefile -c1   # real input
+snakemake -n -s workflow/Snakefile         # CI dry-run
+```
+
+The demo's near-perfect ARI is a fixture property. Five Gaussian
+populations separated by construction is not a biological result.
+
 Analysis runs as a job: the POST parses uploads and returns a
 `{job_id}` immediately, `GET /api/jobs/{id}` polls to the report.
 Uploaded data has no manual gates, so the service reports descriptive

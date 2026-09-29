@@ -174,14 +174,26 @@ def _figures(adata, events: pd.DataFrame, table: pd.DataFrame, out_dir: Path) ->
 def _cli() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
-        "--panel", choices=list(PANELS), default="levine_13dim",
+        "--panel", choices=list(PANELS), default=None,
         help="which gated benchmark panel to run",
     )
+    ap.add_argument("--data-dir", type=Path, default=None,
+                    help="directory of gated FCS files (overrides --panel)")
+    ap.add_argument("--out", type=Path, default=None,
+                    help="output directory (required with --data-dir)")
+    ap.add_argument("--label", default=None, help="dataset label")
     args = ap.parse_args()
-    spec = PANELS[args.panel]
+    if args.data_dir:
+        if not args.out:
+            ap.error("--out is required with --data-dir")
+        main(data_dir=args.data_dir, out_dir=args.out,
+             dataset_label=args.label or args.data_dir.name)
+        return
+    name = args.panel or "levine_13dim"
+    spec = PANELS[name]
     main(
         data_dir=DATA / spec["data"],
-        out_dir=RESULTS / args.panel,
+        out_dir=RESULTS / name,
         dataset_label=spec["label"],
     )
 

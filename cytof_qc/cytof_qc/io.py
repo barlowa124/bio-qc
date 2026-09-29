@@ -11,7 +11,26 @@ import re
 from pathlib import Path
 
 import pandas as pd
-from fcsparser import parse
+
+try:
+    from fcsparser import parse as _parse_fcs
+except ImportError:
+    _parse_fcs = None
+
+
+def _parse_with_fcsio(path: str) -> tuple[pd.DataFrame, dict]:
+    """fcsio fallback: events+meta dict -> same column convention as
+    fcsparser (columns keyed by $PnS, renamed to $PnN below)."""
+    try:
+        import fcsio
+    except ImportError:
+        raise ImportError(
+            "no FCS reader available: install fcsparser or make fcsio "
+            "importable (bio-qc/fcs_io, `pip install -e fcs_io`)"
+        )
+    events, meta = fcsio.read(path)
+    cols = [s or n for s, n in zip(meta["stains"], meta["channels"])]
+    return meta, pd.DataFrame(events, columns=cols)
 
 
 def load_fcs(path: str | Path) -> tuple[pd.DataFrame, dict]:
@@ -21,7 +40,10 @@ def load_fcs(path: str | Path) -> tuple[pd.DataFrame, dict]:
     while the marker name lives in ``$PnN`` (e.g. ``CD45``). Returns the
     event table keyed by marker name, plus the raw metadata dict.
     """
-    meta, df = parse(str(path), reformat_meta=False)
+    if _parse_fcs is not None:
+        meta, df = _parse_fcs(str(path), reformat_meta=False)
+    else:
+        meta, df = _parse_with_fcsio(str(path))
     rename = {}
     for k, v in meta.items():
         m = re.match(r"^\$P(\d+)S$", str(k))

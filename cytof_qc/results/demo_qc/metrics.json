@@ -1,0 +1,386 @@
+{
+  "dataset": "synthetic demo (fcsio-generated FCS)",
+  "n_events_clustered": 2400,
+  "n_events_scored": 2000,
+  "n_channels": 8,
+  "n_gated_populations": 5,
+  "n_clusters_found": 6,
+  "agreement": {
+    "adjusted_rand_index": 1.0,
+    "normalized_mutual_info": 1.0
+  },
+  "channels": {
+    "Time": {
+      "n_events": 2400,
+      "negative_fraction": 0.0,
+      "zero_fraction": 0.0025,
+      "median": 199.5,
+      "flag_negative": false,
+      "flag_zero": false
+    },
+    "DNA1": {
+      "n_events": 2400,
+      "negative_fraction": 0.0,
+      "zero_fraction": 0.0,
+      "median": 4.999191522598267,
+      "flag_negative": false,
+      "flag_zero": false
+    },
+    "DNA2": {
+      "n_events": 2400,
+      "negative_fraction": 0.0,
+      "zero_fraction": 0.0,
+      "median": 4.993857145309448,
+      "flag_negative": false,
+      "flag_zero": false
+    },
+    "Viability": {
+      "n_events": 2400,
+      "negative_fraction": 0.0,
+      "zero_fraction": 0.0,
+      "median": 4.999177932739258,
+      "flag_negative": false,
+      "flag_zero": false
+    },
+    "CD45": {
+      "n_events": 2400,
+      "negative_fraction": 0.0196,
+      "zero_fraction": 0.0,
+      "median": 4.871614456176758,
+      "flag_negative": false,
+      "flag_zero": false
+    },
+    "CD3": {
+      "n_events": 2400,
+      "negative_fraction": 0.0629,
+      "zero_fraction": 0.0,
+      "median": 0.7846203148365021,
+      "flag_negative": false,
+      "flag_zero": false
+    },
+    "CD4": {
+      "n_events": 2400,
+      "negative_fraction": 0.0879,
+      "zero_fraction": 0.0,
+      "median": 0.5912884771823883,
+      "flag_negative": false,
+      "flag_zero": false
+    },
+    "CD8": {
+      "n_events": 2400,
+      "negative_fraction": 0.0875,
+      "zero_fraction": 0.0,
+      "median": 0.6042421460151672,
+      "flag_negative": false,
+      "flag_zero": false
+    },
+    "CD19": {
+      "n_events": 2400,
+      "negative_fraction": 0.0854,
+      "zero_fraction": 0.0,
+      "median": 0.6002217829227448,
+      "flag_negative": false,
+      "flag_zero": false
+    },
+    "CD56": {
+      "n_events": 2400,
+      "negative_fraction": 0.0792,
+      "zero_fraction": 0.0,
+      "median": 0.6022641658782959,
+      "flag_negative": false,
+      "flag_zero": false
+    },
+    "CD11c": {
+      "n_events": 2400,
+      "negative_fraction": 0.0829,
+      "zero_fraction": 0.0,
+      "median": 0.6014466881752014,
+      "flag_negative": false,
+      "flag_zero": false
+    },
+    "CD14": {
+      "n_events": 2400,
+      "negative_fraction": 0.0862,
+      "zero_fraction": 0.0,
+      "median": 0.5839568674564362,
+      "flag_negative": false,
+      "flag_zero": false
+    }
+  },
+  "phenotypic_channels": [
+    "CD45",
+    "CD3",
+    "CD4",
+    "CD8",
+    "CD19",
+    "CD56",
+    "CD11c",
+    "CD14"
+  ],
+  "qc_only_channels": [
+    "Time",
+    "DNA1",
+    "DNA2",
+    "Viability"
+  ],
+  "acquisition_drift": {
+    "Time": {
+      "bin_medians": [
+        3.8675,
+        4.7168,
+        4.3797,
+        3.8675,
+        4.7168,
+        3.8675,
+        4.7168,
+        4.3797,
+        3.8675,
+        4.7168
+      ],
+      "median_drift": 0.8493,
+      "flag_drift": true
+    },
+    "DNA1": {
+      "bin_medians": [
+        0.8826,
+        0.8835,
+        0.8841,
+        0.8818,
+        0.8811,
+        0.8786,
+        0.8778,
+        0.8892,
+        0.8772,
+        0.8771
+      ],
+      "median_drift": 0.0121,
+      "flag_drift": false
+    },
+    "DNA2": {
+      "bin_medians": [
+        0.8797,
+        0.8772,
+        0.8754,
+        0.8783,
+        0.8872,
+        0.8813,
+        0.8822,
+        0.8817,
+        0.8805,
+        0.888
+      ],
+      "median_drift": 0.0126,
+      "flag_drift": false
+    },
+    "Viability": {
+      "bin_medians": [
+        0.88,
+        0.8807,
+        0.8835,
+        0.8757,
+        0.8814,
+        0.8834,
+        0.888,
+        0.8738,
+        0.885,
+        0.8797
+      ],
+      "median_drift": 0.0142,
+      "flag_drift": false
+    },
+    "CD45": {
+      "bin_medians": [
+        0.8839,
+        0.8813,
+        0.889,
+        0.8915,
+        0.8848,
+        0.8844,
+        0.8784,
+        0.8769,
+        0.1537,
+        0.1026
+      ],
+      "median_drift": 0.7889,
+      "flag_drift": true
+    },
+    "CD3": {
+      "bin_medians": [
+        0.1064,
+        0.1471,
+        0.8153,
+        0.8139,
+        0.8049,
+        0.0924,
+        0.1115,
+        0.105,
+        0.1114,
+        0.1027
+      ],
+      "median_drift": 0.7229,
+      "flag_drift": true
+    },
+    "CD4": {
+      "bin_medians": [
+        0.097,
+        0.1452,
+        0.7574,
+        0.1503,
+        0.0825,
+        0.1017,
+        0.1035,
+        0.098,
+        0.1037,
+        0.1031
+      ],
+      "median_drift": 0.675,
+      "flag_drift": true
+    },
+    "CD8": {
+      "bin_medians": [
+        0.088,
+        0.1094,
+        0.1034,
+        0.6955,
+        0.7358,
+        0.0917,
+        0.1021,
+        0.1065,
+        0.0956,
+        0.1085
+      ],
+      "median_drift": 0.6478,
+      "flag_drift": true
+    },
+    "CD19": {
+      "bin_medians": [
+        0.852,
+        0.8099,
+        0.0945,
+        0.1011,
+        0.102,
+        0.1029,
+        0.0975,
+        0.0954,
+        0.1071,
+        0.1075
+      ],
+      "median_drift": 0.7574,
+      "flag_drift": true
+    },
+    "CD56": {
+      "bin_medians": [
+        0.098,
+        0.0869,
+        0.0991,
+        0.1177,
+        0.1003,
+        0.107,
+        0.1455,
+        0.7929,
+        0.1365,
+        0.097
+      ],
+      "median_drift": 0.706,
+      "flag_drift": true
+    },
+    "CD11c": {
+      "bin_medians": [
+        0.1047,
+        0.1017,
+        0.0789,
+        0.1064,
+        0.1005,
+        0.7235,
+        0.6916,
+        0.1058,
+        0.0998,
+        0.0977
+      ],
+      "median_drift": 0.6446,
+      "flag_drift": true
+    },
+    "CD14": {
+      "bin_medians": [
+        0.0943,
+        0.1042,
+        0.0962,
+        0.0958,
+        0.1035,
+        0.8112,
+        0.7594,
+        0.1067,
+        0.0914,
+        0.0901
+      ],
+      "median_drift": 0.7211,
+      "flag_drift": true
+    }
+  },
+  "acquisition_drift_scope": "row order follows per-population file order in this benchmark; drift flags reflect file-to-file composition shifts, not instrument stability",
+  "populations": {
+    "B": {
+      "n_events": 400,
+      "flag_sparse": false
+    },
+    "CD4 T": {
+      "n_events": 400,
+      "flag_sparse": false
+    },
+    "CD8 T": {
+      "n_events": 400,
+      "flag_sparse": false
+    },
+    "Monocytes": {
+      "n_events": 400,
+      "flag_sparse": false
+    },
+    "NK": {
+      "n_events": 400,
+      "flag_sparse": false
+    },
+    "NotGated": {
+      "n_events": 400,
+      "flag_sparse": false
+    }
+  },
+  "per_population_recovery": {
+    "B": {
+      "n_events": 400,
+      "dominant_cluster": "1",
+      "recall": 1.0,
+      "purity": 1.0
+    },
+    "CD4 T": {
+      "n_events": 400,
+      "dominant_cluster": "4",
+      "recall": 1.0,
+      "purity": 1.0
+    },
+    "CD8 T": {
+      "n_events": 400,
+      "dominant_cluster": "0",
+      "recall": 1.0,
+      "purity": 1.0
+    },
+    "Monocytes": {
+      "n_events": 400,
+      "dominant_cluster": "5",
+      "recall": 1.0,
+      "purity": 1.0
+    },
+    "NK": {
+      "n_events": 400,
+      "dominant_cluster": "2",
+      "recall": 1.0,
+      "purity": 1.0
+    }
+  },
+  "cluster_to_population": {
+    "1": "B",
+    "4": "CD4 T",
+    "0": "CD8 T",
+    "5": "Monocytes",
+    "2": "NK"
+  }
+}

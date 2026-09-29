@@ -1,0 +1,41 @@
+"""cytof-qc DAG:
+
+    demo_data -> qc
+
+`snakemake -n` in CI; `rule all` runs the synthetic-FCS demo end to end —
+no downloads needed. Point DATA_DIR at a directory of gated
+<sample>_<population>_cells.fcs files for the real benchmark path.
+
+Demo FCS files are written by fcsio (bio-qc/fcs_io) and read back
+through cytof_qc.io's fcsio fallback, so the DAG exercises the sibling
+parser rather than the optional fcsparser dependency.
+"""
+
+import os
+
+PY = os.environ.get("PY", "python3")
+DATA_DIR = os.environ.get("DATA_DIR", "data/demo_fcs")
+OUT_DIR = os.environ.get("OUT_DIR", "results/demo_qc")
+
+
+rule all:
+    input:
+        f"{OUT_DIR}/metrics.json",
+
+
+rule demo_data:
+    output:
+        directory("data/demo_fcs"),
+    shell:
+        "PYTHONPATH=.:../fcs_io/src {PY} -m cytof_qc.demo_fcs {output}"
+
+
+rule qc:
+    input:
+        DATA_DIR,
+    output:
+        f"{OUT_DIR}/metrics.json",
+    shell:
+        "PYTHONPATH=.:../fcs_io/src {PY} -m cytof_qc.pipeline "
+        "--data-dir {input} --out " + OUT_DIR +
+        " --label 'synthetic demo (fcsio-generated FCS)'"

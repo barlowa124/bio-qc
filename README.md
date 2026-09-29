@@ -11,7 +11,8 @@ own tests, config, and commit history (imported via subtree merge).
 
 | Directory | What it does |
 |---|---|
-| `cytof_qc/` | Mass-cytometry QC and batch-alignment pipeline: arcsinh transform, drift checks, clustering, per-population metrics, plus a deployed review app. |
+| `cytof_qc/` | Mass-cytometry QC and batch-alignment pipeline: arcsinh transform, drift checks, clustering, per-population metrics, a deployed review app, and a Snakemake DAG (`workflow/Snakefile`) that runs on generated FCS fixtures with no downloads. |
+| `fcs_io/` | Dependency-free FCS 3.0/3.1 parser and writer with explicit vendor-quirk handling; wired into `cytof_qc` as the fallback FCS reader. |
 | `organoid_qc/` | Organoid fidelity scoring: scRNA-seq organoid clusters vs tissue-reference centroids, per-cluster and per-cell-type fidelity, fail-closed QC flags. |
 
 ## Running tests
