@@ -35,12 +35,12 @@ published manual gates.
 - 265,627 events clustered, 104,184 scored on gated events
 - 14 gated populations, 39 Leiden clusters
 - Agreement: **ARI 0.412, NMI 0.728**, lower than 13dim as expected on
-  the progenitor-rich panel. Consistent across donors (H1 ARI 0.432,
+  the progenitor-heavy panel. Consistent across donors (H1 ARI 0.432,
   H2 ARI 0.491 after batch alignment).
 - The measured per-channel batch shifts between donors are committed in
   the metrics file. The largest correction was DNA2 at 2.3 arcsinh
-  units, a normalization/donor effect rather than a staining failure
-- CD16+ NK cells, HSCs, and pDCs recover cleanly with recall above 0.98.
+  units, a normalization/donor effect, not a staining failure
+- CD16+ NK cells, HSCs and pDCs recover cleanly with recall above 0.98.
   Monocytes and CD4/CD8 T cells split across multiple clusters, the
   known hard case at this resolution
 
@@ -62,10 +62,10 @@ python -m pytest tests/ -q                            # 35 tests
 
 ### Web service
 
-Live: <https://cytof-qc-production.up.railway.app> — upload `.fcs` or
-`.csv` events and get channel QC, drift flags, and Leiden clusters with
-a UMAP view. No file handy? The "load an example report" link renders a
-precomputed 9,222-event Levine_13dim analysis without uploading anything:
+Live: <https://cytof-qc-production.up.railway.app>. Upload `.fcs` or
+`.csv` events and get channel QC, drift flags and Leiden clusters with
+a UMAP view. The "load an example report" link renders a precomputed
+9,222-event Levine_13dim analysis without uploading anything:
 
 ```bash
 cd app && npm install && npm run build && cd ..    # build the React app once
@@ -79,31 +79,31 @@ ghcr.io/barlowa124/cytof-qc:latest`.
 Analysis runs as a job: the POST parses uploads and returns a
 `{job_id}` immediately, `GET /api/jobs/{id}` polls to the report.
 Uploaded data has no manual gates, so the service reports descriptive
-QC and cluster structure only — never agreement metrics it cannot
+QC and cluster structure only, never agreement metrics it cannot
 support. Measured iterations live in CHANGELOG.md.
 
 ### Ops notes
 
 - **Limits**: ≤200 files/upload, ≤200 MB/file, ≤500k total events,
-  ≥16 events. At most 2 analyses run at once; a third POST gets 429.
-- **Rate limit**: 12 submits/hour per client IP (rightmost
-  `X-Forwarded-For` — the entry appended by Railway's edge, not a
+  ≥16 events. At most 2 analyses run at once. A third POST gets 429.
+- **Rate limit**: 12 submits/hour per client IP (the rightmost
+  `X-Forwarded-For` entry, the one Railway's edge appends, not a
   client-supplied one). Excess submits get `429` before any parse work.
 - **Durable state**: job transitions and the request log append to
   `jobs.jsonl` / `service_requests.jsonl` under `CYTOF_STATE_DIR`
   (else a mounted volume's `RAILWAY_VOLUME_MOUNT_PATH`, else the repo
-  dir). On a volume they survive redeploys — a job still `running` at
-  restart replays as `error: interrupted by restart` rather than
+  dir). On a volume they survive redeploys. A job still `running` at
+  restart replays as `error: interrupted by restart` instead of
   silently resuming or 404ing. Without a volume this degrades to
   per-container state.
 - **Logs**: every request emits one JSON line to stdout (`ts`, `path`,
-  `status`, `ms`, `n_events` when known) — platform log capture
-  retains it across redeploys. `GET /api/stats` serves the aggregate
-  (counts, status split, p50/p95 latency, event range);
+  `status`, `ms`, `n_events` when known). Platform log capture retains
+  it across redeploys. `GET /api/stats` serves the aggregate (counts,
+  status split, p50/p95 latency, event range).
   `scripts/summarize_requests.py` reads the file form back.
 - **Honest ceiling**: this is a hardened demo service, not a staffed
-  production system — no auth on submits, in-process job workers
-  (not a queue), and no uptime history behind it.
+  production system: no auth on submits, in-process job workers
+  (not a queue), no uptime history behind it.
 
 ## Layout
 
