@@ -24,7 +24,7 @@ which still apply.
 
 ## Why one repo
 
-Both answer the same question — does this population-level measurement
-match its reference — over different measurement technologies, with the
+Both answer the same question (does this population-level measurement
+match its reference) over different measurement technologies, with the
 same score-and-report shape and the same rule that pooled metrics must not
 hide failed subpopulations.

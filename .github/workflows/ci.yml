@@ -1,0 +1,46 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  cytof-qc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - working-directory: cytof_qc
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python -m pytest tests/ -q
+
+  cytof-qc-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - working-directory: cytof_qc/app
+        run: |
+          npm ci
+          npm run build
+
+  organoid-qc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - working-directory: organoid_qc
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[test]
+          PYTHONPATH=src python -m pytest tests/ -q
+          pip install snakemake && snakemake -n -s workflow/Snakefile
