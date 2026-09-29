@@ -22,3 +22,8 @@ th { color: #8b98a5; font-weight: normal; }
 tr.flag td { color: #f28e2b; }
 section { margin-top: 2rem; }
 h3 { font-size: 0.95rem; color: #aab6c2; font-weight: normal; text-transform: uppercase; letter-spacing: 0.06em; }
+button.link {
+  background: none; border: none; padding: 0; cursor: pointer;
+  color: #4e79a7; font: inherit; text-decoration: underline;
+}
+button.link:hover { color: #7ba7d0; }

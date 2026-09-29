@@ -52,6 +52,29 @@ export function App() {
         />
         {busy ? 'analysis running — large uploads take a minute or two' : 'choose files'}
       </label>
+      <p>
+        or{' '}
+        <button
+          type="button"
+          className="link"
+          onClick={async () => {
+            setError(null);
+            setBusy(true);
+            try {
+              const r = await fetch('/example_report.json');
+              if (!r.ok) throw new Error(`HTTP ${r.status}`);
+              setReport(await r.json());
+            } catch (e) {
+              setError(e instanceof Error ? e.message : String(e));
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          load an example report
+        </button>{' '}
+        (9,222 Levine bone-marrow events, precomputed)
+      </p>
       {error && <p className="err">{error}</p>}
       {report && <ReportView report={report} />}
     </main>
