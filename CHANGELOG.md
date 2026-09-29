@@ -44,3 +44,8 @@ fields (`load_ms`, `cluster_embed_ms`, `analyze_ms`).
   frontend COPY list, so the file silently never reached the image;
   and only `dist/assets` was mounted, so top-level dist files 404'd.
   Both caught by testing the deployed URL, not the local build.
+- `GET /api/stats` serves the request-log summary live (counts,
+  status split, p50/p95 latency, event-range) — the instrumentation
+  is inspectable, not just claimed. Guard paths that were previously
+  untested now covered: file-size cap via bounded read, 429 at the
+  concurrency limit, TTL expiry of finished jobs.

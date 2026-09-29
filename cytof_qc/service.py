@@ -189,6 +189,40 @@ def create_app():
     def health():
         return {"ok": True, "version": "0.1.0"}
 
+    @app.get("/api/stats")
+    def stats():
+        """Request-log summary — the same aggregate view the offline
+        summarizer prints, served live so the instrumentation is
+        inspectable, not just claimed."""
+        entries = []
+        try:
+            with _REQUEST_LOG.open() as fh:
+                for line in fh:
+                    try:
+                        entries.append(json.loads(line))
+                    except json.JSONDecodeError:
+                        continue
+        except OSError:
+            pass
+        by_status = {}
+        for e in entries:
+            by_status[e.get("status")] = by_status.get(e.get("status"), 0) + 1
+        lat = sorted(e["ms"] for e in entries if "ms" in e)
+        nev = sorted(e["n_events"] for e in entries if "n_events" in e)
+
+        def pct(xs, p):
+            return xs[min(len(xs) - 1, int(len(xs) * p))] if xs else None
+
+        return {
+            "requests": len(entries),
+            "by_status": by_status,
+            "latency_ms": {"p50": pct(lat, 0.5), "p95": pct(lat, 0.95)},
+            "n_events": {
+                "min": nev[0] if nev else None,
+                "max": nev[-1] if nev else None,
+            },
+        }
+
     @app.get("/", include_in_schema=False)
     def index():
         idx = dist / "index.html"

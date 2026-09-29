@@ -144,3 +144,62 @@ def test_analyze_endpoint_rejects_bad_file():
 def test_analyze_endpoint_rejects_empty_upload():
     resp = _client().post("/api/analyze", files=[])
     assert resp.status_code in (400, 422)
+
+
+def test_upload_over_file_cap_rejected(monkeypatch):
+    # even a small file is over the cap once MAX_FILE_BYTES is lowered —
+    # exercises the bounded-read path without needing a 200MB fixture
+    monkeypatch.setattr(service, "MAX_FILE_BYTES", 64)
+    df = _two_pop_events(n=40)
+    buf = stdio.BytesIO(df.to_csv(index=False).encode())
+    resp = _client().post(
+        "/api/analyze", files=[("files", ("big.csv", buf, "text/csv"))]
+    )
+    assert resp.status_code == 400
+    assert "file cap" in resp.json()["error"]
+
+
+def test_busy_returns_429(monkeypatch):
+    monkeypatch.setattr(service, "MAX_RUNNING_JOBS", 0)
+    df = _two_pop_events(n=40)
+    buf = stdio.BytesIO(df.to_csv(index=False).encode())
+    resp = _client().post(
+        "/api/analyze", files=[("files", ("ok.csv", buf, "text/csv"))]
+    )
+    assert resp.status_code == 429
+
+
+def test_finished_jobs_expire_past_ttl():
+    service._JOBS["oldjob000000"] = {
+        "status": "done",
+        "started": time.time() - service.JOB_TTL_S - 10,
+        "n_events": 50,
+        "report": {},
+    }
+    df = _two_pop_events(n=40)
+    buf = stdio.BytesIO(df.to_csv(index=False).encode())
+    resp = _client().post(
+        "/api/analyze", files=[("files", ("ok.csv", buf, "text/csv"))]
+    )
+    assert resp.status_code == 200
+    assert "oldjob000000" not in service._JOBS
+
+
+def test_stats_endpoint_reports_log_summary(tmp_path, monkeypatch):
+    log = tmp_path / "requests.jsonl"
+    log.write_text(
+        '\n'.join([
+            '{"ts":1,"path":"/api/analyze","status":200,"ms":100,"n_events":500}',
+            '{"ts":2,"path":"/api/analyze","status":400,"ms":20}',
+            '{"ts":3,"path":"/health","status":200,"ms":2}',
+        ]) + "\n"
+    )
+    monkeypatch.setattr(service, "_REQUEST_LOG", log)
+    resp = _client().get("/api/stats")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["requests"] == 3
+    assert body["by_status"]["200"] == 2
+    assert body["by_status"]["400"] == 1
+    assert body["latency_ms"]["p50"] == 20
+    assert body["n_events"]["max"] == 500
