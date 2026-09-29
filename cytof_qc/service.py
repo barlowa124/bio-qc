@@ -308,6 +308,12 @@ def create_app():
             "elapsed_s": round(time.time() - job["started"], 1),
         }
 
+    # SPA static root LAST so /api/* and /health routes match first;
+    # serves index.html, /assets/*, and top-level files like
+    # example_report.json.
+    if dist.is_dir():
+        app.mount("/", StaticFiles(directory=dist, html=True), name="spa")
+
     return app
 
 
