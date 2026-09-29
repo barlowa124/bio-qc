@@ -17,7 +17,18 @@ export function App() {
       const resp = await fetch('/api/analyze', { method: 'POST', body: fd });
       const body = await resp.json();
       if (!resp.ok) throw new Error(body.error || `HTTP ${resp.status}`);
-      setReport(body);
+      // analysis runs as a job — poll until the report is ready
+      const jobId: string = body.job_id;
+      for (let i = 0; i < 150; i++) {
+        await new Promise((r) => setTimeout(r, 2000));
+        const jr = await fetch(`/api/jobs/${jobId}`);
+        const jb = await jr.json();
+        if (jb.status === 'running') continue;
+        if (jb.status === 'error') throw new Error(jb.error);
+        setReport(jb);
+        return;
+      }
+      throw new Error('analysis timed out after 5 minutes');
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -39,7 +50,7 @@ export function App() {
           accept=".fcs,.csv"
           onChange={(e) => onFiles(e.target.files)}
         />
-        {busy ? 'analyzing…' : 'choose files'}
+        {busy ? 'analysis running — large uploads take a minute or two' : 'choose files'}
       </label>
       {error && <p className="err">{error}</p>}
       {report && <ReportView report={report} />}

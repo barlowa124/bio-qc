@@ -10,7 +10,9 @@ cluster structure plus QC flags — not agreement scoring.
 import json
 import logging
 import tempfile
+import threading
 import time
+import uuid
 from pathlib import Path
 
 import numpy as np
@@ -23,6 +25,14 @@ MAX_EVENTS = 500_000
 MAX_EMBED_POINTS = 20_000
 
 _REQUEST_LOG = Path(__file__).resolve().parent.parent / "service_requests.jsonl"
+
+# analysis jobs: clustering a 50k-event upload takes ~90s on a shared
+# CPU — too long to hold an HTTP request open. POST returns a job id,
+# GET /api/jobs/{id} polls it.
+_JOBS = {}
+_JOBS_LOCK = threading.Lock()
+MAX_RUNNING_JOBS = 2
+JOB_TTL_S = 3600
 
 
 def analyze_events(events: pd.DataFrame) -> dict:
@@ -177,8 +187,8 @@ def create_app():
             return JSONResponse(
                 {"error": f"upload 1–{MAX_UPLOAD_FILES} files"}, status_code=400
             )
-        # stage timing goes into the request log and the response, so
-        # "analyze took 40s" is attributable to parse vs cluster vs embed
+        # parse synchronously so malformed uploads fail fast with a 400;
+        # the expensive cluster+embed runs as a background job
         t_load = time.time()
         frames = []
         for f in files:
@@ -188,17 +198,68 @@ def create_app():
             except Exception as exc:
                 return JSONResponse({"error": str(exc)}, status_code=400)
         load_ms = round((time.time() - t_load) * 1000)
-        try:
+
+        events = pd.concat(frames, ignore_index=True)
+        n_events = len(events)
+        request.state.n_events = n_events
+        if n_events > MAX_EVENTS:
+            return JSONResponse(
+                {"error": f"{n_events} events exceeds the {MAX_EVENTS} cap"},
+                status_code=400,
+            )
+
+        with _JOBS_LOCK:
+            running = sum(1 for j in _JOBS.values() if j["status"] == "running")
+            if running >= MAX_RUNNING_JOBS:
+                return JSONResponse(
+                    {"error": "service busy, retry shortly"}, status_code=429
+                )
+            done = sorted(
+                (jid for jid, j in _JOBS.items() if j["status"] != "running"),
+                key=lambda jid: _JOBS[jid]["started"],
+            )
+            for jid in done[: max(0, len(_JOBS) - 50)]:
+                _JOBS.pop(jid, None)
+            job_id = uuid.uuid4().hex[:12]
+            _JOBS[job_id] = {
+                "status": "running",
+                "started": time.time(),
+                "n_events": n_events,
+            }
+
+        def _run():
             t_analyze = time.time()
-            report = analyze_events(pd.concat(frames, ignore_index=True))
-            report["timing"].update({
-                "load_ms": load_ms,
-                "analyze_ms": round((time.time() - t_analyze) * 1000),
-            })
-            request.state.n_events = report["n_events"]
-            return report
-        except ValueError as exc:
-            return JSONResponse({"error": str(exc)}, status_code=400)
+            try:
+                report = analyze_events(events)
+                report["timing"].update({
+                    "load_ms": load_ms,
+                    "analyze_ms": round((time.time() - t_analyze) * 1000),
+                })
+                with _JOBS_LOCK:
+                    _JOBS[job_id].update(status="done", report=report)
+            except Exception as exc:
+                with _JOBS_LOCK:
+                    _JOBS[job_id].update(status="error", error=str(exc))
+
+        threading.Thread(target=_run, daemon=True).start()
+        return {"job_id": job_id, "status": "running", "n_events": n_events}
+
+    @app.get("/api/jobs/{job_id}")
+    def job_status(job_id: str):
+        job = _JOBS.get(job_id)
+        if job is None:
+            return JSONResponse({"error": "unknown job"}, status_code=404)
+        if job["status"] == "done":
+            return {**job["report"], "status": "done"}
+        if job["status"] == "error":
+            return JSONResponse(
+                {"status": "error", "error": job["error"]}, status_code=200
+            )
+        return {
+            "status": "running",
+            "n_events": job["n_events"],
+            "elapsed_s": round(time.time() - job["started"], 1),
+        }
 
     return app
 

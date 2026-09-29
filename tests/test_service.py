@@ -67,16 +67,38 @@ def test_health_endpoint():
 def test_analyze_endpoint_accepts_csv():
     df = _two_pop_events()
     buf = stdio.BytesIO(df.to_csv(index=False).encode())
-    resp = _client().post(
+    client = _client()
+    resp = client.post(
         "/api/analyze", files=[("files", ("events.csv", buf, "text/csv"))]
     )
     assert resp.status_code == 200, resp.text
-    report = resp.json()
+    job = resp.json()
+    assert job["status"] == "running"
+    assert job["n_events"] == 1600
+
+    report = None
+    for _ in range(120):
+        jr = client.get(f"/api/jobs/{job['job_id']}")
+        body = jr.json()
+        if body.get("status") == "running":
+            import time
+
+            time.sleep(0.5)
+            continue
+        report = body
+        break
+    assert report is not None, "job never finished"
     assert report["n_events"] == 1600
     assert report["n_clusters_found"] >= 2
     assert report["acquisition_drift"]
+    assert report["timing"]["analyze_ms"] > 0
     # uploads have no manual gates — no agreement claims
     assert "agreement" not in report
+
+
+def test_unknown_job_404():
+    resp = _client().get("/api/jobs/deadbeefdead")
+    assert resp.status_code == 404
 
 
 def test_analyze_endpoint_rejects_bad_file():
