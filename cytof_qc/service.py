@@ -35,6 +35,18 @@ _JOBS = {}
 _JOBS_LOCK = threading.Lock()
 MAX_RUNNING_JOBS = 2
 JOB_TTL_S = 3600
+MAX_JOB_RUNTIME_S = 900
+
+
+def _expire_hung_locked(now=None):
+    """Mark jobs still 'running' past the runtime cap as failed. Call
+    with _JOBS_LOCK held. Guards against a hung worker permanently
+    holding a MAX_RUNNING_JOBS slot — the daemon thread may still be
+    stuck, but slot bookkeeping no longer waits on it."""
+    now = time.time() if now is None else now
+    for jid, j in _JOBS.items():
+        if j["status"] == "running" and now - j["started"] > MAX_JOB_RUNTIME_S:
+            j.update(status="error", error="job exceeded runtime cap")
 
 
 def analyze_events(events: pd.DataFrame) -> dict:
@@ -232,6 +244,7 @@ def create_app():
             )
 
         with _JOBS_LOCK:
+            _expire_hung_locked()
             running = sum(1 for j in _JOBS.values() if j["status"] == "running")
             if running >= MAX_RUNNING_JOBS:
                 return JSONResponse(
@@ -278,8 +291,10 @@ def create_app():
 
     @app.get("/api/jobs/{job_id}")
     def job_status(job_id: str):
-        job = _JOBS.get(job_id)
-        if job is None:
+        with _JOBS_LOCK:
+            _expire_hung_locked()
+            job = dict(_JOBS.get(job_id) or {})
+        if not job:
             return JSONResponse({"error": "unknown job"}, status_code=404)
         if job["status"] == "done":
             return {**job["report"], "status": "done"}

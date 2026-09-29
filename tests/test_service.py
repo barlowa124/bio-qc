@@ -1,4 +1,5 @@
 import io as stdio
+import time
 
 import numpy as np
 import pandas as pd
@@ -99,6 +100,22 @@ def test_analyze_endpoint_accepts_csv():
 def test_unknown_job_404():
     resp = _client().get("/api/jobs/deadbeefdead")
     assert resp.status_code == 404
+
+
+def test_hung_job_expires_to_error():
+    service._JOBS["hungjob12345"] = {
+        "status": "running",
+        "started": time.time() - service.MAX_JOB_RUNTIME_S - 1,
+        "n_events": 100,
+    }
+    try:
+        resp = _client().get("/api/jobs/hungjob12345")
+        assert resp.status_code == 200
+        body = resp.json()
+        assert body["status"] == "error"
+        assert "runtime" in body["error"]
+    finally:
+        service._JOBS.pop("hungjob12345", None)
 
 
 def test_analyze_endpoint_rejects_tiny_upload():
