@@ -62,8 +62,9 @@ python -m pytest tests/ -q                            # 35 tests
 
 ### Web service
 
-Upload `.fcs` or `.csv` events and get channel QC, drift flags, and
-Leiden clusters with a UMAP view:
+Live: <https://cytof-qc-production.up.railway.app> — upload `.fcs` or
+`.csv` events and get channel QC, drift flags, and Leiden clusters with
+a UMAP view:
 
 ```bash
 cd app && npm install && npm run build && cd ..    # build the React app once
