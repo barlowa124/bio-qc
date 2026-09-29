@@ -64,7 +64,8 @@ python -m pytest tests/ -q                            # 35 tests
 
 Live: <https://cytof-qc-production.up.railway.app> — upload `.fcs` or
 `.csv` events and get channel QC, drift flags, and Leiden clusters with
-a UMAP view:
+a UMAP view. No file handy? The "load an example report" link renders a
+precomputed 9,222-event Levine_13dim analysis without uploading anything:
 
 ```bash
 cd app && npm install && npm run build && cd ..    # build the React app once
