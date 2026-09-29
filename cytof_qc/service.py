@@ -51,9 +51,21 @@ def analyze_events(events: pd.DataFrame) -> dict:
 
     from . import cluster
 
-    adata = cluster.cluster_events(transformed[channels], channels)
+    t_cluster = time.time()
+    # cluster on all events; the embedding is display-only, so it is
+    # computed on the subsample the browser actually receives
+    adata = cluster.cluster_events(transformed[channels], channels, umap=False)
     clusters = adata.obs["cluster"].to_numpy()
-    embed = adata.obsm["X_umap"]
+
+    if len(events) > MAX_EMBED_POINTS:
+        rng = np.random.default_rng(0)
+        keep = np.sort(rng.choice(len(events), MAX_EMBED_POINTS, replace=False))
+    else:
+        keep = np.arange(len(events))
+    embed = cluster.embed_events(
+        transformed.iloc[keep].reset_index(drop=True), channels
+    )
+    cluster_ms = round((time.time() - t_cluster) * 1000)
 
     # what defines each cluster: per-channel median arcsinh intensity,
     # so the report answers "which markers are these" not just "how many"
@@ -62,14 +74,6 @@ def analyze_events(events: pd.DataFrame) -> dict:
         str(cl): {ch: round(float(v), 3) for ch, v in row.items()}
         for cl, row in labeled.groupby("cluster")[channels].median().iterrows()
     }
-
-    # the browser renders a deterministic subsample; full clusters are
-    # reported in the counts table either way
-    if len(embed) > MAX_EMBED_POINTS:
-        rng = np.random.default_rng(0)
-        keep = np.sort(rng.choice(len(embed), MAX_EMBED_POINTS, replace=False))
-    else:
-        keep = np.arange(len(embed))
 
     return {
         "n_events": int(len(events)),
@@ -81,11 +85,12 @@ def analyze_events(events: pd.DataFrame) -> dict:
             str(k): int(v)
             for k, v in pd.Series(clusters).value_counts().sort_index().items()
         },
-        "embedding": embed[keep].astype(float).tolist(),
+        "embedding": embed.astype(float).tolist(),
         "embedding_clusters": clusters[keep].tolist(),
         "cluster_profiles": profiles,
         "channels": channel_report,
         "acquisition_drift": drift_report,
+        "timing": {"cluster_embed_ms": cluster_ms},
         "scope": (
             "descriptive QC on uploaded events; no manual gates supplied, "
             "so no agreement metrics are reported"
@@ -186,10 +191,10 @@ def create_app():
         try:
             t_analyze = time.time()
             report = analyze_events(pd.concat(frames, ignore_index=True))
-            report["timing"] = {
+            report["timing"].update({
                 "load_ms": load_ms,
                 "analyze_ms": round((time.time() - t_analyze) * 1000),
-            }
+            })
             request.state.n_events = report["n_events"]
             return report
         except ValueError as exc:

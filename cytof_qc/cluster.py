@@ -15,12 +15,14 @@ def cluster_events(
     n_neighbors: int = 15,
     resolution: float = 1.0,
     random_state: int = 0,
+    umap: bool = True,
 ) -> ad.AnnData:
     """Leiden-cluster events on the selected marker channels.
 
     Input is already arcsinh-transformed. Returns the AnnData with
-    ``.obs["cluster"]``, UMAP coordinates in ``.obsm["X_umap"]``, and the
-    original transformed values in ``.X``.
+    ``.obs["cluster"]`` and, unless ``umap=False``, UMAP coordinates in
+    ``.obsm["X_umap"]``. Skipping UMAP is for callers that only need
+    cluster labels — the embedding is the expensive stage.
     """
     adata = ad.AnnData(events_t[channels].to_numpy(dtype=np.float32))
     adata.var_names = channels
@@ -35,5 +37,25 @@ def cluster_events(
         directed=False,
         key_added="cluster",
     )
-    sc.tl.umap(adata, random_state=random_state)
+    if umap:
+        sc.tl.umap(adata, random_state=random_state)
     return adata
+
+
+def embed_events(
+    events_t: pd.DataFrame,
+    channels: list[str],
+    *,
+    n_neighbors: int = 15,
+    random_state: int = 0,
+) -> np.ndarray:
+    """UMAP embedding for a (typically subsampled) event table.
+
+    No Leiden — this is a display projection only, so callers attach
+    cluster labels from the full-data clustering themselves.
+    """
+    adata = ad.AnnData(events_t[channels].to_numpy(dtype=np.float32))
+    adata.var_names = channels
+    sc.pp.neighbors(adata, n_neighbors=n_neighbors, random_state=random_state)
+    sc.tl.umap(adata, random_state=random_state)
+    return adata.obsm["X_umap"]
