@@ -7,3 +7,4 @@ service_requests.jsonl
 app/node_modules/
 app/dist/
 app/tsconfig.tsbuildinfo
+jobs.jsonl

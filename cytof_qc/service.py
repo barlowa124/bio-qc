@@ -9,10 +9,12 @@ cluster structure plus QC flags — not agreement scoring.
 
 import json
 import logging
+import os
 import tempfile
 import threading
 import time
 import uuid
+from collections import deque
 from pathlib import Path
 
 import numpy as np
@@ -26,16 +28,102 @@ MAX_EMBED_POINTS = 20_000
 MAX_FILE_BYTES = 200_000_000  # per uploaded file, before parse
 MIN_EVENTS = 16               # clustering needs >= n_neighbors events
 
-_REQUEST_LOG = Path(__file__).resolve().parent.parent / "service_requests.jsonl"
+# State lives under CYTOF_STATE_DIR, a mounted Railway volume path, or
+# the repo dir — in that order. On a volume it survives redeploys;
+# without one it degrades to per-container state as before.
+_STATE_DIR = Path(
+    os.environ.get("CYTOF_STATE_DIR")
+    or os.environ.get("RAILWAY_VOLUME_MOUNT_PATH")
+    or Path(__file__).resolve().parent.parent
+)
+_REQUEST_LOG = _STATE_DIR / "service_requests.jsonl"
+_JOBS_FILE = _STATE_DIR / "jobs.jsonl"
 
 # analysis jobs: clustering a 50k-event upload takes ~90s on a shared
 # CPU — too long to hold an HTTP request open. POST returns a job id,
-# GET /api/jobs/{id} polls it.
+# GET /api/jobs/{id} polls it. Job transitions append to _JOBS_FILE so
+# a restart can replay them; a job 'running' at load died with the
+# process and is marked error.
 _JOBS = {}
 _JOBS_LOCK = threading.Lock()
 MAX_RUNNING_JOBS = 2
 JOB_TTL_S = 3600
 MAX_JOB_RUNTIME_S = 900
+
+# per-IP submit throttle — the endpoint is open, so without a cap a
+# single client can hold the CPU busy indefinitely
+_RL_LOCK = threading.Lock()
+_SUBMIT_TIMES = {}  # client ip -> deque of recent POST timestamps
+RATE_LIMIT_WINDOW_S = 3600
+RATE_LIMIT_MAX = 12
+
+
+def _rate_limit_ok(client_ip):
+    """True while client_ip is under RATE_LIMIT_MAX submits per window."""
+    now = time.time()
+    with _RL_LOCK:
+        times = _SUBMIT_TIMES.setdefault(client_ip, deque())
+        while times and now - times[0] > RATE_LIMIT_WINDOW_S:
+            times.popleft()
+        if len(times) >= RATE_LIMIT_MAX:
+            return False
+        times.append(now)
+        return True
+
+
+def _persist_job(job_id, job):
+    """Append the job's current state to the durable log."""
+    try:
+        with _JOBS_FILE.open("a") as fh:
+            fh.write(json.dumps({"job_id": job_id, **job}, default=str) + "\n")
+    except OSError:
+        logging.getLogger("cytof_qc.service").warning("job log write failed")
+
+
+def _load_jobs():
+    """Replay the durable job log into _JOBS, then compact and rewrite.
+    A job still 'running' at load died with the process — mark it error
+    rather than resuming silently."""
+    if not _JOBS_FILE.exists():
+        return
+    try:
+        for line in _JOBS_FILE.read_text().splitlines():
+            try:
+                rec = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            jid = rec.pop("job_id", None)
+            if jid:
+                _JOBS[jid] = rec
+    except OSError:
+        return
+    for j in _JOBS.values():
+        if j["status"] == "running":
+            j.update(status="error", error="interrupted by restart")
+    _compact_jobs()
+
+
+def _compact_jobs(now=None):
+    """Drop finished jobs past TTL, keep last 50 finished + all running;
+    rewrite the durable log so pruned entries don't resurrect."""
+    now = time.time() if now is None else now
+    running = {k: v for k, v in _JOBS.items() if v["status"] == "running"}
+    finished = sorted(
+        (kv for kv in _JOBS.items() if kv[1]["status"] != "running"),
+        key=lambda kv: kv[1]["started"],
+    )
+    finished = [
+        kv for kv in finished if now - kv[1]["started"] <= JOB_TTL_S
+    ][-50:]
+    _JOBS.clear()
+    _JOBS.update(finished)
+    _JOBS.update(running)
+    try:
+        with _JOBS_FILE.open("w") as fh:
+            for jid, j in _JOBS.items():
+                fh.write(json.dumps({"job_id": jid, **j}, default=str) + "\n")
+    except OSError:
+        pass
 
 
 def _expire_hung_locked(now=None):
@@ -47,6 +135,7 @@ def _expire_hung_locked(now=None):
     for jid, j in _JOBS.items():
         if j["status"] == "running" and now - j["started"] > MAX_JOB_RUNTIME_S:
             j.update(status="error", error="job exceeded runtime cap")
+            _persist_job(jid, j)
 
 
 def analyze_events(events: pd.DataFrame) -> dict:
@@ -161,6 +250,12 @@ def create_app():
         CORSMiddleware, allow_origins=["*"], allow_methods=["*"]
     )
 
+    try:
+        _STATE_DIR.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        pass
+    _load_jobs()
+
     dist = Path(__file__).resolve().parent.parent / "app" / "dist"
     if dist.is_dir():
         app.mount("/assets", StaticFiles(directory=dist / "assets"), name="a")
@@ -178,6 +273,9 @@ def create_app():
         n_events = getattr(request.state, "n_events", None)
         if n_events is not None:
             entry["n_events"] = n_events
+        # stdout too — container logs outlive the filesystem, so the
+        # record survives redeploys even without a mounted volume
+        logging.getLogger("cytof_qc.requests").info(json.dumps(entry))
         try:
             with _REQUEST_LOG.open("a") as fh:
                 fh.write(json.dumps(entry) + "\n")
@@ -234,6 +332,14 @@ def create_app():
     async def analyze(
         request: Request, files: List[UploadFile] = File(...)
     ):
+        # throttle before any parse work — counts attempts, not successes
+        fwd = (request.headers.get("x-forwarded-for") or "").split(",")[0].strip()
+        client_ip = fwd or (request.client.host if request.client else "unknown")
+        if not _rate_limit_ok(client_ip):
+            return JSONResponse(
+                {"error": f"rate limited ({RATE_LIMIT_MAX}/hour)"},
+                status_code=429,
+            )
         if not files or len(files) > MAX_UPLOAD_FILES:
             return JSONResponse(
                 {"error": f"upload 1–{MAX_UPLOAD_FILES} files"}, status_code=400
@@ -284,27 +390,16 @@ def create_app():
                 return JSONResponse(
                     {"error": "service busy, retry shortly"}, status_code=429
                 )
-            # expire finished jobs past TTL, then bound the map by count
-            stale = [
-                jid
-                for jid, j in _JOBS.items()
-                if j["status"] != "running"
-                and time.time() - j["started"] > JOB_TTL_S
-            ]
-            for jid in stale:
-                _JOBS.pop(jid, None)
-            done = sorted(
-                (jid for jid, j in _JOBS.items() if j["status"] != "running"),
-                key=lambda jid: _JOBS[jid]["started"],
-            )
-            for jid in done[: max(0, len(_JOBS) - 50)]:
-                _JOBS.pop(jid, None)
+            # expire finished jobs past TTL, bound the map by count,
+            # and keep the durable log in sync
+            _compact_jobs()
             job_id = uuid.uuid4().hex[:12]
             _JOBS[job_id] = {
                 "status": "running",
                 "started": time.time(),
                 "n_events": n_events,
             }
+            _persist_job(job_id, _JOBS[job_id])
 
         def _run():
             t_analyze = time.time()
@@ -315,10 +410,16 @@ def create_app():
                     "analyze_ms": round((time.time() - t_analyze) * 1000),
                 })
                 with _JOBS_LOCK:
-                    _JOBS[job_id].update(status="done", report=report)
+                    job = _JOBS.get(job_id)
+                    if job is not None:
+                        job.update(status="done", report=report)
+                        _persist_job(job_id, job)
             except Exception as exc:
                 with _JOBS_LOCK:
-                    _JOBS[job_id].update(status="error", error=str(exc))
+                    job = _JOBS.get(job_id)
+                    if job is not None:
+                        job.update(status="error", error=str(exc))
+                        _persist_job(job_id, job)
 
         threading.Thread(target=_run, daemon=True).start()
         return {"job_id": job_id, "status": "running", "n_events": n_events}

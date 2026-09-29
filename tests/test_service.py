@@ -1,4 +1,5 @@
 import io as stdio
+import json
 import time
 
 import numpy as np
@@ -6,6 +7,16 @@ import pandas as pd
 import pytest
 
 from cytof_qc import service
+
+
+@pytest.fixture(autouse=True)
+def _isolated_state(tmp_path, monkeypatch):
+    """Keep durable-state writes out of the repo and reset the
+    per-IP submit window (the suite shares one testclient IP)."""
+    monkeypatch.setattr(service, "_JOBS_FILE", tmp_path / "jobs.jsonl")
+    monkeypatch.setattr(service, "_REQUEST_LOG", tmp_path / "req.jsonl")
+    service._SUBMIT_TIMES.clear()
+    yield
 
 
 def _two_pop_events(n=800, seed=0):
@@ -183,6 +194,46 @@ def test_finished_jobs_expire_past_ttl():
     )
     assert resp.status_code == 200
     assert "oldjob000000" not in service._JOBS
+
+
+def test_submit_rate_limit(monkeypatch):
+    monkeypatch.setattr(service, "RATE_LIMIT_MAX", 2)
+    df = _two_pop_events(n=40)
+    codes = []
+    for _ in range(3):
+        buf = stdio.BytesIO(df.to_csv(index=False).encode())
+        codes.append(
+            _client().post(
+                "/api/analyze", files=[("files", ("ok.csv", buf, "text/csv"))]
+            ).status_code
+        )
+    assert codes[:2] == [200, 200]
+    assert codes[2] == 429
+
+
+def test_jobs_replay_from_durable_log(tmp_path, monkeypatch):
+    jf = tmp_path / "jobs.jsonl"
+    jf.write_text(
+        '\n'.join([
+            json.dumps({"job_id": "a1", "status": "done",
+                        "started": time.time(), "n_events": 10,
+                        "report": {"x": 1}}),
+            json.dumps({"job_id": "b2", "status": "running",
+                        "started": time.time(), "n_events": 20}),
+        ]) + "\n"
+    )
+    monkeypatch.setattr(service, "_JOBS_FILE", jf)
+    saved = dict(service._JOBS)
+    service._JOBS.clear()
+    try:
+        service._load_jobs()
+        assert service._JOBS["a1"]["status"] == "done"
+        # 'running' at load died with the process — marked error
+        assert service._JOBS["b2"]["status"] == "error"
+        assert "restart" in service._JOBS["b2"]["error"]
+    finally:
+        service._JOBS.clear()
+        service._JOBS.update(saved)
 
 
 def test_stats_endpoint_reports_log_summary(tmp_path, monkeypatch):
