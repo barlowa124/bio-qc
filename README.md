@@ -75,10 +75,13 @@ or `docker build -t cytof-qc . && docker run -p 8000:8000 cytof-qc`.
 CI also publishes the image: `docker run -p 8000:8000
 ghcr.io/barlowa124/cytof-qc:latest`.
 
+Analysis runs as a job: the POST parses uploads and returns a
+`{job_id}` immediately, `GET /api/jobs/{id}` polls to the report.
 Uploaded data has no manual gates, so the service reports descriptive
 QC and cluster structure only — never agreement metrics it cannot
 support. Requests are logged to `service_requests.jsonl` (path, status,
-latency; no payload data).
+latency; no payload data); `scripts/summarize_requests.py` reads the
+log back. Measured iterations live in CHANGELOG.md.
 
 ## Layout
 
