@@ -1,5 +1,8 @@
 # bio-qc
 
+[![ci](https://github.com/barlowa124/bio-qc/actions/workflows/ci.yml/badge.svg)](https://github.com/barlowa124/bio-qc/actions/workflows/ci.yml)
+
+
 Quality-control pipelines for single-cell and cytometry data. Two related
 projects merged into one repository, each a self-contained package with its
 own tests, config, and commit history (imported via subtree merge).
