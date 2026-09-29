@@ -261,6 +261,7 @@ def create_app():
         handler = logging.StreamHandler()
         handler.setFormatter(logging.Formatter("%(message)s"))
         _req_logger.addHandler(handler)
+        _req_logger.setLevel(logging.INFO)
         _req_logger.propagate = False
     _load_jobs()
 
