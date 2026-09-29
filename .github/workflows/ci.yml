@@ -58,6 +58,19 @@ jobs:
           pip install -e . pytest
           PYTHONPATH=src python -m pytest tests/ -q
 
+  spatial-qc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - working-directory: spatial_qc
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[test]
+          PYTHONPATH=src python -m pytest tests/ -q
+
   cytof-qc-workflow:
     runs-on: ubuntu-latest
     steps:

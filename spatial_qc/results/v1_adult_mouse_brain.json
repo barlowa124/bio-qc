@@ -1,0 +1,51 @@
+{
+ "dataset": "V1_Adult_Mouse_Brain",
+ "summary": {
+  "n_spots": 2702,
+  "n_genes": 32285,
+  "n_in_tissue": 2702,
+  "frac_in_tissue": 1.0,
+  "counts": {
+   "total": 85825294,
+   "median_in_tissue": 28943.5,
+   "median_out_tissue": 0.0
+  },
+  "genes_per_spot_in_tissue": 6018.5,
+  "median_mito_frac_in_tissue": 0.15330035806870668
+ },
+ "strategy_comparison": {
+  "n_spots_total": 2702,
+  "strategies": {
+   "fixed": {
+    "spots_kept": 2611,
+    "frac_spots": 0.9663,
+    "counts_kept_frac": 0.9855,
+    "genes_detected": 21927,
+    "median_counts_kept": 29565.0,
+    "median_mito_kept": 0.15183737691604912,
+    "n_clusters": 16,
+    "leiden_modularity": 0.8368
+   },
+   "mad": {
+    "spots_kept": 2625,
+    "frac_spots": 0.9715,
+    "counts_kept_frac": 0.9902,
+    "genes_detected": 21930,
+    "median_counts_kept": 29502.0,
+    "median_mito_kept": 0.15231647229803977,
+    "n_clusters": 15,
+    "leiden_modularity": 0.8406
+   },
+   "tissue_only": {
+    "spots_kept": 2702,
+    "frac_spots": 1.0,
+    "counts_kept_frac": 1.0,
+    "genes_detected": 21949,
+    "median_counts_kept": 28943.5,
+    "median_mito_kept": 0.15330035806870668,
+    "n_clusters": 14,
+    "leiden_modularity": 0.8336
+   }
+  }
+ }
+}
