@@ -1,8 +1,10 @@
 # cytof-qc
 
 QC and unsupervised-clustering benchmark for mass cytometry (CyTOF) data,
-run end to end on two public panels from the HDCytoData benchmark suite
-(Levine et al. 2015, human bone marrow, manually gated populations):
+served as a live deployed app with durable job state, per-IP rate limiting,
+and structured request logs (link below). The pipeline runs end to end on
+two public panels from the HDCytoData benchmark suite (Levine et al. 2015,
+human bone marrow, manually gated populations):
 
 - **Levine_13dim**: 13 markers, 24 gated populations, one donor
 - **Levine_32dim**: 32 markers, 14 gated populations, two donors (H1/H2)
