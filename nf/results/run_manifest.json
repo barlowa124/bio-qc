@@ -1,0 +1,28 @@
+{
+ "schema": "bio-qc/run-manifest@1",
+ "pipeline": "fcs_qc",
+ "engine": "nextflow@26.04.6",
+ "git": {
+  "sha": "def7bcfa5a83906d1bc1968bc94768ac800d47f4",
+  "dirty": true
+ },
+ "finished_utc": "2026-09-29T20:27:39.953622+00:00",
+ "status": "success",
+ "params": {
+  "input": "demo",
+  "demo_events": "200",
+  "run_name": "adoring_hirsch",
+  "session": "a15bfef3-b39b-402c-9b89-16c6e7609925"
+ },
+ "inputs": [],
+ "artifacts": [
+  {
+   "path": "qc_summary.jsonl",
+   "sha256": "f48dd32b33f626dacf872a18bf4d6316256a59259782673b003dfae12069d8bb",
+   "bytes": 5267
+  }
+ ],
+ "tools": {
+  "python": "3.9.6"
+ }
+}

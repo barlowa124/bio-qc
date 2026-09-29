@@ -9,6 +9,7 @@ nf/work/
 nf/.nf-test/
 nf/results/*
 !nf/results/qc_summary.jsonl
+!nf/results/run_manifest.json
 nf/tests/output_test/
 nf/.nextflow/
 nf/.nextflow.log*

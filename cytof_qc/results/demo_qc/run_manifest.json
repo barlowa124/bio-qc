@@ -1,0 +1,66 @@
+{
+ "schema": "bio-qc/run-manifest@1",
+ "pipeline": "cytof_qc",
+ "engine": "snakemake@7.32.4",
+ "git": {
+  "sha": "def7bcfa5a83906d1bc1968bc94768ac800d47f4",
+  "dirty": true
+ },
+ "finished_utc": "2026-09-29T20:28:14.098446+00:00",
+ "status": "success",
+ "params": {
+  "data_dir": "data/demo_fcs"
+ },
+ "inputs": [
+  {
+   "path": "Demo_B_cells.fcs",
+   "sha256": "22a97015e83ed73be619e40c1b8c062bc8b15de807801ec53ba46ff95c9f6f92",
+   "bytes": 19917
+  },
+  {
+   "path": "Demo_CD4 T_cells.fcs",
+   "sha256": "c5afce85b54d2a4e3b8906b4697297a24cbeb4ca4ec5fafc018480648faf29de",
+   "bytes": 19917
+  },
+  {
+   "path": "Demo_CD8 T_cells.fcs",
+   "sha256": "686da9aac01800c4d9abeb9aefaaf1d851ad9b33b67c9b9965b83fe1629f53c2",
+   "bytes": 19917
+  },
+  {
+   "path": "Demo_Monocytes_cells.fcs",
+   "sha256": "a4703b1af5961b02d1a39ac54fdf234fece01a09559b3252492505612c931a5c",
+   "bytes": 19917
+  },
+  {
+   "path": "Demo_NK_cells.fcs",
+   "sha256": "78de94809ee2320ba478b955bc27ae336f8a75bb6a80c82f81aa184e8d89a46a",
+   "bytes": 19917
+  },
+  {
+   "path": "Demo_NotGated_cells.fcs",
+   "sha256": "780becc4147fb110404221e8b2629378277e253608bfbd83f1a0aabc2f6ed0ec",
+   "bytes": 19917
+  }
+ ],
+ "artifacts": [
+  {
+   "path": "metrics.json",
+   "sha256": "256c4ee516c1d92d45936041a720d9e5a8323c464ed339c23cf55f82305924ce",
+   "bytes": 7450
+  },
+  {
+   "path": "population_cluster_heatmap.png",
+   "sha256": "9755f7e2a58a4fde7e7d8a1882a228c7f33fba7b1e91da68b501fdcc226e45ac",
+   "bytes": 26067
+  },
+  {
+   "path": "umap_comparison.png",
+   "sha256": "6a60150c1c120eea5792e69eddc16f49c395969be618210ba17f9ad6f413045b",
+   "bytes": 53657
+  }
+ ],
+ "tools": {
+  "python": "3.9.6"
+ }
+}

@@ -80,12 +80,16 @@ ghcr.io/barlowa124/cytof-qc:latest`.
 
 ### Workflow DAG
 
-`workflow/Snakefile` runs the pipeline as a two-rule DAG with no
-downloads. `demo_data` writes six small gated-population FCS files with
-fcsio (sibling package, `../fcs_io`), `qc` parses them back through
-`io.load_fcs` and produces `results/demo_qc/metrics.json` plus figures.
-When `fcsparser` is not installed, `load_fcs` falls back to `fcsio`, so
-the demo exercises this repo's own parser end to end:
+`workflow/Snakefile` runs the pipeline as a DAG with no downloads.
+`demo_data` writes six small gated-population FCS files with fcsio
+(sibling package, `../fcs_io`), `qc` parses them back through
+`io.load_fcs` and produces `results/demo_qc/metrics.json` plus figures,
+and `manifest` emits `run_manifest.json`: git sha, input/output
+sha256s, params, and tool versions in the same
+`bio-qc/run-manifest@1` schema the Nextflow pipeline in `../nf/` uses
+(shared writer: `../scripts/run_manifest.py`). When `fcsparser` is not
+installed, `load_fcs` falls back to `fcsio`, so the demo exercises this
+repo's own parser end to end:
 
 ```bash
 snakemake -s workflow/Snakefile -c1        # demo run, ~1 min

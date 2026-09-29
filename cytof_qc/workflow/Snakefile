@@ -21,6 +21,7 @@ OUT_DIR = os.environ.get("OUT_DIR", "results/demo_qc")
 rule all:
     input:
         f"{OUT_DIR}/metrics.json",
+        f"{OUT_DIR}/run_manifest.json",
 
 
 rule demo_data:
@@ -39,3 +40,17 @@ rule qc:
         "PYTHONPATH=.:../fcs_io/src {PY} -m cytof_qc.pipeline "
         "--data-dir {input} --out " + OUT_DIR +
         " --label 'synthetic demo (fcsio-generated FCS)'"
+
+
+rule manifest:
+    input:
+        f"{OUT_DIR}/metrics.json",
+    output:
+        f"{OUT_DIR}/run_manifest.json",
+    shell:
+        "{PY} ../scripts/run_manifest.py --pipeline cytof_qc "
+        "--engine snakemake@`{PY} -c 'import snakemake,sys;"
+        "sys.stdout.write(snakemake.__version__)'` "
+        "--out {output} --inputs " + DATA_DIR +
+        " --artifacts " + OUT_DIR +
+        " --param data_dir=" + DATA_DIR

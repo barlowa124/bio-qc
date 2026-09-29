@@ -16,7 +16,10 @@ FCSIO_DEMO -> FCSIO_PARSE -> FCS_STATS
   `fcs_io/validation/`).
 - `FCS_STATS` computes per-channel mean/median/p95/negative-fraction
   JSON per sample. The entrypoint collects them into
-  `results/qc_summary.jsonl`.
+  `results/qc_summary.jsonl` and then writes
+  `results/run_manifest.json`: git sha, artifact sha256s, params,
+  and tool versions in the `bio-qc/run-manifest@1` schema shared with
+  the Snakemake DAG (`../scripts/run_manifest.py`).
 
 ## Run
 

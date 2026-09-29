@@ -46,5 +46,26 @@ workflow {
                     [sample: meta.id,
                      stats: new groovy.json.JsonSlurper().parseText(f.text)]
                 ).toString() }
-        .map { f -> println "wrote ${f}" }
+        .map { f ->
+            // f is the written summary; emit the provenance manifest
+            def outdir = f.getParent()
+            def cmd = ["python3",
+                       "${projectDir}/../scripts/run_manifest.py",
+                       "--pipeline", "fcs_qc",
+                       "--engine", "nextflow@${nextflow.version}",
+                       "--out", "${outdir}/run_manifest.json",
+                       "--artifacts", outdir.toString(),
+                       "--param", "input=${params.input ?: 'demo'}",
+                       "--param", "demo_events=${params.demo_events}",
+                       "--param", "run_name=${workflow.runName}",
+                       "--param", "session=${workflow.sessionId}"]
+            if (params.input) {
+                cmd.addAll(["--inputs", params.input as String])
+            }
+            def p = cmd.execute()
+            p.waitFor()
+            println "wrote ${f}" + (p.exitValue() == 0
+                ? " + run_manifest.json"
+                : " (manifest failed: ${p.err.text})")
+            f }
 }
