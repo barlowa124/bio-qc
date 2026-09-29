@@ -1,0 +1,24 @@
+nextflow_workflow {
+
+    name "Test Workflow FCS_QC"
+    script "../main.nf"
+    workflow "FCS_QC"
+
+    test("Demo mode: fixtures flow through parse and stats") {
+        when {
+            params { demo_events = 200 }
+            workflow { }
+        }
+
+        then {
+            assert workflow.success
+            assert workflow.trace.tasks().size() == 13
+            def rows = workflow.out.stats.collect { meta, f ->
+                new groovy.json.JsonSlurper().parseText(file(f).text) }
+            assert rows.size() == 6
+            assert rows.every { it.n_events == 200 }
+            assert rows.every { it.channels.size() == 12 }
+            assert rows.every { it.channels.containsKey('CD45') }
+        }
+    }
+}

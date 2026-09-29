@@ -1,0 +1,43 @@
+name: "fcsio_parse"
+description: Parse an FCS 3.x flow-cytometry file into an events TSV and
+  metadata JSON using fcsio, the stdlib FCS reader in this monorepo.
+keywords:
+  - flow cytometry
+  - fcs
+  - parse
+tools:
+  - "fcsio":
+      description: "Dependency-free FCS 3.0/3.1 parser with explicit
+        vendor-quirk handling (bio-qc/fcs_io)."
+      homepage: "https://github.com/barlowa124/bio-qc/tree/main/fcs_io"
+      documentation: "https://github.com/barlowa124/bio-qc/tree/main/fcs_io"
+      tool_dev_url: "https://github.com/barlowa124/bio-qc/tree/main/fcs_io"
+      licence: ["MIT"]
+input:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information (e.g. `id`)
+  - fcs:
+      type: file
+      description: FCS 3.0/3.1 flow-cytometry file
+      pattern: "*.fcs"
+output:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - events:
+      type: file
+      description: Tab-separated event matrix, one channel per column
+      pattern: "*.events.tsv"
+  - meta_json:
+      type: file
+      description: TEXT-segment metadata with derived channel/stain lists
+      pattern: "*.meta.json"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@barlowa124"
+maintainers:
+  - "@barlowa124"

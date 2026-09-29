@@ -1,0 +1,6 @@
+channels:
+  - conda-forge
+dependencies:
+  - python >=3.9
+# fcsio is a sibling package in this monorepo (no conda recipe); the
+# process exports PYTHONPATH to expose it.

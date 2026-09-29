@@ -1,0 +1,52 @@
+nextflow_process {
+
+    name "Test Process FCSIO_PARSE"
+    script "../main.nf"
+    process "FCSIO_PARSE"
+
+    test("Should run without failures") {
+        when {
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file("${moduleDir}/tests/fixtures/test.fcs", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.events.size() == 1
+            assert process.out.meta.size() == 1
+            def events = file(process.out.events[0][1]).readLines()
+            assert events.size() == 51          // header + 50 events
+            assert events[0] == "CD45\tCD3\tCD4"
+            def meta = new groovy.json.JsonSlurper()
+                .parseText(file(process.out.meta[0][1]).text)
+            assert meta.channels == ["CD45", "CD3", "CD4"]
+            assert snapshot(process.out.versions).match()
+        }
+    }
+
+    test("Stub run emits declared outputs") {
+        options "-stub-run"
+        when {
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file("${moduleDir}/tests/fixtures/test.fcs", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.events.size() == 1
+            assert process.out.meta.size() == 1
+        }
+    }
+}

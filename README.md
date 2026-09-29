@@ -13,6 +13,7 @@ own tests, config, and commit history (imported via subtree merge).
 |---|---|
 | `cytof_qc/` | Mass-cytometry QC and batch-alignment pipeline: arcsinh transform, drift checks, clustering, per-population metrics, a deployed review app, and a Snakemake DAG (`workflow/Snakefile`) that runs on generated FCS fixtures with no downloads. |
 | `fcs_io/` | Dependency-free FCS 3.0/3.1 parser and writer with explicit vendor-quirk handling; wired into `cytof_qc` as the fallback FCS reader. |
+| `nf/` | DSL2 Nextflow pipeline in nf-core module style: `FCSIO_DEMO` -> `FCSIO_PARSE` -> `FCS_STATS`, with `meta.yml`/`environment.yml`/`stub:` per module, nf-test coverage, and a committed `qc_summary.jsonl`. |
 | `spatial_qc/` | Visium spot-level QC metrics plus a filtering-strategy benchmark (fixed cutoffs vs MAD-adaptive vs tissue-only), with a committed run on the public V1 Adult Mouse Brain export. |
 | `organoid_qc/` | Organoid fidelity scoring: scRNA-seq organoid clusters vs tissue-reference centroids, per-cluster and per-cell-type fidelity, fail-closed QC flags. |
 

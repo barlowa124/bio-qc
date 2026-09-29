@@ -5,3 +5,11 @@ __pycache__/
 .DS_Store
 data/
 .snakemake/
+nf/work/
+nf/.nf-test/
+nf/results/*
+!nf/results/qc_summary.jsonl
+nf/tests/output_test/
+nf/.nextflow/
+nf/.nextflow.log*
+nf/.nf-test.log

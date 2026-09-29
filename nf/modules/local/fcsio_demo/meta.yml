@@ -1,0 +1,31 @@
+name: "fcsio_demo"
+description: Generate deterministic gated-population FCS fixtures so the
+  pipeline runs end to end without downloading benchmark data.
+keywords:
+  - flow cytometry
+  - fcs
+  - fixtures
+tools:
+  - "fcsio":
+      description: "Dependency-free FCS 3.0/3.1 writer (bio-qc/fcs_io);
+        population definitions come from cytof_qc.demo_fcs."
+      homepage: "https://github.com/barlowa124/bio-qc"
+      documentation: "https://github.com/barlowa124/bio-qc"
+      licence: ["MIT"]
+input:
+  - n_events:
+      type: integer
+      description: Events per population file
+output:
+  - fcs:
+      type: file
+      description: One FCS file per gated population
+      pattern: "*.fcs"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@barlowa124"
+maintainers:
+  - "@barlowa124"
