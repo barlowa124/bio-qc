@@ -1,0 +1,18 @@
+anndata==0.10.9
+fcsparser==0.2.8
+igraph==1.0.0
+leidenalg==0.12.0
+matplotlib==3.9.4
+numpy==1.26.4
+pandas==2.3.3
+pytest==8.4.2
+scanpy==1.10.3
+scikit-learn==1.6.1
+scipy==1.13.1
+seaborn==0.13.2
+
+# web service surface (cytof_qc/service.py) — not needed for the pipeline
+fastapi==0.115.12
+uvicorn==0.34.2
+python-multipart==0.0.20
+httpx==0.28.1

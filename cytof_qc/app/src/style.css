@@ -1,0 +1,29 @@
+:root {
+  color-scheme: dark;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+}
+body { margin: 0; background: #0b0f14; color: #dbe2ea; }
+main { max-width: 960px; margin: 0 auto; padding: 2rem 1rem; }
+h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+.tag { color: #8b98a5; margin-top: 0; }
+.drop {
+  display: block; border: 1px dashed #3a4654; border-radius: 8px;
+  padding: 2rem; text-align: center; cursor: pointer; color: #8b98a5;
+}
+.drop input { display: none; }
+.drop:hover { border-color: #4e79a7; color: #dbe2ea; }
+.err { color: #e15759; }
+.ok { color: #59a14f; }
+.scope { color: #8b98a5; font-size: 0.85rem; }
+.scatter { width: 100%; height: 480px; border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+th, td { text-align: left; padding: 0.3rem 0.6rem; border-bottom: 1px solid #1e2630; }
+th { color: #8b98a5; font-weight: normal; }
+tr.flag td { color: #f28e2b; }
+section { margin-top: 2rem; }
+h3 { font-size: 0.95rem; color: #aab6c2; font-weight: normal; text-transform: uppercase; letter-spacing: 0.06em; }
+button.link {
+  background: none; border: none; padding: 0; cursor: pointer;
+  color: #4e79a7; font: inherit; text-decoration: underline;
+}
+button.link:hover { color: #7ba7d0; }

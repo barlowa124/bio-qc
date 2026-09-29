@@ -1,0 +1,10 @@
+data/
+.venv/
+__pycache__/
+*.egg-info/
+.DS_Store
+service_requests.jsonl
+app/node_modules/
+app/dist/
+app/tsconfig.tsbuildinfo
+jobs.jsonl
