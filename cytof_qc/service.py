@@ -10,6 +10,7 @@ cluster structure plus QC flags — not agreement scoring.
 import json
 import logging
 import os
+import sys
 import tempfile
 import threading
 import time
@@ -258,7 +259,8 @@ def create_app():
     # this the request-log entries below never reach stdout
     _req_logger = logging.getLogger("cytof_qc.requests")
     if not _req_logger.handlers:
-        handler = logging.StreamHandler()
+        # stdout, not stderr — Railway tags stderr lines as errors
+        handler = logging.StreamHandler(sys.stdout)
         handler.setFormatter(logging.Formatter("%(message)s"))
         _req_logger.addHandler(handler)
         _req_logger.setLevel(logging.INFO)
