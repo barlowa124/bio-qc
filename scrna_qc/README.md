@@ -13,11 +13,25 @@ synthetic demo so the whole thing runs without a download.
 | `results/markers.csv` | Wilcoxon per-cluster marker scores |
 | `results/cluster_qc.csv` | Per-cluster n_cells, fraction, median counts/genes/%mt, top marker |
 | `results/qc_summary.json` | Summary + provenance (git sha, scanpy/anndata versions, config snapshot) |
+| `results/report.md` | Human-readable report; every number binds to a recorded value |
+| `results/claims_check.json` | Claim-check verdict for `report.md` (see below) |
 | `results/umap.png` | UMAP colored by Leiden cluster |
 | `data/processed/*.h5ad` | Filtered and embedded AnnData (gitignored) |
 
 QC is reported per cluster, not only pooled. A pooled pass can hide a
 depleted population.
+
+## Verified claims
+
+`report.md` goes through a claim check (`claims.py`, ported from the
+oncology_coscientist draft verifier in trust-tools): every numeric token
+in the markdown is re-derived against the flattened numeric leaves of
+`filter_waterfall.json` + `qc_summary.json`, at the token's display
+tolerance (a `%` token also binds to the fraction form). A number that
+no recorded computation produced lands in `claims_check.json` under
+`unbound_claims`. Cluster names and version strings are identifiers, not
+claims, and are exempt. The committed verdicts: 35/35 bound on the demo
+run, 59/59 on pbmc3k.
 
 ## Committed example runs
 
@@ -65,7 +79,7 @@ Override the config path with `SCRNA_QC_CONFIG`.
 ## Tests
 
 ```bash
-PYTHONPATH=src python -m pytest tests/ -q   # 17 tests
+PYTHONPATH=src python -m pytest tests/ -q   # 30 tests
 snakemake -n -s workflow/Snakefile          # DAG dry-run
 ```
 

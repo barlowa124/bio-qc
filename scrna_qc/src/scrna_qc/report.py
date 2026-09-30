@@ -17,6 +17,7 @@ matplotlib.use("Agg")
 import pandas as pd
 import scanpy as sc
 
+from .claims import flatten_results, verify_markdown
 from .util import git_sha, load_config
 
 
@@ -43,9 +44,50 @@ def cluster_table(adata: ad.AnnData, markers: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows).sort_values("cluster").reset_index(drop=True)
 
 
+def render_markdown(summary: dict) -> str:
+    """The human-readable report. Every number here must bind to a
+    recorded value — verify_markdown enforces that before this text
+    is presented as output."""
+    wf = summary["filter_waterfall"]
+    lines = [
+        f"# scrna_qc report — {summary['dataset_mode']}",
+        "",
+        f"- cells in: {wf['cells_in']}, genes in: {wf['genes_in']}",
+        f"- cells after filtering: {summary['n_cells']}, "
+        f"genes after filtering: {wf['genes_out']}",
+        "- filter removals (cells / genes): "
+        + ", ".join(f"{s['stage']} {s['cells_removed']}/{s['genes_removed']}"
+                    for s in wf["steps"]),
+        f"- Leiden clusters: {summary['n_clusters']}",
+        "",
+        "## Per-cluster QC",
+        "",
+        "| cluster | cells | % of cells | median counts | median genes |"
+        " median %mt | top marker |",
+        "|---|---|---|---|---|---|---|",
+    ]
+    for row in summary["cluster_qc"]:
+        lines.append(
+            f"| {row['cluster']} | {row['n_cells']} "
+            f"| {round(row['frac_of_total'] * 100, 2)}% "
+            f"| {row['median_total_counts']} | {row['median_n_genes']} "
+            f"| {row['median_pct_mt']} | {row['top_marker']} |")
+    prov = summary["provenance"]
+    lines += [
+        "",
+        "## Provenance",
+        "",
+        f"git {prov['git_sha']} · scanpy {prov['scanpy']} · "
+        f"anndata {prov['anndata']}",
+        "",
+    ]
+    return "\n".join(lines)
+
+
 def report(adata: ad.AnnData, markers: pd.DataFrame, waterfall: dict,
            cfg: dict, cluster_csv: str, summary_json: str,
-           umap_png: str) -> dict:
+           umap_png: str, report_md: str | None = None,
+           claims_json: str | None = None) -> dict:
     table = cluster_table(adata, markers)
     Path(cluster_csv).parent.mkdir(parents=True, exist_ok=True)
     table.to_csv(cluster_csv, index=False)
@@ -71,19 +113,36 @@ def report(adata: ad.AnnData, markers: pd.DataFrame, waterfall: dict,
     plt.gcf().set_size_inches(6, 5)
     plt.gcf().savefig(umap_png, dpi=130, bbox_inches="tight")
     plt.close()
+
+    if report_md and claims_json:
+        # Claim check: re-derive every number in the markdown from the
+        # recorded waterfall+summary values; flag what doesn't bind.
+        md = render_markdown(summary)
+        Path(report_md).write_text(md)
+        flat = {**flatten_results(waterfall), **flatten_results(summary)}
+        labels = {str(r["cluster"]) for r in table.to_dict("records")}
+        labels.add(str(summary["provenance"]["git_sha"]))
+        verdict = verify_markdown(md, flat, labels)
+        with open(claims_json, "w") as f:
+            json.dump(verdict, f, indent=2)
+        status = "verified" if verdict["passed"] else "UNBOUND CLAIMS"
+        print(f"claims: {verdict['n_claims']} numbers checked — {status}")
+
     return summary
 
 
 def main() -> None:
     emb_in, markers_in, waterfall_in, cluster_csv, summary_json, umap_png = \
         sys.argv[1:7]
+    report_md = sys.argv[7] if len(sys.argv) > 7 else None
+    claims_json = sys.argv[8] if len(sys.argv) > 8 else None
     cfg = load_config()
     adata = ad.read_h5ad(emb_in)
     markers = pd.read_csv(markers_in)
     with open(waterfall_in) as f:
         waterfall = json.load(f)
     s = report(adata, markers, waterfall, cfg,
-               cluster_csv, summary_json, umap_png)
+               cluster_csv, summary_json, umap_png, report_md, claims_json)
     print(f"report: {s['n_clusters']} clusters over {s['n_cells']} cells")
 
 

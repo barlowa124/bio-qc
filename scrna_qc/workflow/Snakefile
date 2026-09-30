@@ -25,12 +25,15 @@ WATERFALL = f"{RESULTS_DIR}/filter_waterfall.json"
 MARKERS = f"{RESULTS_DIR}/markers.csv"
 CLUSTER_CSV = f"{RESULTS_DIR}/cluster_qc.csv"
 SUMMARY = f"{RESULTS_DIR}/qc_summary.json"
+REPORT_MD = f"{RESULTS_DIR}/report.md"
+CLAIMS = f"{RESULTS_DIR}/claims_check.json"
 UMAP = f"{RESULTS_DIR}/umap.png"
 
 
 rule all:
     input:
         SUMMARY,
+        CLAIMS,
         UMAP,
 
 
@@ -71,7 +74,9 @@ rule report:
         cluster_csv=CLUSTER_CSV,
         summary=SUMMARY,
         umap=UMAP,
+        md=REPORT_MD,
+        claims=CLAIMS,
     shell:
         "{PY} -m scrna_qc.report {input.embedded} {input.markers}"
         " {input.waterfall} {output.cluster_csv} {output.summary}"
-        " {output.umap}"
+        " {output.umap} {output.md} {output.claims}"

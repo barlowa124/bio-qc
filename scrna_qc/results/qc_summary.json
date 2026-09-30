@@ -76,10 +76,14 @@
     }
   ],
   "provenance": {
-    "git_sha": "36f432c",
-    "scanpy": "1.9.8",
-    "anndata": "0.10.9",
+    "git_sha": "01360b8",
+    "scanpy": "1.11.5",
+    "anndata": "0.12.19",
     "config": {
+      "paths": {
+        "data_dir": "data",
+        "results_dir": "results"
+      },
       "dataset": {
         "mode": "demo",
         "h5ad_path": null,
