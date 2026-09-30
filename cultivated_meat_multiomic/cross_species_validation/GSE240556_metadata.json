@@ -1,0 +1,13 @@
+{
+  "gse": "GSE240556",
+  "geo_id": "200240556",
+  "title": "Optimisation of cell fate decisions for cultured muscle differentiation",
+  "organism": "Bos taurus",
+  "n_samples": "1",
+  "type": "N/A",
+  "summary": "Production of cultured meat requires defined medium formulations for the robust differentiation of myogenic cells into mature skeletal muscle fibres in vitro. Whilst such formulations can drive myogenic differentiation to an extent similar to serum-starvation based protocols, these cultures are visually heterogeneous in nature, with a significant proportion of cells not participating in myofusion, limiting the maturation of the muscle. Here, we use RNA sequencing to characterise this heterogenei",
+  "sra_ids": [
+    "28764095"
+  ],
+  "description": "Bovine snRNA-seq diff (Nature Comms 2024)"
+}

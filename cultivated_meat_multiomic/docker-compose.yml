@@ -1,0 +1,32 @@
+# Cultivated Meat Multi-Omic Analysis
+# Docker Compose for easy orchestration
+
+version: '3.8'
+
+services:
+  analysis:
+    build: .
+    volumes:
+      - ./data:/app/data:ro
+      - ./output:/app/output
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python notebooks/comprehensive_analysis.py
+
+  dashboard:
+    build: .
+    ports:
+      - "8050:8050"
+    volumes:
+      - ./output:/app/output:ro
+    command: python -c "import webbrowser; webbrowser.open('p2_state_map/output/dashboard.html')"
+
+  jupyter:
+    build: .
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/app/notebooks
+      - ./output:/app/output
+      - ./data:/app/data:ro
+    command: jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root

@@ -1,0 +1,1 @@
+-r--r--r--   1 ftp      anonymous     3624 Feb 23 05:43 GSE173199_family.soft.gz

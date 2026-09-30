@@ -1,0 +1,1 @@
+-r--r--r--   1 ftp      anonymous     3099 Mar  3 05:37 GSE240556_series_matrix.txt.gz

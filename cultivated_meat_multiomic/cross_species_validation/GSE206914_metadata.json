@@ -1,0 +1,11 @@
+{
+  "gse": "GSE206914",
+  "geo_id": "200206914",
+  "title": "Somites and myotomes at embryonic stages E18, E21, and E28 from Tibetan pigs (ZZ) and Duroc x Tibetan pigs (DZ)",
+  "organism": "Sus scrofa",
+  "n_samples": "14",
+  "type": "N/A",
+  "summary": "This SuperSeries is composed of the SubSeries listed below.",
+  "sra_ids": [],
+  "description": "Porcine scRNA-seq myogenesis"
+}

@@ -1,0 +1,21 @@
+Database,Term_ID,Term_Name,P_value_raw,P_value_adj,Overlap_Count,Term_Size,Gene_Ratio
+GO BP,NA,lipid metabolism,0.000598,NA,3,3,1.0
+GO BP,NA,response to hypoxia,0.001696,NA,3,3,1.0
+GO BP,NA,protein localization,0.001696,NA,4,4,1.0
+GO BP,NA,muscle cell differentiation,0.004693,NA,2,5,0.4
+GO BP,NA,cell cycle regulation,0.009129,NA,3,3,1.0
+GO BP,NA,RNA processing,0.009191,NA,3,3,1.0
+GO BP,NA,autophagy,0.012313,NA,3,3,1.0
+GO BP,NA,extracellular matrix organization,0.013167,NA,3,3,1.0
+GO BP,NA,immune response,0.020112,NA,3,3,1.0
+GO BP,NA,mitochondrial organization,0.030101,NA,4,4,1.0
+KEGG,NA,Ribosome,0.000208,NA,2,2,1.0
+KEGG,NA,Pathways in cancer,0.002007,NA,3,3,1.0
+KEGG,NA,Cell cycle,0.002387,NA,2,2,1.0
+KEGG,NA,ECM receptor interaction,0.017864,NA,2,2,1.0
+KEGG,NA,Protein processing in endoplasmic reticulum,0.035036,NA,2,2,1.0
+Reactome,NA,Assembly of the pre replicative complex,0.002026,NA,2,2,1.0
+Reactome,NA,Metabolism of lipids,0.003442,NA,3,3,1.0
+Reactome,NA,Mitochondrial protein import,0.003628,NA,3,3,1.0
+Reactome,NA,Innate Immune System,0.005655,NA,4,4,1.0
+Reactome,NA,Extracellular matrix organization,0.007439,NA,2,2,1.0

@@ -1,0 +1,18 @@
+{
+  "GSE173199": {
+    "gse": "GSE173199",
+    "geo_id": "200173199",
+    "title": "A serum-free media formulation for cultured meat production supports bovine satellite cell differentiation in the absence of serum starvation",
+    "summary": "This SuperSeries is composed of the SubSeries listed below.",
+    "n_samples": "38",
+    "organism": "Bos taurus"
+  },
+  "GSE240556": {
+    "gse": "GSE240556",
+    "error": "HTTP Error 429: Too Many Requests"
+  },
+  "GSE206914": {
+    "gse": "GSE206914",
+    "error": "HTTP Error 429: Too Many Requests"
+  }
+}

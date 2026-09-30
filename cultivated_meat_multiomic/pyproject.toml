@@ -1,0 +1,36 @@
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = 'notebooks/.*\.py$'
+extend-exclude = '''
+/(
+    \.git
+  | \.github
+  | \.pytest_cache
+  | __pycache__
+  | \.mypy_cache
+  | data
+  | output
+)/
+'''
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+exclude = [
+    "data/",
+    "output/",
+    ".git/",
+    "__pycache__/",
+    ".pytest_cache/",
+    ".mypy_cache/",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"

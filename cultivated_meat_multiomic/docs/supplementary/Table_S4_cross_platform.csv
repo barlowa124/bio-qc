@@ -1,0 +1,4 @@
+Comparison,Mean_Gene_Correlation,State_Concordance
+rna_seq vs qPCR,0.955,NA
+rna_seq vs nanostring,0.965,NA
+qPCR vs nanostring,0.944,NA

@@ -1,0 +1,25 @@
+# Jupyter Book configuration for Cultivated Meat Analysis Pipeline
+title: "Cultivated Meat Multi-Omic Analysis"
+author: "barlowa124"
+logo: ""
+execute:
+  execute_notebooks: "off"
+repository:
+  url: https://github.com/rao-lab/cultivated-meat-multiomic
+  branch: main
+html:
+  use_issues_button: true
+  use_repository_button: true
+  home_page_in_navbar: true
+launch_buttons:
+  colab_url: "https://colab.research.google.com"
+parse:
+  myst_enable_extensions:
+    - dollarmath
+    - linkify
+    - substitution
+sphinx:
+  config:
+    html_theme: sphinx_book_theme
+    html_theme_options:
+      show_toc_level: 2

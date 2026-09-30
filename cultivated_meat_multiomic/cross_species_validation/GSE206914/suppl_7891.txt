@@ -1,0 +1,1 @@
+-r--r--r--   1 ftp      anonymous     4623 May  9 04:38 GSE206914_family.soft.gz

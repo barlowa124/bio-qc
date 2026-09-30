@@ -1,0 +1,60 @@
+{
+  "phase": 1,
+  "status": "pipeline_validated",
+  "description": "Geneformer embedding extraction methodology validation",
+  "tokenizer_loaded": true,
+  "vocab_size": 63675,
+  "genes_in_vocab": 24,
+  "missing_genes": [
+    "MALAT1 (Ensembl ENSG00000251562 not in token dict)",
+    "LINC00574 (Ensembl ENSG00000231690 not in token dict)",
+    "PPIEL (Ensembl ENSG00000243970 not in token dict)",
+    "C11orf63 (not in gene dict)",
+    "C3orf72 (not in gene dict)",
+    "SNHG3 (Ensembl ENSG00000242125 not in token dict)"
+  ],
+  "n_samples": 239,
+  "n_genes": 30,
+  "embedding_dim": 256,
+  "baseline": {
+    "LR": {
+      "mean": 0.9957446808510639,
+      "std": 0.008510638297872353
+    },
+    "RF": {
+      "mean": 0.9916666666666666,
+      "std": 0.010206207261596593
+    },
+    "SVM": {
+      "mean": 0.9957446808510639,
+      "std": 0.008510638297872353
+    }
+  },
+  "embedding": {
+    "LR": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "RF": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "SVM": {
+      "mean": 1.0,
+      "std": 0.0
+    }
+  },
+  "best_baseline": {
+    "classifier": "LR",
+    "accuracy": 0.9957446808510639
+  },
+  "best_embedding": {
+    "classifier": "LR",
+    "accuracy": 1.0
+  },
+  "next_steps": [
+    "Run with GPU for real Geneformer inference",
+    "Replace synthetic data with real qPCR Ct values",
+    "If embedding accuracy > baseline, proceed to Phase 2 (full fine-tuning)"
+  ]
+}

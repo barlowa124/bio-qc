@@ -1,0 +1,8 @@
+Classifier,Test_Accuracy
+Logistic Regression,0.9583
+DNN (MLP),0.75
+Random Forest,0.9583
+SVM (RBF),0.9167
+XGBoost (proxy),0.9583
+Naive Bayes,0.9167
+Ensemble (LR+DNN+XGB),0.9792

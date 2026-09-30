@@ -1,0 +1,6 @@
+Method,Accuracy,Batch_Mixing,Notes
+raw,0.3973,0.1,
+combat,0.3642,0.2962,
+harmony,0.3768,0.2962,
+mnn,0.3558,0.2971,
+reference_atlas,0.1505,0.1,

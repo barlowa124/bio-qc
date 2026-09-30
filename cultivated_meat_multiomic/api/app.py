@@ -1,0 +1,57 @@
+"""Flask API for 30-gene QC panel state prediction."""
+import json, pickle, numpy as np
+from pathlib import Path
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+API_DIR = Path(__file__).parent
+
+# CORS: the API binds 127.0.0.1, so only same-machine browser pages can reach it.
+# Reflect loopback origins (vite dev server, file:// has no origin and gets none).
+from urllib.parse import urlparse
+
+@app.after_request
+def add_cors(response):
+    origin = request.headers.get("Origin", "")
+    host = urlparse(origin).hostname or ""
+    if host in ("127.0.0.1", "localhost", "::1"):
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Vary"] = "Origin"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    return response
+model = pickle.load(open(API_DIR / "model.pkl", "rb"))
+scaler = pickle.load(open(API_DIR / "scaler.pkl", "rb"))
+meta = json.load(open(API_DIR / "model_metadata.json"))
+
+@app.route("/")
+def index():
+    return jsonify({"service": "Cultivated Meat 30-Gene QC Panel", "genes": meta["genes"], "states": meta["classes"], "data_source": meta.get("data_source", "unverified"), "endpoints": {"/predict": "POST gene expression values", "/health": "GET health check"}})
+
+@app.route("/health")
+def health():
+    return jsonify({"status": "healthy", "model_accuracy": None, "data_source": meta.get("data_source", "unverified")})
+
+@app.route("/predict", methods=["POST"])
+def predict():
+    data = request.get_json()
+    if not data or "expression" not in data:
+        return jsonify({"error": "Missing 'expression' field."}), 400
+    raw = data["expression"]
+    if not isinstance(raw, list):
+        return jsonify({"error": "'expression' must be a list of numbers."}), 400
+    try:
+        expr = np.array(raw, dtype=np.float32).reshape(1, -1)
+    except (ValueError, TypeError):
+        return jsonify({"error": "'expression' must contain only numeric values."}), 400
+    if expr.shape[1] != len(meta["genes"]):
+        return jsonify({"error": f"Expected {len(meta['genes'])} values, got {expr.shape[1]}"}), 400
+    if not np.isfinite(expr).all():
+        return jsonify({"error": "'expression' must contain only finite values."}), 400
+    expr_scaled = scaler.transform(expr)
+    probs = model.predict_proba(expr_scaled)[0]
+    pred = model.classes_[probs.argmax()]
+    return jsonify({"prediction": pred, "probabilities": {model.classes_[i]: float(p) for i, p in enumerate(probs)}, "confidence": float(probs.max()), "data_source": meta.get("data_source", "unverified")})
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=5000, debug=False)

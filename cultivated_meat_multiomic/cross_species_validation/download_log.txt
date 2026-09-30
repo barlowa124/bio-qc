@@ -1,0 +1,18 @@
+============================================================
+CROSS-SPECIES DOWNLOAD (rate-limit aware)
+============================================================
+
+1. Fetching dataset metadata...
+
+   GSE173199 (Bovine satellite cell diff (cultivated meat))...
+     Title: A serum-free media formulation for cultured meat production supports bovine satellite cell differentiation in the absenc
+     Organism: Bos taurus, Samples: 38, Type: N/A
+     SRA accessions: 0
+
+   GSE240556 (Bovine snRNA-seq diff (Nature Comms 2024))...
+Traceback (most recent call last):
+  File "C:\Users\asdf\CascadeProjects\rao_lab_ml\cultivated_meat_projects\notebooks\cross_species_download.py", line 46, in <module>
+    time.sleep(1.5)  # Be nice to NCBI
+    ^^^^^^^^^^^^^^^
+KeyboardInterrupt
+^C

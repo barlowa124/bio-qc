@@ -1,0 +1,83 @@
+============================================================
+BOVINE PROCESSING V2
+============================================================
+
+1. Loading bovine counts...
+   27607 genes x 38 samples
+
+2. Mapping ENSBTAG to gene symbols via Ensembl REST...
+   27607 unique Ensembl IDs
+   Batch 1 error: 'NoneType' object has no attribute 'get'
+   Batch 2 error: 'NoneType' object has no attribute 'get'
+   Batch 3 error: 'NoneType' object has no attribute 'get'
+   Batch 4 error: 'NoneType' object has no attribute 'get'
+   Batch 5 error: 'NoneType' object has no attribute 'get'
+   Batch 6 error: 'NoneType' object has no attribute 'get'
+   Batch 7 error: 'NoneType' object has no attribute 'get'
+   Batch 8 error: 'NoneType' object has no attribute 'get'
+   Batch 9 error: 'NoneType' object has no attribute 'get'
+   Batch 10 error: 'NoneType' object has no attribute 'get'
+   Batch 11 error: 'NoneType' object has no attribute 'get'
+   Batch 12 error: 'NoneType' object has no attribute 'get'
+   Batch 13 error: 'NoneType' object has no attribute 'get'
+   Batch 14 error: 'NoneType' object has no attribute 'get'
+   Batch 15 error: 'NoneType' object has no attribute 'get'
+   Batch 16 error: 'NoneType' object has no attribute 'get'
+   Batch 17 error: 'NoneType' object has no attribute 'get'
+   Batch 18 error: 'NoneType' object has no attribute 'get'
+   Batch 19 error: 'NoneType' object has no attribute 'get'
+   Batch 20 error: 'NoneType' object has no attribute 'get'
+   Batch 21 error: 'NoneType' object has no attribute 'get'
+   Batch 22 error: 'NoneType' object has no attribute 'get'
+   Batch 23 error: 'NoneType' object has no attribute 'get'
+   Batch 24 error: 'NoneType' object has no attribute 'get'
+   Batch 25 error: 'NoneType' object has no attribute 'get'
+   Batch 26 error: 'NoneType' object has no attribute 'get'
+   Batch 27 error: 'NoneType' object has no attribute 'get'
+   Batch 28 error: 'NoneType' object has no attribute 'get'
+   Batch 29 error: 'NoneType' object has no attribute 'get'
+   Batch 30 error: 'NoneType' object has no attribute 'get'
+   Batch 31 error: 'NoneType' object has no attribute 'get'
+   Batch 32 error: 'NoneType' object has no attribute 'get'
+   Batch 33 error: 'NoneType' object has no attribute 'get'
+   Batch 34 error: 'NoneType' object has no attribute 'get'
+   Batch 35 error: 'NoneType' object has no attribute 'get'
+   Batch 36 error: 'NoneType' object has no attribute 'get'
+   Batch 37 error: 'NoneType' object has no attribute 'get'
+   Batch 38 error: 'NoneType' object has no attribute 'get'
+   Batch 39 error: 'NoneType' object has no attribute 'get'
+   Batch 40 error: 'NoneType' object has no attribute 'get'
+   Batch 41 error: 'NoneType' object has no attribute 'get'
+   Batch 42 error: 'NoneType' object has no attribute 'get'
+   Batch 43 error: 'NoneType' object has no attribute 'get'
+   Batch 44 error: 'NoneType' object has no attribute 'get'
+   Batch 45 error: 'NoneType' object has no attribute 'get'
+   Batch 46 error: 'NoneType' object has no attribute 'get'
+   Batch 47 error: 'NoneType' object has no attribute 'get'
+   Batch 48 error: 'NoneType' object has no attribute 'get'
+   Batch 49 error: 'NoneType' object has no attribute 'get'
+   Batch 50 error: 'NoneType' object has no attribute 'get'
+   Batch 51 error: 'NoneType' object has no attribute 'get'
+   Batch 52 error: 'NoneType' object has no attribute 'get'
+   Batch 53 error: 'NoneType' object has no attribute 'get'
+   Batch 54 error: 'NoneType' object has no attribute 'get'
+   Batch 55 error: 'NoneType' object has no attribute 'get'
+   Batch 56 error: 'NoneType' object has no attribute 'get'
+   After mapping: (27605, 38)
+   Sample symbols: ['ENSBTAG00000006648', 'ENSBTAG00000049697', 'ENSBTAG00000047028', 'ENSBTAG00000053686', 'ENSBTAG00000054829', 'ENSBTAG00000046619', 'ENSBTAG00000001753', 'ENSBTAG00000020035', 'ENSBTAG00000005540', 'ENSBTAG00000001150']
+
+3. Aligning with human genes...
+   Common genes: 125
+   Case-insensitive common: 125
+   Bovine subset: (125, 38), Human subset: (125, 425)
+
+4. Projecting bovine onto human state map...
+
+5. Computing human state labels...
+
+6. Classifying bovine samples...
+Traceback (most recent call last):
+  File "C:\Users\asdf\CascadeProjects\rao_lab_ml\cultivated_meat_projects\notebooks\process_bovine.py", line 134, in <module>
+    centroids[s] = hum_pca[readiness == s].mean(axis=0)
+                   ~~~~~~~^^^^^^^^^^^^^^^^
+IndexError: boolean index did not match indexed array along axis 0; size of axis is 425 but size of corresponding boolean axis is 239

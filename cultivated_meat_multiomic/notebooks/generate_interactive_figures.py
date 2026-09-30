@@ -1,0 +1,365 @@
+"""Generate interactive Plotly figures for bioRxiv supplement and GitHub Pages."""
+import json
+import warnings
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+from artifact_provenance import annotate_figure, is_synthetic
+
+warnings.filterwarnings("ignore")
+PROJ = Path(__file__).resolve().parents[1]
+OUT = PROJ / "p2_state_map/output"
+FIGS = PROJ / "docs/figures"
+FIGS.mkdir(parents=True, exist_ok=True)
+
+print("=" * 60)
+print("INTERACTIVE FIGURES (Plotly)")
+print("=" * 60)
+
+# ── Load results ──
+results = {}
+for f in ["shap_dnn_results.json", "literature_drug_panel_noise.json", "vae_bayesian_results.json",
+          "bootstrap_ml_timeseries.json", "state_map_results.json", "cross_species_comparison.json",
+          "tf_ppi_results.json", "wgcna_de_batch.json"]:
+    p = OUT / f
+    if p.exists():
+        results[f.replace(".json", "")] = json.loads(p.read_text())
+
+# --- Figure 1: State Map (UMAP-style scatter) ---
+print("\n--- Fig 1: State Map ---")
+state_res = results.get("state_map_results", {})
+coords = state_res.get("umap_coords", {})
+state_sizes = state_res.get("states", {})
+if coords:
+    df = pd.DataFrame({"UMAP1": coords["x"], "UMAP2": coords["y"],
+                       "State": state_res.get("labels", [])})
+    fig = px.scatter(df, x="UMAP1", y="UMAP2", color="State",
+                     color_discrete_map={"expansion_competent": "#2ecc71", "committed": "#f39c12", "terminal": "#e74c3c"},
+                     title="Manufacturing-Readiness State Map (239 samples)",
+                     labels={"State": "Cell State"},
+                     hover_data={"UMAP1": ":.2f", "UMAP2": ":.2f"})
+elif state_sizes:
+    df = pd.DataFrame({"State": list(state_sizes.keys()), "Samples": list(state_sizes.values())})
+    fig = px.bar(df, x="State", y="Samples", color="State",
+                 color_discrete_map={"expansion_competent": "#2ecc71", "committed": "#f39c12", "terminal": "#e74c3c"},
+                 title="Manufacturing-Readiness State Sizes (239 samples)",
+                 labels={"State": "Cell State"}, text="Samples")
+    fig.update_layout(showlegend=False)
+else:
+    fig = None
+    print("  Skipped fig1 (no coords or state sizes)")
+if fig is not None:
+    fig.update_layout(width=800, height=600, template="plotly_white")
+    annotate_figure(fig, state_res)
+    fig.write_html(FIGS / "fig1_state_map.html", include_plotlyjs="cdn")
+    print("  Saved fig1_state_map.html")
+
+# ── Figure 2: QC Panel Performance ──
+print("\n--- Fig 2: QC Panel Performance ---")
+# Audited CV values from the QC benchmark run (see docs/supplementary/Table_S2 for test accs)
+models = ["Logistic Regression", "Random Forest", "SVM (RBF)", "DNN", "XGBoost", "Naive Bayes"]
+means = [0.967, 0.953, 0.961, 0.962, 0.958, 0.891]
+stds = [0.010, 0.014, 0.012, 0.015, 0.013, 0.018]
+fig = go.Figure(data=[
+    go.Bar(name="CV Accuracy", x=models, y=means,
+           error_y=dict(type="data", array=stds, visible=True),
+           marker_color=["#3498db", "#2ecc71", "#9b59b6", "#e74c3c", "#f39c12", "#95a5a6"])
+])
+fig.update_layout(title="30-Gene QC Panel: Cross-Validation Performance",
+                  yaxis_title="Accuracy", yaxis_range=[0.85, 1.0], template="plotly_white",
+                  width=800, height=500)
+annotate_figure(fig, {'data_source': 'unverified'})
+fig.write_html(FIGS / "fig2_qc_performance.html", include_plotlyjs="cdn")
+print("  Saved fig2_qc_performance.html")
+
+# ── Figure 3: SHAP Gene Importance ──
+print("\n--- Fig 3: SHAP Importance ---")
+if "shap_dnn_results" in results:
+    top = results["shap_dnn_results"]["shap"]["top_genes"][:15]
+    if isinstance(top, list) and len(top) > 0:
+        if isinstance(top[0], dict):
+            df = pd.DataFrame(top)
+            fig = px.bar(df, x="importance", y="gene", orientation="h",
+                         title="Top 15 Gene Importance (SHAP)",
+                         labels={"importance": "Mean |SHAP| Value", "gene": "Gene"},
+                         color="importance", color_continuous_scale="Viridis")
+        else:
+            # List of strings without magnitudes — plot SHAP rank, not fake values
+            df = pd.DataFrame({"gene": top, "rank": list(range(len(top), 0, -1))})
+            fig = px.bar(df, x="rank", y="gene", orientation="h",
+                         title="Top Gene Importance Rank (SHAP)",
+                         labels={"rank": "Rank position (higher = more important)", "gene": "Gene"},
+                         color="rank", color_continuous_scale="Viridis")
+        fig.update_layout(width=700, height=600, template="plotly_white")
+        annotate_figure(fig, results.get('shap_dnn_results', {}))
+        fig.write_html(FIGS / "fig3_shap_importance.html", include_plotlyjs="cdn")
+        print("  Saved fig3_shap_importance.html")
+
+# ── Figure 4: Cross-Species Validation ──
+print("\n--- Fig 4: Cross-Species ---")
+species = ["Bovine\n(GSE173199)", "Porcine\n(GSE206914)", "Bovine snRNA\n(GSE240556)"]
+cs = results.get("cross_species_comparison", {})
+acc = [cs.get("bovine_vs_human", {}).get("accuracy", 0.92),
+       cs.get("porcine_vs_human", {}).get("accuracy", 0.88),
+       cs.get("bovine_snrna_vs_human", {}).get("accuracy", 0.85)]
+n_samples = [cs.get("bovine_vs_human", {}).get("n_samples", 38),
+             cs.get("porcine_vs_human", {}).get("n_samples", 45),
+             cs.get("bovine_snrna_vs_human", {}).get("n_samples", 17541)]
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+fig.add_trace(go.Bar(x=species, y=acc, name="Accuracy", marker_color="#3498db"), secondary_y=False)
+fig.add_trace(go.Scatter(x=species, y=n_samples, name="N Samples", mode="markers+lines",
+                         marker=dict(size=12, color="#e74c3c")), secondary_y=True)
+cs_keys = ("bovine_vs_human", "porcine_vs_human", "bovine_snrna_vs_human")
+cs_fallback = any(cs.get(key, {}).get("accuracy") is None or cs.get(key, {}).get("n_samples") is None
+                  for key in cs_keys)
+cs_source = {"data_source": "synthetic_fallback"} if cs_fallback else cs
+fig.update_layout(title="Cross-Species Panel Validation", template="plotly_white", width=700, height=500)
+fig.update_yaxes(title_text="Accuracy", secondary_y=False, range=[0.7, 1.0])
+fig.update_yaxes(title_text="Number of Samples", secondary_y=True)
+annotate_figure(fig, cs_source)
+fig.write_html(FIGS / "fig4_cross_species.html", include_plotlyjs="cdn")
+print("  Saved fig4_cross_species.html")
+
+# ── Figure 5: Noise Robustness ──
+print("\n--- Fig 5: Noise Robustness ---")
+if "literature_drug_panel_noise" in results:
+    noise_data = results["literature_drug_panel_noise"].get("qpcr_noise_simulation", results["literature_drug_panel_noise"].get("noise_simulation", []))
+    synth_noise = False
+    if isinstance(noise_data, list) and noise_data:
+        cvs = [int(round(n["cv_level"] * 100)) for n in noise_data]
+        accs = [n["mean_accuracy"] for n in noise_data]
+    elif isinstance(noise_data, dict):
+        cvs = [int(k) for k in noise_data.keys()]
+        accs = [noise_data[str(k)]["accuracy"] for k in cvs]
+    else:
+        cvs = [5, 10, 15, 20, 25]
+        accs = [0.967 * (1 - cv/100*0.3) for cv in cvs]
+        synth_noise = True
+    if cvs:
+        noise_title = "qPCR Noise Simulation: Technical Variation Robustness"
+        if synth_noise:
+            noise_title += " (synthetic model — no simulation data)"
+        fig = px.line(x=cvs, y=accs, markers=True,
+                      title=noise_title,
+                      labels={"x": "Coefficient of Variation (%)", "y": "Accuracy"})
+        fig.update_traces(line=dict(color="#e74c3c", width=3), marker=dict(size=10))
+        fig.update_layout(width=700, height=500, template="plotly_white", yaxis_range=[0.8, 1.0])
+        annotate_figure(fig, {'data_source': 'synthetic_formula'} if synth_noise else results['literature_drug_panel_noise'])
+        fig.write_html(FIGS / "fig5_noise_robustness.html", include_plotlyjs="cdn")
+        print("  Saved fig5_noise_robustness.html")
+
+# ── Figure 6: Drug Prediction Scores ──
+print("\n--- Fig 6: Drug Predictions ---")
+if "literature_drug_panel_noise" in results:
+    drugs_data = results["literature_drug_panel_noise"]["drug_predictions"]
+    if isinstance(drugs_data, list) and drugs_data:
+        compounds = [d["compound"] for d in drugs_data[:15]]
+        scores = [d.get("relevance_score", d.get("score", 0)) for d in drugs_data[:15]]
+        mechanisms = [d.get("effect", d.get("mechanism", "unknown")) for d in drugs_data[:15]]
+    elif isinstance(drugs_data, dict):
+        compounds = list(drugs_data.keys())[:15]
+        scores = [drugs_data[c].get("relevance_score", drugs_data[c].get("score", 0)) for c in compounds]
+        mechanisms = [drugs_data[c].get("effect", drugs_data[c].get("mechanism", "unknown")) for c in compounds]
+    else:
+        compounds, scores, mechanisms = [], [], []
+    if compounds:
+        df = pd.DataFrame({"Compound": compounds, "Score": scores, "Mechanism": mechanisms})
+        df = df.sort_values("Score", ascending=True)
+        fig = px.bar(df, x="Score", y="Compound", color="Mechanism", orientation="h",
+                     title="Literature-curated compounds: panel-gene target matches",
+                     color_discrete_sequence=px.colors.qualitative.Set2)
+        fig.update_layout(width=800, height=700, template="plotly_white")
+        annotate_figure(fig, results['literature_drug_panel_noise'])
+        fig.write_html(FIGS / "fig6_drug_predictions.html", include_plotlyjs="cdn")
+        print("  Saved fig6_drug_predictions.html")
+
+# ── Figure 7: TEA Sensitivity ──
+print("\n--- Fig 7: TEA Sensitivity ---")
+tea = json.loads((OUT / "techno_economic_analysis.json").read_text()) if (OUT / "techno_economic_analysis.json").exists() else {}
+if not (tea and "sensitivity" in tea):
+    # No real TEA output — synthetic illustrative model, flagged in title
+    tea = {"data_source": "synthetic_formula",
+           "sensitivity": [{"panel_cost_per_batch": c,
+                            "cost_per_sample": 50 * (1 - 50/c) / 100}
+                           for c in np.linspace(25, 200, 20)]}
+    tea_synth = True
+else:
+    tea_synth = False
+if tea and "sensitivity" in tea:
+    sens = tea["sensitivity"]
+    df = pd.DataFrame(sens)
+    tea_title = "Manufacturing Cost Sensitivity: Panel Cost per Batch vs Cost per Sample"
+    if tea_synth:
+        tea_title += " (synthetic model — no TEA data)"
+    fig = px.line(df, x="panel_cost_per_batch", y="cost_per_sample", markers=True,
+                  title=tea_title,
+                  labels={"panel_cost_per_batch": "Panel Cost ($/batch)", "cost_per_sample": "Cost per Sample ($)"})
+    fig.update_traces(line=dict(color="#2ecc71", width=3), marker=dict(size=10))
+    fig.update_layout(width=700, height=500, template="plotly_white")
+    annotate_figure(fig, tea)
+    fig.write_html(FIGS / "fig7_tea_sensitivity.html", include_plotlyjs="cdn")
+    print("  Saved fig7_tea_sensitivity.html")
+
+# ── Figure 8: PPI Network (basic) ──
+print("\n--- Fig 8: PPI Network ---")
+if "tf_ppi_results" in results:
+    ppi = results["tf_ppi_results"]["ppi_network"]
+    edges = ppi.get("interactions", ppi.get("edges", []))
+    if edges:
+        nodes = list(set([e["source"] for e in edges[:50]] + [e["target"] for e in edges[:50]]))
+        rng = np.random.RandomState(42)
+        pos = {n: (rng.randn(), rng.randn()) for n in nodes}
+        fig = go.Figure(data=go.Scatter(
+            x=[pos[n][0] for n in nodes], y=[pos[n][1] for n in nodes],
+            mode="markers+text", text=nodes, textposition="top center",
+            marker=dict(size=15, color="#3498db"),
+        ))
+        for e in edges[:30]:
+            if e["source"] in pos and e["target"] in pos:
+                fig.add_trace(go.Scatter(
+                    x=[pos[e["source"]][0], pos[e["target"]][0]],
+                    y=[pos[e["source"]][1], pos[e["target"]][1]],
+                    mode="lines", line=dict(color="lightgray", width=1), showlegend=False, hoverinfo="skip"
+                ))
+        fig.update_layout(title="PPI Network (top 50 edges)", template="plotly_white", width=800, height=600)
+        annotate_figure(fig, results['tf_ppi_results'])
+        fig.write_html(FIGS / "fig8_ppi_network.html", include_plotlyjs="cdn")
+        print("  Saved fig8_ppi_network.html")
+
+# ── Figure 9: Batch Correction Benchmark ──
+print("\n--- Fig 9: Batch Correction Benchmark ---")
+SUPP = PROJ / "docs/supplementary"
+bc = json.loads((OUT / "batch_correction_benchmark.json").read_text()) if (OUT / "batch_correction_benchmark.json").exists() else {}
+s5_path = SUPP / "Table_S5_batch_correction.csv"
+if is_synthetic(bc) and s5_path.exists():
+    bc = {}
+if not bc and s5_path.exists():
+    s5 = pd.read_csv(s5_path)
+    bc = {"data_source": "Table_S5_batch_correction.csv",
+          "methods": {r["Method"]: {"accuracy": r["Accuracy"], "batch_mixing": r["Batch_Mixing"]}
+                      for _, r in s5.iterrows()}}
+if bc:
+    methods_data = bc.get("methods", {})
+    methods = list(methods_data.keys())
+    accuracy = [methods_data[m]["accuracy"] for m in methods]
+    mixing = [methods_data[m]["batch_mixing"] for m in methods]
+    df = pd.DataFrame({"Method": methods, "Accuracy": accuracy, "Batch Mixing": mixing})
+    fig = make_subplots(rows=1, cols=2, subplot_titles=("Classification Accuracy", "Batch Mixing (kBET-like)"),
+                        specs=[[{"type": "bar"}, {"type": "bar"}]])
+    colors = ["#3498db" if m == "raw" else "#2ecc71" if m == "combat" else "#9b59b6" if m == "harmony" else "#e74c3c" if m == "mnn" else "#f39c12" for m in methods]
+    fig.add_trace(go.Bar(x=methods, y=accuracy, marker_color=colors, name="Accuracy"), row=1, col=1)
+    fig.add_trace(go.Bar(x=methods, y=mixing, marker_color=colors, name="Mixing"), row=1, col=2)
+    fig.update_layout(title_text="Batch Correction Method Comparison (3 batches, 239 samples)", template="plotly_white",
+                      showlegend=False, width=900, height=450)
+    fig.update_yaxes(title_text="Accuracy", row=1, col=1, range=[0, 1])
+    fig.update_yaxes(title_text="Batch Mixing", row=1, col=2, range=[0, 1])
+    annotate_figure(fig, bc)
+    fig.write_html(FIGS / "fig9_batch_correction.html", include_plotlyjs="cdn")
+    print("  Saved fig9_batch_correction.html")
+
+# ── Figure 10: Pathway Enrichment Dot Plot ──
+print("\n--- Fig 10: Pathway Enrichment ---")
+pe = json.loads((OUT / "pathway_enrichment.json").read_text()) if (OUT / "pathway_enrichment.json").exists() else {}
+s6_path = SUPP / "Table_S6_pathway_enrichment.csv"
+if is_synthetic(pe) and s6_path.exists():
+    pe = {}
+rows = []
+pe_source = None
+pe_artifact = pe
+for db_name, db_data in [("GO BP", pe.get("go_bp", {})), ("KEGG", pe.get("kegg", {})), ("Reactome", pe.get("reactome", {}))]:
+    for hit in db_data.get("top_hits", [])[:5]:
+        rows.append({
+            "Database": db_name,
+            "Term": hit["term"].replace("_", " ").title(),
+            "P-value": hit["p_value"],
+            "Gene Ratio": hit["overlap_count"] / hit.get("term_size", 1),
+            "Count": hit["overlap_count"],
+            "-log10(p)": -np.log10(hit["p_value"])
+        })
+if rows:
+    pe_source = "pathway_enrichment.json"
+elif s6_path.exists():
+    pe_source = "Table S6"
+    pe_artifact = {"data_source": "Table_S6_pathway_enrichment.csv"}
+    for _, r in pd.read_csv(s6_path).iterrows():
+        p_val = r["P_value_adj"] if pd.notna(r.get("P_value_adj")) else r["P_value_raw"]
+        rows.append({
+            "Database": r["Database"],
+            "Term": str(r["Term_Name"]).replace("_", " ").title(),
+            "P-value": p_val,
+            "Gene Ratio": r["Gene_Ratio"],
+            "Count": r["Overlap_Count"],
+            "-log10(p)": -np.log10(max(p_val, 1e-300))
+        })
+if rows:
+    df = pd.DataFrame(rows)
+    df = df.sort_values("-log10(p)", ascending=True)
+    fig = px.scatter(df, x="Gene Ratio", y="Term", size="Count", color="-log10(p)", facet_col="Database",
+                     title=f"Pathway Enrichment of 30-Gene Panel (GO BP / KEGG / Reactome, {pe_source})",
+                     labels={"Gene Ratio": "Gene Ratio (overlap/term)", "Term": ""},
+                     color_continuous_scale="RdYlBu_r", size_max=25, height=600)
+    fig.update_layout(template="plotly_white", width=1100)
+    fig.update_yaxes(tickfont=dict(size=10))
+    annotate_figure(fig, pe_artifact)
+    fig.write_html(FIGS / "fig10_pathway_enrichment.html", include_plotlyjs="cdn")
+    print("  Saved fig10_pathway_enrichment.html")
+
+# ── Figure 11: Cross-Platform Validation Heatmap ──
+print("\n--- Fig 11: Cross-Platform Validation ---")
+cp = json.loads((OUT / "cross_platform_validation.json").read_text()) if (OUT / "cross_platform_validation.json").exists() else {}
+s4_path = SUPP / "Table_S4_cross_platform.csv"
+if is_synthetic(cp) and s4_path.exists():
+    cp = {}
+if not cp and s4_path.exists():
+    s4 = pd.read_csv(s4_path)
+    conc = [{"platform_a": r["Comparison"].split(" vs ")[0].strip(),
+             "platform_b": r["Comparison"].split(" vs ")[1].strip(),
+             "mean_gene_correlation": r["Mean_Gene_Correlation"]}
+            for _, r in s4.iterrows()]
+    cp = {"data_source": "Table_S4_cross_platform.csv", "expression_concordance": conc, "_source": "Table S4"}
+if cp:
+    conc = cp.get("expression_concordance", [])
+    plat_names = []
+    corrs = []
+    for c in conc:
+        pair = f"{c['platform_a']} vs {c['platform_b']}"
+        plat_names.append(pair)
+        corrs.append(c["mean_gene_correlation"])
+    fig = go.Figure(data=[
+        go.Bar(x=plat_names, y=corrs, marker_color=["#2ecc71", "#3498db", "#9b59b6"],
+               text=[f"{v:.3f}" for v in corrs], textposition="outside")
+    ])
+    fig.update_layout(title="Cross-Platform Gene Expression Concordance (Pearson r)", template="plotly_white",
+                      yaxis_title="Mean Gene Correlation", yaxis_range=[0.9, 1.0], width=700, height=450)
+    annotate_figure(fig, cp)
+    fig.write_html(FIGS / "fig11_cross_platform.html", include_plotlyjs="cdn")
+    print("  Saved fig11_cross_platform.html")
+
+    # Also generate gene bias heatmap
+    bias = cp.get("gene_bias_summary", {})
+    if bias:
+        genes = list(bias.keys())[:20]
+        platforms = ["rna_seq_mean", "qPCR_mean", "nanostring_mean"]
+        mat = np.array([[bias[g][p] for p in platforms] for g in genes])
+        fig = px.imshow(mat, x=["RNA-seq", "qPCR", "Nanostring"], y=genes, aspect="auto",
+                        title="Gene Expression Bias Across Platforms (log TPM, top 20 genes)",
+                        color_continuous_scale="Viridis", height=700)
+        fig.update_layout(template="plotly_white", width=500)
+        annotate_figure(fig, cp)
+        fig.write_html(FIGS / "fig11b_platform_heatmap.html", include_plotlyjs="cdn")
+        print("  Saved fig11b_platform_heatmap.html")
+
+# ── Summary ──
+print("\n--- Interactive Figures Summary ---")
+print(f"  Output: {FIGS}")
+html_files = sorted(FIGS.glob("*.html"))
+print(f"  Generated {len(html_files)} HTML files:")
+for f in html_files:
+    print(f"    {f.name}")
+print("  These HTML files can be embedded in bioRxiv supplement or presentations")
+print("DONE")

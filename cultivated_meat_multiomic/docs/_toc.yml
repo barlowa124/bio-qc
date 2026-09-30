@@ -1,0 +1,29 @@
+format: jb-book
+root: index
+parts:
+  - caption: Overview
+    chapters:
+    - file: overview
+    - file: installation
+  - caption: Core Analyses
+    chapters:
+    - file: p2_state_map
+    - file: p3_qc_panel
+    - file: p5_reproducibility
+  - caption: Extended Analyses
+    chapters:
+    - file: p1_protocol_meta
+    - file: p4_media_formulation
+    - file: cross_species
+    - file: snrna_seq
+    - file: vae_bayesian
+    - file: tf_ppi
+    - file: bootstrap_ml
+  - caption: Results
+    chapters:
+    - file: figures
+    - file: manuscript
+  - caption: Appendix
+    chapters:
+    - file: supplementary
+    - file: validation_plan
