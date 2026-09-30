@@ -1,0 +1,50 @@
+# Single source of truth: dataset, QC thresholds, stratification, and
+# association settings.
+
+# Where the DAG reads raw/intermediate cohorts (gitignored) and writes
+# committed artifacts. Alternate configs point results elsewhere so a
+# real-data run never overwrites the demo outputs.
+paths:
+  data_dir: data
+  results_dir: results
+
+dataset:
+  # "demo" generates a deterministic synthetic cohort: two ancestry
+  # groups, planted causal variants at recorded effect sizes, and a
+  # quantitative trait. Truth is written to results/planted_truth.json.
+  # "vcf" reads biallelic SNPs from a local VCF (plain or .gz, truncated
+  # streams OK) and simulates a trait on the real genotypes.
+  mode: demo
+  demo:
+    seed: 11
+    n_samples: 800
+    n_variants: 4000
+    ancestry_shares: [0.6, 0.4]   # two groups
+    fst: 0.08                    # Balding-Nichols differentiation
+    missing_rate: 0.02
+    n_causal: 8
+    beta_lo: 0.35
+    beta_hi: 0.60
+    ancestry_shift: 0.8          # confounding: trait differs by group
+    h2: 0.35                     # target signal share of trait variance
+  vcf:
+    path: data/kg_chr22_head.vcf.gz
+    max_variants: 20000
+    trait_seed: 5
+    n_causal: 6
+    beta_lo: 0.2
+    beta_hi: 0.4
+    h2: 0.15
+
+qc:
+  max_sample_missing: 0.10
+  max_variant_missing: 0.05
+  min_maf: 0.01
+  hwe_p_min: 1.0e-6            # chi-square 1df; set 0 to disable
+
+strat:
+  n_pcs: 10
+
+assoc:
+  kind: linear                 # linear | logistic
+  n_pcs_as_cov: 2              # PCs added to the covariate design

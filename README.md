@@ -31,6 +31,7 @@ ML).
 | `spatial_qc/` | Visium spot-level QC metrics plus a filtering-strategy benchmark (fixed cutoffs vs MAD-adaptive vs tissue-only), with a committed run on the public V1 Adult Mouse Brain export. |
 | `organoid_qc/` | Organoid fidelity scoring: scRNA-seq organoid clusters vs tissue-reference centroids, per-cluster and per-cell-type fidelity, fail-closed QC flags. |
 | `scrna_qc/` | scverse-based single-cell RNA QC: threshold filtering with an auditable waterfall, UMAP + Leiden, Wilcoxon markers, and a per-cluster QC table. Deterministic synthetic demo or public AnnData input (PBMC 3k / CELLxGENE-compatible), Snakemake DAG. |
+| `statgen/` | Statistical genetics: genotype QC (missingness/MAF/HWE with a reconciling waterfall), stratification PCA, single-variant linear/logistic association with genomic-control lambda, and the same claims-check layer as scrna_qc binding every report number to a results JSON. Deterministic synthetic cohort (planted ancestry + causal variants) or 1000 Genomes chr22 real-data mode. |
 | `cultivated_meat_multiomic/` | Multi-omic (RNA + metabolic flux) methods demo on public data: clustering, biomarker-panel selection with calibration and conformal intervals, ablation, drift monitoring, and cross-species checks on bovine/porcine muscle. A methods demonstration, not a manufacturing claim. |
 
 ## Running tests

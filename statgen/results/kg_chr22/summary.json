@@ -1,0 +1,38 @@
+{
+  "pipeline": "statgen",
+  "mode": "vcf",
+  "trait_kind": "real_genotypes_simulated_trait",
+  "samples_in": 2504,
+  "samples_out": 2504,
+  "variants_in": 20000,
+  "variants_out": 1866,
+  "assoc_kind": "linear",
+  "lambda_gc": 1.8851859007793632,
+  "lambda_gc_no_cov": 11.656391522902094,
+  "n_bonferroni_hits": 17,
+  "bonferroni_alpha": 2.679528403001072e-05,
+  "lead_hit": {
+    "vid": "22:17003990",
+    "pos": 17003990,
+    "chrom": 22,
+    "beta": -0.4664142415532166,
+    "se": 0.057500114595737756,
+    "p": 7.7537924153253e-16
+  },
+  "n_causal_planted": 6,
+  "n_causal_post_qc": 5,
+  "n_causal_recovered": 2,
+  "causal_beta_corr": 0.636433925095804,
+  "n_hits_causal": 2,
+  "n_hits_ld_proxy": 15,
+  "n_hits_other": 0,
+  "ld_window_kb": 250,
+  "pc1_ancestry_r": null,
+  "provenance": {
+    "git": "88a693c",
+    "python": "3.11.16",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "pandas": "2.3.3"
+  }
+}

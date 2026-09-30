@@ -1,0 +1,164 @@
+{
+  "passed": true,
+  "n_claims": 31,
+  "claims": [
+    {
+      "token": "800",
+      "bound_to": "qc_waterfall.samples_in",
+      "context": "c findings.  ## QC waterfall  800 -> 800 samples; 4000 -> 3840 v"
+    },
+    {
+      "token": "800",
+      "bound_to": "qc_waterfall.samples_in",
+      "context": "ngs.  ## QC waterfall  800 -> 800 samples; 4000 -> 3840 variant"
+    },
+    {
+      "token": "4000",
+      "bound_to": "qc_waterfall.variants_in",
+      "context": "aterfall  800 -> 800 samples; 4000 -> 3840 variants.  | filter |"
+    },
+    {
+      "token": "3840",
+      "bound_to": "qc_waterfall.variants_out",
+      "context": "800 -> 800 samples; 4000 -> 3840 variants.  | filter | axis |"
+    },
+    {
+      "token": "0",
+      "bound_to": "qc_waterfall.steps.0.removed",
+      "context": "sample_missingness | sample | 0 | 800 | | variant_missingness"
+    },
+    {
+      "token": "800",
+      "bound_to": "qc_waterfall.samples_in",
+      "context": "le_missingness | sample | 0 | 800 | | variant_missingness | vari"
+    },
+    {
+      "token": "0",
+      "bound_to": "qc_waterfall.steps.0.removed",
+      "context": "riant_missingness | variant | 0 | 4000 | | min_maf | variant |"
+    },
+    {
+      "token": "4000",
+      "bound_to": "qc_waterfall.variants_in",
+      "context": "t_missingness | variant | 0 | 4000 | | min_maf | variant | 23 | 3"
+    },
+    {
+      "token": "23",
+      "bound_to": "qc_waterfall.steps.2.removed",
+      "context": "4000 | | min_maf | variant | 23 | 3977 | | hwe | variant | 137"
+    },
+    {
+      "token": "3977",
+      "bound_to": "qc_waterfall.steps.2.kept",
+      "context": "| | min_maf | variant | 23 | 3977 | | hwe | variant | 137 | 3840"
+    },
+    {
+      "token": "137",
+      "bound_to": "qc_waterfall.steps.3.removed",
+      "context": "23 | 3977 | | hwe | variant | 137 | 3840 |  ## Stratification  1"
+    },
+    {
+      "token": "3840",
+      "bound_to": "qc_waterfall.variants_out",
+      "context": "977 | | hwe | variant | 137 | 3840 |  ## Stratification  10 PCs c"
+    },
+    {
+      "token": "10",
+      "bound_to": "strat_summary.n_pcs",
+      "context": "| 3840 |  ## Stratification  10 PCs computed on 3840 variants"
+    },
+    {
+      "token": "3840",
+      "bound_to": "qc_waterfall.variants_out",
+      "context": "ification  10 PCs computed on 3840 variants; PC1 explains 6.0% o"
+    },
+    {
+      "token": "6.0%",
+      "bound_to": "summary.n_causal_post_qc",
+      "context": "n 3840 variants; PC1 explains 6.0% of genotype variance and corr"
+    },
+    {
+      "token": "3840",
+      "bound_to": "qc_waterfall.variants_out",
+      "context": "## Association  linear test, 3840 variants on 800 samples with"
+    },
+    {
+      "token": "800",
+      "bound_to": "qc_waterfall.samples_in",
+      "context": "linear test, 3840 variants on 800 samples with 4 covariates (2"
+    },
+    {
+      "token": "4",
+      "bound_to": "assoc_summary.n_covariates",
+      "context": "variants on 800 samples with 4 covariates (2 PCs).  Genomic"
+    },
+    {
+      "token": "2",
+      "bound_to": "strat_summary.top_eigenvalues.1",
+      "context": "00 samples with 4 covariates (2 PCs).  Genomic control $\\lamb"
+    },
+    {
+      "token": "0.965",
+      "bound_to": "assoc_summary.lambda_gc",
+      "context": "Genomic control $\\lambda$ = 0.965 with covariates vs 2.646 with"
+    },
+    {
+      "token": "2.646",
+      "bound_to": "assoc_summary.lambda_gc_no_cov",
+      "context": "a$ = 0.965 with covariates vs 2.646 without; 4 variants pass the"
+    },
+    {
+      "token": "4",
+      "bound_to": "assoc_summary.n_covariates",
+      "context": "covariates vs 2.646 without; 4 variants pass the Bonferroni"
+    },
+    {
+      "token": "2114",
+      "bound_to": "assoc_summary.lead_hit.pos",
+      "context": "e-05.  Lead hit rs102113 (pos 2114): beta 0.443 (se 0.063), p ="
+    },
+    {
+      "token": "0.443",
+      "bound_to": "assoc_summary.lead_hit.beta",
+      "context": "hit rs102113 (pos 2114): beta 0.443 (se 0.063), p = 3.54e-12.  Pla"
+    },
+    {
+      "token": "0.063",
+      "bound_to": "assoc_summary.lead_hit.se",
+      "context": "13 (pos 2114): beta 0.443 (se 0.063), p = 3.54e-12.  Planted caus"
+    },
+    {
+      "token": "4",
+      "bound_to": "assoc_summary.n_covariates",
+      "context": "12.  Planted causal variants: 4 of 6 surviving QC recovered a"
+    },
+    {
+      "token": "6",
+      "bound_to": "summary.n_causal_post_qc",
+      "context": "Planted causal variants: 4 of 6 surviving QC recovered at Bon"
+    },
+    {
+      "token": "8",
+      "bound_to": "summary.n_causal_planted",
+      "context": "g QC recovered at Bonferroni (8 planted; 2 failed pooled HWE"
+    },
+    {
+      "token": "2",
+      "bound_to": "strat_summary.top_eigenvalues.1",
+      "context": "red at Bonferroni (8 planted; 2 failed pooled HWE \u2014 the Wahlu"
+    },
+    {
+      "token": "4",
+      "bound_to": "assoc_summary.n_covariates",
+      "context": "eta correlation 0.99.  Of the 4 Bonferroni hits, 0 are non-ca"
+    },
+    {
+      "token": "0",
+      "bound_to": "qc_waterfall.steps.0.removed",
+      "context": "9.  Of the 4 Bonferroni hits, 0 are non-causal.  ![manhattan]"
+    }
+  ],
+  "unbound_claims": [],
+  "forbidden": [],
+  "verified_by": "statgen.claims (vendored, parity-pinned)"
+}

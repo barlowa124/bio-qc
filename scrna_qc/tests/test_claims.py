@@ -98,6 +98,18 @@ def test_unbound_number_flagged():
     assert v["unbound_claims"][0]["token"] == "9999"
 
 
+def test_sci_notation_tokens_are_single_claims():
+    # "1.2e-20" must not fragment into "1" and "20"
+    toks = extract_numbers("p = 1.2e-20")
+    assert len(toks) == 1 and toks[0]["value"] == 1.2e-20
+    flat = {"assoc.lead_p": 1.2e-20}
+    v = verify_markdown("lead hit p = 1.2e-20", flat)
+    assert v["passed"], v
+    # a different exponent does NOT bind even at the same mantissa
+    v2 = verify_markdown("lead hit p = 1.2e-8", flat)
+    assert not v2["passed"]
+
+
 def test_display_rounding_within_tolerance_binds():
     # recorded 0.25034 displayed as "25.0%" must still bind
     flat = {"frac": 0.25034}

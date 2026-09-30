@@ -1,0 +1,38 @@
+{
+  "samples_in": 2504,
+  "samples_out": 2504,
+  "variants_in": 20000,
+  "variants_out": 1866,
+  "steps": [
+    {
+      "name": "sample_missingness",
+      "axis": "sample",
+      "removed": 0,
+      "kept": 2504
+    },
+    {
+      "name": "variant_missingness",
+      "axis": "variant",
+      "removed": 0,
+      "kept": 20000
+    },
+    {
+      "name": "min_maf",
+      "axis": "variant",
+      "removed": 17142,
+      "kept": 2858
+    },
+    {
+      "name": "hwe",
+      "axis": "variant",
+      "removed": 992,
+      "kept": 1866
+    }
+  ],
+  "thresholds": {
+    "max_sample_missing": 0.1,
+    "max_variant_missing": 0.05,
+    "min_maf": 0.01,
+    "hwe_p_min": 1e-06
+  }
+}

@@ -1,0 +1,56 @@
+# Real-data mode: 1000 Genomes phase3 chr22 head region.
+#
+# Fetch (~14 MB range request against the bgzip file; parsing tolerates
+# the truncated tail):
+#
+#   curl -L -r 0-14000000 -o data/kg_chr22_head.vcf.gz \
+#     https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/\
+# ALL.chr22.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz
+#
+# The call set carries genotypes for 2,504 samples and no phenotype, so
+# this config simulates a trait on the real genotype matrix (see
+# dataset.vcf.trait_seed). Numbers are pipeline exercises.
+
+paths:
+  data_dir: data
+  results_dir: results/kg_chr22
+
+dataset:
+  mode: vcf
+  demo:
+    seed: 11
+    n_samples: 800
+    n_variants: 4000
+    ancestry_shares: [0.6, 0.4]
+    fst: 0.08
+    missing_rate: 0.02
+    n_causal: 8
+    beta_lo: 0.25
+    beta_hi: 0.45
+    ancestry_shift: 0.8
+    h2: 0.30
+  vcf:
+    path: data/kg_chr22_head.vcf.gz
+    panel_path: data/integrated_call_samples_v3.20130502.ALL.panel
+    max_variants: 20000
+    trait_seed: 5
+    n_causal: 6
+    beta_lo: 0.30
+    beta_hi: 0.55
+    max_anc_spread: 0.15   # planted causals only on low-differentiation
+                         # variants, so the trait is unconfounded
+    ancestry_shift: 0.0    # set >0 to deliberately confound the trait
+    h2: 0.25
+
+qc:
+  max_sample_missing: 0.10
+  max_variant_missing: 0.05
+  min_maf: 0.01
+  hwe_p_min: 1.0e-6
+
+strat:
+  n_pcs: 10
+
+assoc:
+  kind: linear
+  n_pcs_as_cov: 5   # continental ancestry is deep in 1kG; 2 PCs undercorrect

@@ -1,0 +1,37 @@
+{
+  "pipeline": "statgen",
+  "mode": "demo",
+  "trait_kind": "synthetic",
+  "samples_in": 800,
+  "samples_out": 800,
+  "variants_in": 4000,
+  "variants_out": 3840,
+  "assoc_kind": "linear",
+  "lambda_gc": 0.9651128236650924,
+  "lambda_gc_no_cov": 2.6461977496155575,
+  "n_bonferroni_hits": 4,
+  "bonferroni_alpha": 1.3020833333333334e-05,
+  "lead_hit": {
+    "vid": "rs102113",
+    "pos": 2114,
+    "beta": 0.4427013862060489,
+    "se": 0.06267214825152906,
+    "p": 3.544772624658694e-12
+  },
+  "n_causal_planted": 8,
+  "n_causal_post_qc": 6,
+  "n_causal_recovered": 4,
+  "causal_beta_corr": 0.988986801088118,
+  "n_hits_causal": 4,
+  "n_hits_ld_proxy": 0,
+  "n_hits_other": 0,
+  "ld_window_kb": 0,
+  "pc1_ancestry_r": 0.9979860075478906,
+  "provenance": {
+    "git": "88a693c",
+    "python": "3.11.16",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "pandas": "2.3.3"
+  }
+}

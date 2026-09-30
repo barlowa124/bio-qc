@@ -1,0 +1,18 @@
+{
+  "kind": "linear",
+  "n_variants": 3840,
+  "n_samples": 800,
+  "n_covariates": 4,
+  "n_pcs_as_cov": 2,
+  "lambda_gc": 0.9651128236650924,
+  "lambda_gc_no_cov": 2.6461977496155575,
+  "bonferroni_alpha": 1.3020833333333334e-05,
+  "n_bonferroni_hits": 4,
+  "lead_hit": {
+    "vid": "rs102113",
+    "pos": 2114,
+    "beta": 0.4427013862060489,
+    "se": 0.06267214825152906,
+    "p": 3.544772624658694e-12
+  }
+}

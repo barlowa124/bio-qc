@@ -1,0 +1,93 @@
+"""statgen DAG:
+
+    data -> qc -> strat -> assoc -> report
+"""
+
+import os
+import sys
+
+import statgen.util as _util  # noqa: E402  (src/ on PYTHONPATH)
+
+_CFG = _util.load_config()
+DATA_DIR = _CFG.get("paths", {}).get("data_dir", "data")
+RESULTS_DIR = _CFG.get("paths", {}).get("results_dir", "results")
+
+PY = os.environ.get("PYTHON", sys.executable)
+
+RAW = f"{DATA_DIR}/raw/cohort.npz"
+FILTERED = f"{DATA_DIR}/processed/filtered.npz"
+TRUTH = f"{RESULTS_DIR}/planted_truth.json"
+WATERFALL = f"{RESULTS_DIR}/qc_waterfall.json"
+PCS = f"{RESULTS_DIR}/pcs.tsv"
+STRAT = f"{RESULTS_DIR}/strat_summary.json"
+ASSOC_TSV = f"{RESULTS_DIR}/assoc.tsv"
+ASSOC_SUM = f"{RESULTS_DIR}/assoc_summary.json"
+SUMMARY = f"{RESULTS_DIR}/summary.json"
+REPORT_MD = f"{RESULTS_DIR}/report.md"
+CLAIMS = f"{RESULTS_DIR}/claims_check.json"
+MANHATTAN = f"{RESULTS_DIR}/manhattan.png"
+QQ = f"{RESULTS_DIR}/qq.png"
+
+
+rule all:
+    input:
+        SUMMARY,
+        CLAIMS,
+        MANHATTAN,
+        QQ,
+
+
+rule data:
+    output:
+        RAW,
+        TRUTH,
+    shell:
+        f"PYTHONPATH=src {PY} -m statgen.data"
+
+
+rule qc:
+    input:
+        RAW,
+    output:
+        FILTERED,
+        WATERFALL,
+    shell:
+        f"PYTHONPATH=src {PY} -m statgen.qc"
+
+
+rule strat:
+    input:
+        FILTERED,
+    output:
+        PCS,
+        STRAT,
+    shell:
+        f"PYTHONPATH=src {PY} -m statgen.strat"
+
+
+rule assoc:
+    input:
+        FILTERED,
+        PCS,
+    output:
+        ASSOC_TSV,
+        ASSOC_SUM,
+    shell:
+        f"PYTHONPATH=src {PY} -m statgen.assoc"
+
+
+rule report:
+    input:
+        WATERFALL,
+        STRAT,
+        ASSOC_TSV,
+        ASSOC_SUM,
+        TRUTH,
+    output:
+        SUMMARY,
+        REPORT_MD,
+        CLAIMS,
+        MANHATTAN,
+        QQ,
+    shell:
+        f"PYTHONPATH=src {PY} -m statgen.report"
