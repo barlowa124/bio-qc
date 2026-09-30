@@ -44,9 +44,14 @@ python ../scripts/run_receipts.py --trace results/trace.txt \
     --out results/run_receipts.jsonl --run-name <name>
 ```
 
-The receipts are a durable record of what ran. Re-hashing the referenced
-files requires `work/` or the published outputs to still exist; the
-JSONL itself verifies record integrity, not file availability.
+The receipts are a durable record of what ran. Two verification levels
+exist: `--verify` checks record integrity (chain + embedded hashes),
+while `--rehash` re-computes recorded files where they still exist —
+inputs resolve via the staged symlink targets, outputs via
+`workdir`/name — and reports hash mismatches or files cleaned away.
+Receipts are emitted by the entry workflow's `onComplete`, so the named
+`FCS_QC` workflow exercised by nf-test does not produce them; the
+committed artifact comes from a real `nextflow run main.nf`.
 
 ## Run
 

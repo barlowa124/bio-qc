@@ -116,6 +116,19 @@ class ReceiptTests(unittest.TestCase):
             self.assertTrue(r["receipt_id"].startswith("rcpt-"))
             self.assertEqual(len(r["receipt_id"]), 21)
 
+    def test_rehash_matches_then_detects_change(self):
+        recs = rr.task_receipts(str(self.trace), engine="nf@1",
+                                run_name="r", session_id="s")
+        issues = rr.rehash(recs)
+        self.assertTrue(issues[0].startswith("re-hashed"))
+        self.assertFalse(any("mismatch" in i for i in issues))
+        # rewrite an output file -> mismatch on next rehash
+        import pathlib
+        out = pathlib.Path(self.rows[0]["workdir"]) / "a.events.tsv"
+        out.write_text("changed")
+        issues = rr.rehash(recs)
+        self.assertTrue(any("mismatch" in i for i in issues))
+
     def test_committed_receipts_verify(self):
         """The committed nf/results/run_receipts.jsonl is chain-clean."""
         committed = ROOT / "nf" / "results" / "run_receipts.jsonl"
@@ -124,6 +137,12 @@ class ReceiptTests(unittest.TestCase):
         recs = [json.loads(l) for l in open(committed) if l.strip()]
         self.assertGreaterEqual(len(recs), 3)
         self.assertEqual(rr.check_chain(recs), [])
+        # schema: every record binds env + workdir + hashes
+        for r in recs:
+            self.assertTrue(r["workdir"])
+            self.assertTrue(r["env_sha256"])
+            self.assertTrue(r["nextflow_task_hash"])
+            self.assertTrue(r["outputs"], f"{r['task']} has no outputs")
 
 
 if __name__ == "__main__":

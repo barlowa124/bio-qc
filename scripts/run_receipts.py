@@ -121,6 +121,7 @@ def task_receipts(trace_path: str, *, engine: str, run_name: str,
             "session_id": session_id,
             "task": r.get("name", ""),
             "process": process,
+            "workdir": workdir,
             "status": r.get("status", ""),
             "exit": r.get("exit", ""),
             "nextflow_task_hash": r.get("hash", ""),
@@ -164,6 +165,40 @@ def check_chain(receipts: list[dict]) -> list[str]:
     return problems
 
 
+def rehash(receipts: list[dict]) -> list[str]:
+    """Re-hash the recorded files where they still exist.
+
+    Chain verification proves the record is intact; this proves the
+    files still match the record. Inputs resolve through the recorded
+    staged symlink target, outputs through workdir/name. Files that no
+    longer exist are reported as unavailable, not as mismatches — the
+    distinction matters when work/ has been cleaned.
+    """
+    problems, checked = [], 0
+    for i, r in enumerate(receipts):
+        for e in r.get("inputs", []):
+            p = e.get("staged_from", "")
+            if p and os.path.exists(p):
+                checked += 1
+                if sha256_file(p) != e.get("sha256"):
+                    problems.append(f"[{i}] {r.get('task')}: input "
+                                    f"{e.get('name')} hash mismatch")
+        wd = r.get("workdir", "")
+        for e in r.get("outputs", []):
+            p = os.path.join(wd, e.get("name", "")) if wd else ""
+            if p and os.path.exists(p):
+                checked += 1
+                if sha256_file(p) != e.get("sha256"):
+                    problems.append(f"[{i}] {r.get('task')}: output "
+                                    f"{e.get('name')} hash mismatch")
+    if not checked:
+        problems.append("no recorded files still exist — record "
+                        "integrity is all that can be verified")
+    else:
+        problems.insert(0, f"re-hashed {checked} recorded files")
+    return problems
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--trace", help="nextflow -with-trace TSV")
@@ -172,6 +207,8 @@ def main() -> int:
     ap.add_argument("--session-id", default="")
     ap.add_argument("--engine", default="nextflow")
     ap.add_argument("--verify", help="check an existing receipts file")
+    ap.add_argument("--rehash", help="re-hash recorded files that "
+                    "still exist and compare to the receipts")
     a = ap.parse_args()
 
     if a.verify:
@@ -182,6 +219,19 @@ def main() -> int:
         for p in problems:
             print("  " + p)
         return 1 if problems else 0
+
+    if a.rehash:
+        receipts = [json.loads(l) for l in open(a.rehash) if l.strip()]
+        problems = check_chain(receipts)
+        print(f"{a.rehash}: {len(receipts)} receipts, "
+              f"{len(problems)} chain problems")
+        for p in problems:
+            print("  " + p)
+        issues = rehash(receipts)
+        for p in issues:
+            print("  " + p)
+        return 1 if problems or any("mismatch" in i for i in issues) \
+            else 0
 
     if not (a.trace and a.out):
         ap.error("--trace and --out required (or use --verify)")
