@@ -1,0 +1,51 @@
+{
+ "dataset": "visium_v1_breast_cancer",
+ "summary": {
+  "n_spots": 3798,
+  "n_genes": 36601,
+  "n_in_tissue": 3798,
+  "frac_in_tissue": 1.0,
+  "counts": {
+   "total": 82852292,
+   "median_in_tissue": 20761.5,
+   "median_out_tissue": 0.0
+  },
+  "genes_per_spot_in_tissue": 6026.5,
+  "median_mito_frac_in_tissue": 0.035036526934698144
+ },
+ "strategy_comparison": {
+  "n_spots_total": 3798,
+  "strategies": {
+   "fixed": {
+    "spots_kept": 3798,
+    "frac_spots": 1.0,
+    "counts_kept_frac": 1.0,
+    "genes_detected": 24923,
+    "median_counts_kept": 20761.5,
+    "median_mito_kept": 0.035036526934698144,
+    "n_clusters": 10,
+    "leiden_modularity": 0.7965
+   },
+   "mad": {
+    "spots_kept": 3425,
+    "frac_spots": 0.9018,
+    "counts_kept_frac": 0.955,
+    "genes_detected": 24833,
+    "median_counts_kept": 22274.0,
+    "median_mito_kept": 0.03362893409841767,
+    "n_clusters": 10,
+    "leiden_modularity": 0.7754
+   },
+   "tissue_only": {
+    "spots_kept": 3798,
+    "frac_spots": 1.0,
+    "counts_kept_frac": 1.0,
+    "genes_detected": 24923,
+    "median_counts_kept": 20761.5,
+    "median_mito_kept": 0.035036526934698144,
+    "n_clusters": 10,
+    "leiden_modularity": 0.7965
+   }
+  }
+ }
+}

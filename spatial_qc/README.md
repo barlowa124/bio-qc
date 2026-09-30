@@ -36,17 +36,35 @@ public sample (2,702 spots, 32,285 genes, Space Ranger 1.1.0 export).
 | tissue_only | 2,702 (100%) | 100% | 14 | 0.8336 |
 
 MAD filtering keeps more real spots than fixed cutoffs with
-slightly better graph structure on this sample. The distribution-adaptive approach
-pays on this sample. The `tissue_only` line is near-passthrough
-because the *filtered* matrix already excludes out-of-tissue barcodes
-upstream. Its discriminating power shows only on the unfiltered
-(in-tissue + fiducial-frame) export, which is the same call for anyone
-who has it.
+slightly better graph structure on this sample. The `tissue_only`
+line is near-passthrough because the *filtered* matrix already
+excludes out-of-tissue barcodes upstream. Its discriminating power
+shows only on the unfiltered (in-tissue + fiducial-frame) export,
+which is the same call for anyone who has it.
+
+`results/v1_breast_cancer.json`: 10x Genomics V1 Breast Cancer Block A
+Section 1 public sample. 3,798 spots and 36,601 genes in a Space Ranger
+1.1.0 export, human sample this time.
+
+| strategy | spots kept | counts kept | clusters | modularity |
+|---|---|---|---|---|
+| fixed | 3,798 (100%) | 100% | 10 | 0.7965 |
+| mad | 3,425 (90.2%) | 95.5% | 10 | 0.7754 |
+| tissue_only | 3,798 (100%) | 100% | 10 | 0.7965 |
+
+The ranking reverses across the two samples. On the mouse brain,
+`mad` kept more spots than `fixed`. Here `fixed` passes everything
+because this sample's depth (median ~20,762 counts/spot) sits far
+above the static cutoffs, while `mad` drops a 10% sparse tail and
+loses modularity for it. Two samples, two different answers. That is
+the point of running the comparison per sample over assuming
+a default.
 
 ## Limits
 
-- One public sample. The strategy ranking is a demonstration of the
-  measurement, not a claim about Visium data generally.
+- Two public samples, and the ranking already differs between them.
+  The numbers show the measurement working, not which strategy is
+  right for Visium data generally.
 - Mito genes are detected by `mt-` symbol prefix, right for mouse and
   human nomenclature, wrong for organisms with different conventions.
 - Modularity compares filtered subsets on their own graphs. It answers
