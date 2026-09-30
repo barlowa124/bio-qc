@@ -154,3 +154,6 @@ jobs:
             modules/local/fcsio_parse/tests/main.nf.test \
             modules/local/fcs_stats/tests/main.nf.test \
             modules/local/fcsio_demo/tests/main.nf.test
+          nextflow run main.nf
+          python3 ../scripts/run_receipts.py --verify \
+            results/run_receipts.jsonl
