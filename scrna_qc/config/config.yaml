@@ -1,0 +1,34 @@
+# Single source of truth: dataset, QC thresholds, embedding parameters.
+
+dataset:
+  # "demo" generates a deterministic synthetic AnnData with known
+  # populations and injected low-quality cells.
+  # "pbmc3k" loads the public 10x PBMC 3k dataset via scanpy's dataset
+  # cache (downloads ~5.5 MB once; the h5ad is never committed).
+  # "h5ad" reads a local path provided in `h5ad_path`.
+  mode: demo
+  h5ad_path: null
+  demo:
+    seed: 7
+    n_cells: 900
+    n_genes: 1200
+    n_mt_genes: 24
+    type_proportions: [0.45, 0.25, 0.20, 0.10]
+    marker_block_size: 40
+    frac_low_quality: 0.08   # few detected genes
+    frac_mito_high: 0.05     # stressed cells, high mt fraction
+
+qc:
+  min_genes_per_cell: 200
+  min_cells_per_gene: 5
+  max_pct_mt: 12.0
+  mt_prefix: "MT-"
+
+embed:
+  target_sum: 10000
+  n_hvg: 1500
+  n_pcs: 30
+  n_neighbors: 15
+  leiden_resolution: 0.8
+  n_markers: 5
+  seed: 7

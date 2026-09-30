@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scrna-qc"
+version = "0.1.0"
+description = "Single-cell RNA QC: metrics, filtering waterfall, embedding, per-cluster QC table"
+requires-python = ">=3.9"
+dependencies = [
+    "anndata>=0.10",
+    "scanpy>=1.9",
+    "numpy",
+    "pandas",
+    "scipy",
+    "matplotlib",
+    "pyyaml",
+    "igraph",
+    "leidenalg",
+    "umap-learn",
+]
+
+[project.optional-dependencies]
+test = ["pytest", "snakemake>=7,<8"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

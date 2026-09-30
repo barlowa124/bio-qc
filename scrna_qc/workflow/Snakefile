@@ -1,0 +1,60 @@
+"""scrna-qc DAG:
+
+    data -> filter -> embed -> report
+"""
+
+import os
+import sys
+
+# Interpreter for the stage commands: PYTHON env var wins, else the
+# interpreter that launched snakemake.
+PY = os.environ.get("PYTHON", sys.executable)
+
+
+rule all:
+    input:
+        "results/qc_summary.json",
+        "results/umap.png",
+
+
+rule data:
+    output:
+        "data/raw/sample.h5ad",
+    shell:
+        "{PY} -m scrna_qc.data {output}"
+
+
+rule qc_filter:
+    input:
+        "data/raw/sample.h5ad",
+    output:
+        filtered="data/processed/filtered.h5ad",
+        waterfall="results/filter_waterfall.json",
+    shell:
+        "{PY} -m scrna_qc.filter_cells {input} {output.filtered}"
+        " {output.waterfall}"
+
+
+rule embed:
+    input:
+        "data/processed/filtered.h5ad",
+    output:
+        embedded="data/processed/embedded.h5ad",
+        markers="results/markers.csv",
+    shell:
+        "{PY} -m scrna_qc.embed {input} {output.embedded} {output.markers}"
+
+
+rule report:
+    input:
+        embedded="data/processed/embedded.h5ad",
+        markers="results/markers.csv",
+        waterfall="results/filter_waterfall.json",
+    output:
+        cluster_csv="results/cluster_qc.csv",
+        summary="results/qc_summary.json",
+        umap="results/umap.png",
+    shell:
+        "{PY} -m scrna_qc.report {input.embedded} {input.markers}"
+        " {input.waterfall} {output.cluster_csv} {output.summary}"
+        " {output.umap}"

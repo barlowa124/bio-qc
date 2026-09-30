@@ -1,0 +1,119 @@
+{
+  "dataset_mode": "demo",
+  "n_cells": 783,
+  "n_clusters": 4,
+  "filter_waterfall": {
+    "cells_in": 900,
+    "genes_in": 1200,
+    "steps": [
+      {
+        "stage": "min_genes_per_cell",
+        "cells_before": 900,
+        "cells_after": 828,
+        "cells_removed": 72,
+        "genes_before": 1200,
+        "genes_after": 1200,
+        "genes_removed": 0
+      },
+      {
+        "stage": "max_pct_mt",
+        "cells_before": 828,
+        "cells_after": 783,
+        "cells_removed": 45,
+        "genes_before": 1200,
+        "genes_after": 1200,
+        "genes_removed": 0
+      },
+      {
+        "stage": "min_cells_per_gene",
+        "cells_before": 783,
+        "cells_after": 783,
+        "cells_removed": 0,
+        "genes_before": 1200,
+        "genes_after": 1199,
+        "genes_removed": 1
+      }
+    ],
+    "cells_out": 783,
+    "genes_out": 1199
+  },
+  "cluster_qc": [
+    {
+      "cluster": "0",
+      "n_cells": 359,
+      "frac_of_total": 0.4585,
+      "median_total_counts": 3024.0,
+      "median_n_genes": 840.0,
+      "median_pct_mt": 1.81,
+      "top_marker": "G0020"
+    },
+    {
+      "cluster": "1",
+      "n_cells": 191,
+      "frac_of_total": 0.2439,
+      "median_total_counts": 2910.0,
+      "median_n_genes": 839.0,
+      "median_pct_mt": 1.84,
+      "top_marker": "G0076"
+    },
+    {
+      "cluster": "2",
+      "n_cells": 155,
+      "frac_of_total": 0.198,
+      "median_total_counts": 2953.0,
+      "median_n_genes": 831.0,
+      "median_pct_mt": 1.82,
+      "top_marker": "G0099"
+    },
+    {
+      "cluster": "3",
+      "n_cells": 78,
+      "frac_of_total": 0.0996,
+      "median_total_counts": 3102.5,
+      "median_n_genes": 846.0,
+      "median_pct_mt": 1.82,
+      "top_marker": "G0160"
+    }
+  ],
+  "provenance": {
+    "git_sha": "36f432c",
+    "scanpy": "1.9.8",
+    "anndata": "0.10.9",
+    "config": {
+      "dataset": {
+        "mode": "demo",
+        "h5ad_path": null,
+        "demo": {
+          "seed": 7,
+          "n_cells": 900,
+          "n_genes": 1200,
+          "n_mt_genes": 24,
+          "type_proportions": [
+            0.45,
+            0.25,
+            0.2,
+            0.1
+          ],
+          "marker_block_size": 40,
+          "frac_low_quality": 0.08,
+          "frac_mito_high": 0.05
+        }
+      },
+      "qc": {
+        "min_genes_per_cell": 200,
+        "min_cells_per_gene": 5,
+        "max_pct_mt": 12.0,
+        "mt_prefix": "MT-"
+      },
+      "embed": {
+        "target_sum": 10000,
+        "n_hvg": 1500,
+        "n_pcs": 30,
+        "n_neighbors": 15,
+        "leiden_resolution": 0.8,
+        "n_markers": 5,
+        "seed": 7
+      }
+    }
+  }
+}
