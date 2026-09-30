@@ -1,0 +1,72 @@
+{
+  "alpha": 0.1,
+  "n_cal": 792,
+  "n_test": 1851,
+  "pooled_coverage": 0.8427876823338736,
+  "mean_set_size": 0.8465694219340897,
+  "qhat_global": 0.012701869010925293,
+  "min_group": 30,
+  "per_cluster": {
+    "0": {
+      "n_test": 823,
+      "coverage": 0.8578371810449574,
+      "qhat": 0.0034123659133911133,
+      "global_fallback": false,
+      "mean_set_size": 0.8651275820170109
+    },
+    "1": {
+      "n_test": 337,
+      "coverage": 0.9347181008902077,
+      "qhat": 0.01832479238510132,
+      "global_fallback": false,
+      "mean_set_size": 0.9347181008902077
+    },
+    "2": {
+      "n_test": 301,
+      "coverage": 0.8438538205980066,
+      "qhat": 0.017805397510528564,
+      "global_fallback": false,
+      "mean_set_size": 0.8438538205980066
+    },
+    "3": {
+      "n_test": 239,
+      "coverage": 0.7364016736401674,
+      "qhat": 0.002150416374206543,
+      "global_fallback": false,
+      "mean_set_size": 0.7364016736401674
+    },
+    "4": {
+      "n_test": 111,
+      "coverage": 0.7477477477477478,
+      "qhat": 0.0527573823928833,
+      "global_fallback": false,
+      "mean_set_size": 0.7477477477477478
+    },
+    "5": {
+      "n_test": 25,
+      "coverage": 0.72,
+      "qhat": 0.012701869010925293,
+      "global_fallback": true,
+      "mean_set_size": 0.76
+    },
+    "6": {
+      "n_test": 9,
+      "coverage": 0.4444444444444444,
+      "qhat": 0.012701869010925293,
+      "global_fallback": true,
+      "mean_set_size": 0.4444444444444444
+    },
+    "7": {
+      "n_test": 6,
+      "coverage": 0.6666666666666666,
+      "qhat": 0.012701869010925293,
+      "global_fallback": true,
+      "mean_set_size": 0.6666666666666666
+    }
+  },
+  "estimator": "LogisticRegression(max_iter=1000) on X_pca",
+  "provenance": {
+    "classifier": "sklearn.LogisticRegression",
+    "features": "X_pca (post-HVG PCA)"
+  }
+}

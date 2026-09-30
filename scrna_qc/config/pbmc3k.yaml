@@ -23,3 +23,8 @@ embed:
   leiden_resolution: 0.5
   n_markers: 5
   seed: 7
+
+conformal:
+  alpha: 0.1
+  cal_frac: 0.3
+  min_group: 30

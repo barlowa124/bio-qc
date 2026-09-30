@@ -76,7 +76,7 @@
     }
   ],
   "provenance": {
-    "git_sha": "01360b8",
+    "git_sha": "f600fa4",
     "scanpy": "1.11.5",
     "anndata": "0.12.19",
     "config": {
@@ -117,6 +117,11 @@
         "leiden_resolution": 0.8,
         "n_markers": 5,
         "seed": 7
+      },
+      "conformal": {
+        "alpha": 0.1,
+        "cal_frac": 0.3,
+        "min_group": 30
       }
     }
   }

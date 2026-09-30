@@ -1,10 +1,10 @@
-"""Vendored parity: cultivated_meat_multiomic/conformal.py shares the
-portfolio digest.
+"""Vendored parity: conformal.py copies share the portfolio digest.
 
 The canonical conformal helpers are vendored (not depended on) in
-protein-ml/protein_stability_uncertainty, mol-ml/comp_tox_pipeline, and
-here in cultivated_meat_multiomic. mol-ml and protein-ml pin the same
-sha256; an edit anywhere trips a pin and forces deliberate sync.
+protein-ml/protein_stability_uncertainty, mol-ml/comp_tox_pipeline,
+cultivated_meat_multiomic, and scrna_qc — four consumers. mol-ml and
+protein-ml pin the same sha256; an edit anywhere trips a pin and forces
+deliberate sync.
 """
 import hashlib
 import unittest
@@ -12,7 +12,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-CONFORMAL = ROOT / "cultivated_meat_multiomic" / "conformal.py"
+COPIES = [
+    ROOT / "cultivated_meat_multiomic" / "conformal.py",
+    ROOT / "scrna_qc" / "src" / "scrna_qc" / "conformal.py",
+]
 
 # Shared with mol-ml and protein-ml tests — keep in sync.
 CONFORMAL_SHA256 = \
@@ -21,12 +24,12 @@ CONFORMAL_SHA256 = \
 
 class VendoredParityTests(unittest.TestCase):
     def test_conformal_matches_shared_digest(self):
-        self.assertEqual(
-            hashlib.sha256(CONFORMAL.read_bytes()).hexdigest(),
-            CONFORMAL_SHA256,
-            "cultivated_meat_multiomic conformal.py drifted from the "
-            "vendored copies in mol-ml and protein-ml — sync all copies "
-            "and update the pin together")
+        for path in COPIES:
+            self.assertEqual(
+                hashlib.sha256(path.read_bytes()).hexdigest(),
+                CONFORMAL_SHA256,
+                f"{path.relative_to(ROOT)} drifted from the vendored "
+                "copies — sync all copies and update the pin together")
 
 
 if __name__ == "__main__":

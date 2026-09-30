@@ -39,3 +39,12 @@ embed:
   leiden_resolution: 0.8
   n_markers: 5
   seed: 7
+
+conformal:
+  # Mondrian split-conformal on cluster-assignment confidence.
+  # alpha: target miscoverage (1-alpha coverage), cal_frac: calibration
+  # share of cells per cluster, min_group: clusters with fewer
+  # calibration cells fall back to the pooled qhat.
+  alpha: 0.1
+  cal_frac: 0.3
+  min_group: 30

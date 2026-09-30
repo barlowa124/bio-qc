@@ -44,7 +44,29 @@ def cluster_table(adata: ad.AnnData, markers: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows).sort_values("cluster").reset_index(drop=True)
 
 
-def render_markdown(summary: dict) -> str:
+def _conformal_lines(conf: dict) -> list[str]:
+    lines = [
+        "",
+        "## Cluster-assignment confidence (Mondrian conformal)",
+        "",
+        f"- alpha: {conf['alpha']}, calibration cells: {conf['n_cal']}, "
+        f"held-out cells: {conf['n_test']}",
+        f"- pooled prediction-set coverage: {conf['pooled_coverage']}",
+        f"- mean set size: {conf['mean_set_size']}",
+        "",
+        "| cluster | held-out cells | coverage | qhat | set size | "
+        "fallback |",
+        "|---|---|---|---|---|---|",
+    ]
+    for cl, row in sorted(conf["per_cluster"].items()):
+        lines.append(
+            f"| {cl} | {row['n_test']} | {row['coverage']} "
+            f"| {row['qhat']} | {row['mean_set_size']} "
+            f"| {row['global_fallback']} |")
+    return lines
+
+
+def render_markdown(summary: dict, conformal: dict | None = None) -> str:
     """The human-readable report. Every number here must bind to a
     recorded value — verify_markdown enforces that before this text
     is presented as output."""
@@ -72,6 +94,8 @@ def render_markdown(summary: dict) -> str:
             f"| {round(row['frac_of_total'] * 100, 2)}% "
             f"| {row['median_total_counts']} | {row['median_n_genes']} "
             f"| {row['median_pct_mt']} | {row['top_marker']} |")
+    if conformal:
+        lines += _conformal_lines(conformal)
     prov = summary["provenance"]
     lines += [
         "",
@@ -87,7 +111,8 @@ def render_markdown(summary: dict) -> str:
 def report(adata: ad.AnnData, markers: pd.DataFrame, waterfall: dict,
            cfg: dict, cluster_csv: str, summary_json: str,
            umap_png: str, report_md: str | None = None,
-           claims_json: str | None = None) -> dict:
+           claims_json: str | None = None,
+           conformal_json: str | None = None) -> dict:
     table = cluster_table(adata, markers)
     Path(cluster_csv).parent.mkdir(parents=True, exist_ok=True)
     table.to_csv(cluster_csv, index=False)
@@ -116,10 +141,16 @@ def report(adata: ad.AnnData, markers: pd.DataFrame, waterfall: dict,
 
     if report_md and claims_json:
         # Claim check: re-derive every number in the markdown from the
-        # recorded waterfall+summary values; flag what doesn't bind.
-        md = render_markdown(summary)
+        # recorded waterfall+summary(+conformal) values; flag what
+        # doesn't bind.
+        conformal = None
+        if conformal_json and Path(conformal_json).exists():
+            conformal = json.loads(Path(conformal_json).read_text())
+        md = render_markdown(summary, conformal)
         Path(report_md).write_text(md)
         flat = {**flatten_results(waterfall), **flatten_results(summary)}
+        if conformal:
+            flat.update(flatten_results(conformal))
         labels = {str(r["cluster"]) for r in table.to_dict("records")}
         labels.add(str(summary["provenance"]["git_sha"]))
         verdict = verify_markdown(md, flat, labels)
@@ -136,13 +167,15 @@ def main() -> None:
         sys.argv[1:7]
     report_md = sys.argv[7] if len(sys.argv) > 7 else None
     claims_json = sys.argv[8] if len(sys.argv) > 8 else None
+    conformal_json = sys.argv[9] if len(sys.argv) > 9 else None
     cfg = load_config()
     adata = ad.read_h5ad(emb_in)
     markers = pd.read_csv(markers_in)
     with open(waterfall_in) as f:
         waterfall = json.load(f)
     s = report(adata, markers, waterfall, cfg,
-               cluster_csv, summary_json, umap_png, report_md, claims_json)
+               cluster_csv, summary_json, umap_png, report_md, claims_json,
+               conformal_json)
     print(f"report: {s['n_clusters']} clusters over {s['n_cells']} cells")
 
 

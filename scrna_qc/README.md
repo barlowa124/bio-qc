@@ -15,6 +15,7 @@ synthetic demo so the whole thing runs without a download.
 | `results/qc_summary.json` | Summary + provenance (git sha, scanpy/anndata versions, config snapshot) |
 | `results/report.md` | Human-readable report; every number binds to a recorded value |
 | `results/claims_check.json` | Claim-check verdict for `report.md` (see below) |
+| `results/cluster_conformal.json` | Mondrian conformal coverage of cluster-assignment confidence (see below) |
 | `results/umap.png` | UMAP colored by Leiden cluster |
 | `data/processed/*.h5ad` | Filtered and embedded AnnData (gitignored) |
 
@@ -30,8 +31,8 @@ in the markdown is re-derived against the flattened numeric leaves of
 tolerance (a `%` token also binds to the fraction form). A number that
 no recorded computation produced lands in `claims_check.json` under
 `unbound_claims`. Cluster names and version strings are identifiers, not
-claims, and are exempt. The committed verdicts: 35/35 bound on the demo
-run, 59/59 on pbmc3k.
+claims, and are exempt. The committed verdicts: all numbers bound on
+both runs (60 demo, 104 pbmc3k claims including the conformal table).
 
 ## Committed example runs
 
@@ -79,7 +80,7 @@ Override the config path with `SCRNA_QC_CONFIG`.
 ## Tests
 
 ```bash
-PYTHONPATH=src python -m pytest tests/ -q   # 30 tests
+PYTHONPATH=src python -m pytest tests/ -q   # 35 tests
 snakemake -n -s workflow/Snakefile          # DAG dry-run
 ```
 
