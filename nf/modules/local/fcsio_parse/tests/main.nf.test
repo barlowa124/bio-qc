@@ -26,7 +26,11 @@ nextflow_process {
             def meta = new groovy.json.JsonSlurper()
                 .parseText(file(process.out.meta[0][1]).text)
             assert meta.channels == ["CD45", "CD3", "CD4"]
-            assert snapshot(process.out.versions).match()
+            // assert shape, not md5: the version string varies by host
+            def versions = new groovy.yaml.YamlSlurper()
+                .parseText(file(process.out.versions[0]).text)
+            assert versions.containsKey("FCSIO_PARSE")
+            assert versions["FCSIO_PARSE"]["python"]
         }
     }
 

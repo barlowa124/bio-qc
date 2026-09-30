@@ -127,4 +127,6 @@ jobs:
         run: |
           nextflow run main.nf -stub-run
           nf-test test tests/main.nf.test \
-            modules/local/fcsio_parse/tests/main.nf.test
+            modules/local/fcsio_parse/tests/main.nf.test \
+            modules/local/fcs_stats/tests/main.nf.test \
+            modules/local/fcsio_demo/tests/main.nf.test

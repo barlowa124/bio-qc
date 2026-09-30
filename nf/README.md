@@ -35,12 +35,15 @@ nextflow run nf/main.nf -stub-run             # DAG structure only
 
 ```bash
 nf-test test nf/tests/main.nf.test \
-    nf/modules/local/fcsio_parse/tests/main.nf.test
+    nf/modules/local/fcsio_parse/tests/main.nf.test \
+    nf/modules/local/fcs_stats/tests/main.nf.test \
+    nf/modules/local/fcsio_demo/tests/main.nf.test
 ```
 
 `tests/main.nf.test` runs the full workflow (13 tasks) and checks the
-emitted stats. The module test exercises `FCSIO_PARSE` on a committed
-fixture plus a `-stub` run.
+emitted stats. Each module has its own process-level test plus a
+`-stub` run. `versions.yml` assertions check structure rather than
+md5, since the recorded python version varies by host.
 
 ## Conventions
 

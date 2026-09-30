@@ -1,0 +1,49 @@
+nextflow_process {
+
+    name "Test Process FCSIO_DEMO"
+    script "../main.nf"
+    process "FCSIO_DEMO"
+
+    test("Emits the six deterministic gated-population fixtures") {
+        when {
+            process {
+                """
+                input[0] = 50
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            def fcs_files = process.out.fcs.flatten()
+            assert fcs_files.size() == 6
+            def names = fcs_files.collect { file(it).name }.sort()
+            assert names.every { it.startsWith("Demo_") && it.endsWith(".fcs") }
+            // every fixture carries the real FCS magic header
+            fcs_files.each { f ->
+                def bytes = file(f).bytes
+                assert new String(bytes, 0, 6) == "FCS3.0"
+            }
+            // shape, not md5: the python version string varies by host
+            def versions = new groovy.yaml.YamlSlurper()
+                .parseText(file(process.out.versions[0]).text)
+            assert versions.containsKey("FCSIO_DEMO")
+        }
+    }
+
+    test("Stub run emits declared outputs") {
+        options "-stub-run"
+        when {
+            process {
+                """
+                input[0] = 50
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.fcs.flatten().size() >= 1
+        }
+    }
+}

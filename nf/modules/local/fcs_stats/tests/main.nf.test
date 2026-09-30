@@ -1,0 +1,57 @@
+nextflow_process {
+
+    name "Test Process FCS_STATS"
+    script "../main.nf"
+    process "FCS_STATS"
+
+    test("Computes per-channel stats on the fixture") {
+        when {
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file("${moduleDir}/tests/fixtures/events.tsv", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.stats.size() == 1
+            def stats = new groovy.json.JsonSlurper()
+                .parseText(file(process.out.stats[0][1]).text)
+            assert stats.n_events == 4
+            // CD45: 10,20,30,40 -> mean 25, no negatives
+            assert stats.channels["CD45"]["mean"] == 25.0
+            assert stats.channels["CD45"]["neg_frac"] == 0.0
+            // CD3: one of four events negative
+            assert stats.channels["CD3"]["neg_frac"] == 0.25
+            // shape, not md5: the python version string varies by host
+            def versions = new groovy.yaml.YamlSlurper()
+                .parseText(file(process.out.versions[0]).text)
+            assert versions.containsKey("FCS_STATS")
+            assert versions["FCS_STATS"]["python"]
+        }
+    }
+
+    test("Stub run emits declared outputs") {
+        options "-stub-run"
+        when {
+            process {
+                """
+                input[0] = [
+                    [id: 'test'],
+                    file("${moduleDir}/tests/fixtures/events.tsv", checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert process.out.stats.size() == 1
+            assert process.out.versions.size() == 1
+        }
+    }
+}
