@@ -10,6 +10,10 @@ nf/.nf-test/
 nf/results/*
 !nf/results/qc_summary.jsonl
 !nf/results/run_manifest.json
+!nf/results/run_receipts.jsonl
+!nf/results/trace.txt
+.nf-test/
+.nf-test.log
 nf/tests/output_test/
 nf/.nextflow/
 nf/.nextflow.log*

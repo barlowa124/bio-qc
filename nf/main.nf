@@ -68,4 +68,30 @@ workflow {
                 ? " + run_manifest.json"
                 : " (manifest failed: ${p.err.text})")
             f }
+
+    // Hash-chained execution receipts (scripts/run_receipts.py): one
+    // JSONL per run, one record per task binding staged inputs, written
+    // outputs, env fingerprint, and timestamps. Best-effort — the trace
+    // writer may still be flushing; the deterministic path is the
+    // documented post-run command, which is what CI uses.
+    // params/workflow/nextflow are not bound inside onComplete's
+    // delegate — capture them in locals now.
+    def outdirForReceipts = params.outdir
+    def runName = workflow.runName
+    def sessionId = "${workflow.sessionId}"
+    def nfVersion = "${nextflow.version}"
+    def receiptsScript = "${projectDir}/../scripts/run_receipts.py"
+    workflow.onComplete {
+        def cmd = ["python3", receiptsScript,
+                   "--trace", "${outdirForReceipts}/trace.txt",
+                   "--out", "${outdirForReceipts}/run_receipts.jsonl",
+                   "--run-name", runName,
+                   "--session-id", sessionId,
+                   "--engine", "nextflow@${nfVersion}"]
+        def p = cmd.execute()
+        p.waitFor()
+        println (p.exitValue() == 0 ?
+            "wrote run_receipts.jsonl" :
+            "receipts deferred (run scripts/run_receipts.py): ${p.err.text}")
+    }
 }

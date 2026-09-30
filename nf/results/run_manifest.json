@@ -3,16 +3,16 @@
  "pipeline": "fcs_qc",
  "engine": "nextflow@26.04.6",
  "git": {
-  "sha": "def7bcfa5a83906d1bc1968bc94768ac800d47f4",
+  "sha": "1ad3e591078c03a47d383bffb4239fbbb5da3067",
   "dirty": true
  },
- "finished_utc": "2026-09-29T20:27:39.953622+00:00",
+ "finished_utc": "2026-09-30T14:19:33.609304+00:00",
  "status": "success",
  "params": {
   "input": "demo",
   "demo_events": "200",
-  "run_name": "adoring_hirsch",
-  "session": "a15bfef3-b39b-402c-9b89-16c6e7609925"
+  "run_name": "amazing_shaw",
+  "session": "52bb5402-e2f6-4b38-a988-34cfc4614b55"
  },
  "inputs": [],
  "artifacts": [
@@ -20,6 +20,16 @@
    "path": "qc_summary.jsonl",
    "sha256": "f48dd32b33f626dacf872a18bf4d6316256a59259782673b003dfae12069d8bb",
    "bytes": 5267
+  },
+  {
+   "path": "run_receipts.jsonl",
+   "sha256": "6f6bd9a556994e1155d6de8000fb9c6dd94f1a6ef3e2968c4c91162b6bc3abf4",
+   "bytes": 8268
+  },
+  {
+   "path": "trace.txt",
+   "sha256": "561802cbc86d2a763b0278f65ae90774715ec4f7689d3858100e12fa12754876",
+   "bytes": 3030
   }
  ],
  "tools": {

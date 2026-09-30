@@ -21,6 +21,33 @@ FCSIO_DEMO -> FCSIO_PARSE -> FCS_STATS
   and tool versions in the `bio-qc/run-manifest@1` schema shared with
   the Snakemake DAG (`../scripts/run_manifest.py`).
 
+## Run receipts
+
+Every run also emits `results/run_receipts.jsonl` — a hash-chained
+execution record in the same format as `trust-tools/inference_receipts`:
+one record per task binding the task's staged inputs (symlink targets,
+sha256), written outputs (sha256), an env fingerprint (the task's
+`versions.yml` plus the engine string), the Nextflow task hash, and
+start/complete timestamps. `chain_prev` links records so a deleted,
+reordered, or tampered task breaks the chain; verify with:
+
+```bash
+python ../scripts/run_receipts.py --verify results/run_receipts.jsonl
+```
+
+Receipts are written by `workflow.onComplete` (the trace writer flushes
+before the handler runs) and can be regenerated deterministically after
+any run:
+
+```bash
+python ../scripts/run_receipts.py --trace results/trace.txt \
+    --out results/run_receipts.jsonl --run-name <name>
+```
+
+The receipts are a durable record of what ran. Re-hashing the referenced
+files requires `work/` or the published outputs to still exist; the
+JSONL itself verifies record integrity, not file availability.
+
 ## Run
 
 ```bash
@@ -34,10 +61,11 @@ nextflow run nf/main.nf -stub-run             # DAG structure only
 ## Tests
 
 ```bash
-nf-test test nf/tests/main.nf.test \
-    nf/modules/local/fcsio_parse/tests/main.nf.test \
-    nf/modules/local/fcs_stats/tests/main.nf.test \
-    nf/modules/local/fcsio_demo/tests/main.nf.test
+cd nf   # module tests resolve bin/ from the project dir — run from nf/
+nf-test test tests/main.nf.test \
+    modules/local/fcsio_parse/tests/main.nf.test \
+    modules/local/fcs_stats/tests/main.nf.test \
+    modules/local/fcsio_demo/tests/main.nf.test
 ```
 
 `tests/main.nf.test` runs the full workflow (13 tasks) and checks the
