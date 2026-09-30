@@ -71,6 +71,8 @@ def generate_demo(cfg: dict) -> tuple[dict, dict]:
     var_g = np.var(signal) + np.var(anc_shift)
     noise_sd = np.sqrt(var_g * (1.0 - d["h2"]) / d["h2"])
     y = signal + anc_shift + rng.normal(0.0, noise_sd, size=n)
+    if d.get("binary_trait"):
+        y = (y > np.median(y)).astype(float)  # liability threshold
 
     vids = np.array([f"rs{100000 + i}" for i in range(v)])
     cohort = {
@@ -94,6 +96,7 @@ def generate_demo(cfg: dict) -> tuple[dict, dict]:
         "ancestry_shares": share, "fst": d["fst"],
         "ancestry_shift": d["ancestry_shift"], "h2_target": d["h2"],
         "noise_sd": float(noise_sd),
+        "binary_trait": bool(d.get("binary_trait")),
     }
     return cohort, truth
 

@@ -27,6 +27,7 @@ dataset:
     beta_hi: 0.60
     ancestry_shift: 0.8          # confounding: trait differs by group
     h2: 0.35                     # target signal share of trait variance
+    binary_trait: false          # true thresholds liability for logistic runs
   vcf:
     path: data/kg_chr22_head.vcf.gz
     max_variants: 20000
@@ -38,6 +39,7 @@ dataset:
 
 qc:
   max_sample_missing: 0.10
+  het_sd: 3.0                  # within-ancestry het-rate |z| cutoff; 0 disables
   max_variant_missing: 0.05
   min_maf: 0.01
   hwe_p_min: 1.0e-6            # chi-square 1df; set 0 to disable

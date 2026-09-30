@@ -90,12 +90,12 @@
     {
       "token": "3840",
       "bound_to": "qc_waterfall.variants_out",
-      "context": "## Association  linear test, 3840 variants on 799 samples with"
+      "context": "# Association  logistic test, 3840 variants on 799 samples with"
     },
     {
       "token": "799",
       "bound_to": "qc_waterfall.samples_out",
-      "context": "linear test, 3840 variants on 799 samples with 4 covariates (2"
+      "context": "gistic test, 3840 variants on 799 samples with 4 covariates (2"
     },
     {
       "token": "4",
@@ -108,69 +108,69 @@
       "context": "99 samples with 4 covariates (2 PCs).  Genomic control $\\lamb"
     },
     {
-      "token": "0.966",
+      "token": "0.986",
       "bound_to": "assoc_summary.lambda_gc",
-      "context": "Genomic control $\\lambda$ = 0.966 with covariates vs 2.639 with"
+      "context": "Genomic control $\\lambda$ = 0.986 with covariates vs 1.721 with"
     },
     {
-      "token": "2.639",
+      "token": "1.721",
       "bound_to": "assoc_summary.lambda_gc_no_cov",
-      "context": "a$ = 0.966 with covariates vs 2.639 without; 4 variants pass the"
+      "context": "a$ = 0.986 with covariates vs 1.721 without; 3 variants pass the"
     },
     {
-      "token": "4",
-      "bound_to": "assoc_summary.n_covariates",
-      "context": "covariates vs 2.639 without; 4 variants pass the Bonferroni"
+      "token": "3",
+      "bound_to": "qc_waterfall.thresholds.het_sd",
+      "context": "covariates vs 1.721 without; 3 variants pass the Bonferroni"
     },
     {
       "token": "0",
       "bound_to": "qc_waterfall.steps.0.removed",
-      "context": "$\\lambda$ by covariate PCs: 0 PCs -> 2.628, 1 PCs -> 0.968,"
+      "context": "$\\lambda$ by covariate PCs: 0 PCs -> 1.731, 1 PCs -> 0.988,"
     },
     {
-      "token": "2.628",
+      "token": "1.731",
       "bound_to": "assoc_summary.lambda_by_pcs.pcs_0",
-      "context": "a$ by covariate PCs: 0 PCs -> 2.628, 1 PCs -> 0.968, 2 PCs -> 0.9"
+      "context": "a$ by covariate PCs: 0 PCs -> 1.731, 1 PCs -> 0.988, 2 PCs -> 0.9"
     },
     {
       "token": "1",
       "bound_to": "qc_waterfall.steps.1.removed",
-      "context": "ovariate PCs: 0 PCs -> 2.628, 1 PCs -> 0.968, 2 PCs -> 0.966."
+      "context": "ovariate PCs: 0 PCs -> 1.731, 1 PCs -> 0.988, 2 PCs -> 0.986."
     },
     {
-      "token": "0.968",
+      "token": "0.988",
       "bound_to": "assoc_summary.lambda_by_pcs.pcs_1",
-      "context": "PCs: 0 PCs -> 2.628, 1 PCs -> 0.968, 2 PCs -> 0.966. Effect sizes"
+      "context": "PCs: 0 PCs -> 1.731, 1 PCs -> 0.988, 2 PCs -> 0.986. Effect sizes"
     },
     {
       "token": "2",
       "bound_to": "strat_summary.top_eigenvalues.1",
-      "context": "PCs -> 2.628, 1 PCs -> 0.968, 2 PCs -> 0.966. Effect sizes ar"
+      "context": "PCs -> 1.731, 1 PCs -> 0.988, 2 PCs -> 0.986. Effect sizes ar"
     },
     {
-      "token": "2114",
+      "token": "1143",
       "bound_to": "assoc_summary.lead_hit.pos",
-      "context": "(a1).  Lead hit rs102113 (pos 2114): beta 0.443 (se 0.063), p ="
+      "context": "(a1).  Lead hit rs101142 (pos 1143): beta -0.634 (se 0.110), p ="
     },
     {
-      "token": "0.443",
+      "token": "-0.634",
       "bound_to": "assoc_summary.lead_hit.beta",
-      "context": "hit rs102113 (pos 2114): beta 0.443 (se 0.063), p = 3.59e-12.  Pla"
+      "context": "hit rs101142 (pos 1143): beta -0.634 (se 0.110), p = 8.50e-09.  Pla"
     },
     {
-      "token": "0.063",
+      "token": "0.110",
       "bound_to": "assoc_summary.lead_hit.se",
-      "context": "13 (pos 2114): beta 0.443 (se 0.063), p = 3.59e-12.  Planted caus"
+      "context": "2 (pos 1143): beta -0.634 (se 0.110), p = 8.50e-09.  Planted caus"
     },
     {
-      "token": "4",
-      "bound_to": "assoc_summary.n_covariates",
-      "context": "12.  Planted causal variants: 4 of 6 surviving QC recovered a"
+      "token": "3",
+      "bound_to": "qc_waterfall.thresholds.het_sd",
+      "context": "09.  Planted causal variants: 3 of 6 surviving QC recovered a"
     },
     {
       "token": "6",
       "bound_to": "summary.n_causal_post_qc",
-      "context": "Planted causal variants: 4 of 6 surviving QC recovered at Bon"
+      "context": "Planted causal variants: 3 of 6 surviving QC recovered at Bon"
     },
     {
       "token": "8",
@@ -183,14 +183,14 @@
       "context": "red at Bonferroni (8 planted; 2 failed pooled HWE \u2014 the Wahlu"
     },
     {
-      "token": "4",
-      "bound_to": "assoc_summary.n_covariates",
-      "context": "eta correlation 0.99.  Of the 4 Bonferroni hits, 0 are non-ca"
+      "token": "3",
+      "bound_to": "qc_waterfall.thresholds.het_sd",
+      "context": "eta correlation 0.97.  Of the 3 Bonferroni hits, 0 are non-ca"
     },
     {
       "token": "0",
       "bound_to": "qc_waterfall.steps.0.removed",
-      "context": "9.  Of the 4 Bonferroni hits, 0 are non-causal.  ![manhattan]"
+      "context": "7.  Of the 3 Bonferroni hits, 0 are non-causal.  ![manhattan]"
     }
   ],
   "unbound_claims": [],

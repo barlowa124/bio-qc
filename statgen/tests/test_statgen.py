@@ -149,3 +149,33 @@ def test_missing_imputation_preserves_shape():
     Gi = assoc._impute(G)
     assert Gi.shape == G.shape and not np.isnan(Gi).any()
     assert Gi[0, 1] == pytest.approx(1.5)
+
+
+def test_het_filter_flags_outlier_not_population():
+    rng = np.random.default_rng(0)
+    n, v = 60, 200
+    anc = np.repeat([0, 1], n // 2)
+    # group 1 systematically more heterozygous (different freqs)
+    p = np.where(anc[:, None] == 0, 0.1, 0.4)
+    G = (rng.random((n, v)) < p).astype(np.int8) \
+        + (rng.random((n, v)) < p).astype(np.int8)
+    G = G.astype(np.int8)
+    keep = qc._het_keep(G, 3.0, anc)
+    # with within-group z, group-1 members aren't mass-flagged
+    assert keep[anc == 1].mean() > 0.9
+    # inject a het outlier inside group 0
+    G[0, :] = 1
+    keep2 = qc._het_keep(G, 3.0, anc)
+    assert not keep2[0] and keep2[1:].all()
+
+
+def test_binary_trait_is_generated():
+    cfg = {"dataset": {"demo": {
+        "seed": 11, "n_samples": 200, "n_variants": 300,
+        "ancestry_shares": [0.6, 0.4], "fst": 0.08,
+        "missing_rate": 0.02, "n_causal": 3,
+        "beta_lo": 0.35, "beta_hi": 0.60,
+        "ancestry_shift": 0.8, "h2": 0.35, "binary_trait": True}}}
+    cohort, truth = generate_demo(cfg)
+    assert set(np.unique(cohort["y"])) <= {0.0, 1.0}
+    assert truth["binary_trait"] is True

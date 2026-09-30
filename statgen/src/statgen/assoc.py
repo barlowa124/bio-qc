@@ -131,15 +131,26 @@ def main() -> None:
     X0 = np.ones((len(y), 1))
 
     kind = a["kind"]
+    y_eval = y
     if kind == "linear":
-        beta, se, stat, p = linear_scan(y, Gf, X)
-        _, _, stat0, _ = linear_scan(y, Gf, X0)
+        scan = linear_scan
     elif kind == "logistic":
-        yb = (y > np.median(y)).astype(float)
-        beta, se, stat, p = logistic_score_scan(yb, Gf, X)
-        _, _, stat0, _ = logistic_score_scan(yb, Gf, X0)
+        y_eval = (y > np.median(y)).astype(float)
+        scan = logistic_score_scan
     else:
         raise ValueError(f"unknown assoc.kind: {kind}")
+
+    beta, se, stat, p = scan(y_eval, Gf, X)
+    _, _, stat0, _ = scan(y_eval, Gf, X0)
+
+    # Dose-response curve: lambda at 0..n_pcs covariate PCs shows
+    # how much stratification each PC absorbs, not just endpoints.
+    pc_cols = pcs[[f"PC{i+1}" for i in range(n_pcs)]].to_numpy()
+    lam_curve = {}
+    for k in range(n_pcs + 1):
+        Xk = np.column_stack([np.ones(len(y)), cov, pc_cols[:, :k]])
+        _, _, stat_k, _ = scan(y_eval, Gf, Xk)
+        lam_curve[f"pcs_{k}"] = genomic_lambda(stat_k)
 
     df = pd.DataFrame({
         "vid": z["vid"].astype(str), "chrom": z["chrom"].astype(str),
@@ -160,6 +171,7 @@ def main() -> None:
         "n_pcs_as_cov": n_pcs,
         "lambda_gc": genomic_lambda(stat),
         "lambda_gc_no_cov": genomic_lambda(stat0),
+        "lambda_by_pcs": lam_curve,
         "bonferroni_alpha": float(bonf),
         "n_bonferroni_hits": int((p < bonf).sum()),
         "lead_hit": {

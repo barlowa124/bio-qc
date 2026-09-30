@@ -44,6 +44,7 @@ dataset:
 
 qc:
   max_sample_missing: 0.10
+  het_sd: 3.0
   max_variant_missing: 0.05
   min_maf: 0.01
   hwe_p_min: 1.0e-6

@@ -60,5 +60,5 @@
   "ancestry_shift": 0.8,
   "h2_target": 0.35,
   "noise_sd": 0.8947646068841034,
-  "binary_trait": false
+  "binary_trait": true
 }

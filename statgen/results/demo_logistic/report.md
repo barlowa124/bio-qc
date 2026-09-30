@@ -20,17 +20,17 @@ Cohort mode `demo`; trait `synthetic`. Synthetic and simulated-trait numbers exe
 
 ## Association
 
-linear test, 3840 variants on 799 samples with 4 covariates (2 PCs).
+logistic test, 3840 variants on 799 samples with 4 covariates (2 PCs).
 
-Genomic control $\lambda$ = 0.966 with covariates vs 2.639 without; 4 variants pass the Bonferroni threshold 1.30e-05.
+Genomic control $\lambda$ = 0.986 with covariates vs 1.721 without; 3 variants pass the Bonferroni threshold 1.30e-05.
 
-$\lambda$ by covariate PCs: 0 PCs -> 2.628, 1 PCs -> 0.968, 2 PCs -> 0.966. Effect sizes are per copy of the counted allele (a1).
+$\lambda$ by covariate PCs: 0 PCs -> 1.731, 1 PCs -> 0.988, 2 PCs -> 0.986. Effect sizes are per copy of the counted allele (a1).
 
-Lead hit rs102113 (pos 2114): beta 0.443 (se 0.063), p = 3.59e-12.
+Lead hit rs101142 (pos 1143): beta -0.634 (se 0.110), p = 8.50e-09.
 
-Planted causal variants: 4 of 6 surviving QC recovered at Bonferroni (8 planted; 2 failed pooled HWE — the Wahlund effect of mixing groups; beta correlation 0.99.
+Planted causal variants: 3 of 6 surviving QC recovered at Bonferroni (8 planted; 2 failed pooled HWE — the Wahlund effect of mixing groups; beta correlation 0.97.
 
-Of the 4 Bonferroni hits, 0 are non-causal.
+Of the 3 Bonferroni hits, 0 are non-causal.
 
 ![manhattan](manhattan.png)
 

@@ -30,18 +30,28 @@ lands in `results/planted_truth.json`, so recovery is auditable.
 What the committed demo artifacts show:
 
 - QC waterfall reconciles. 4,000 -> 3,840 variants (23 fail MAF, 137
-  fail pooled HWE). Two of the planted causals die at HWE: mixing
-  ancestry groups produces the Wahlund effect, and the filter removes
-  exactly the stratified variants it should.
+  fail pooled HWE) and 1 of 800 samples fails the heterozygosity
+  screen. Two of the planted causals die at HWE: mixing ancestry
+  groups produces the Wahlund effect, and the filter removes exactly
+  the stratified variants it should. Het outliers are z-scored within
+  ancestry group, so a real population's het level is not mistaken for
+  contamination.
 - PC1 recovers the planted structure at |r| = 1.00 with the ancestry
   label on 6.0% of genotype variance.
-- PC covariates control inflation. Genomic-control lambda drops from
-  2.65 (no covariates) to 0.97 with 2 PCs plus sex/age.
+- PC covariates control inflation, dose-resolved: lambda_GC 2.63 with
+  no PCs, 0.97 already at 1 PC, 0.97 at 2 PCs. One component absorbs
+  the entire two-group confound.
 - Signals come back without false positives. All 4 Bonferroni hits are
   planted causals (4 of 6 post-QC recovered. Beta correlation 0.99).
   The two misses are sub-threshold effects, reported as such.
 
 Demo numbers exercise the pipeline. They are not genetic findings.
+
+`config/demo_logistic.yaml` reruns the same cohort with the liability
+thresholded to a binary trait and the Rao score test: committed under
+`results/demo_logistic/`, lambda 1.72 -> 0.99 with PCs, 3 Bonferroni
+hits, all causal (a thresholded trait trades power for the case/control
+shape).
 
 ## Real-data mode (1000 Genomes chr22 head)
 
@@ -61,15 +71,16 @@ on common variants with limited continental frequency spread
 Committed artifacts show what real data does to a GWAS pipeline:
 
 - 20,000 -> 1,866 variants: 86% fail MAF >= 0.01 (the call set is dense
-  with rare variation) and 992 fail pooled HWE across continental
-  groups.
+  with rare variation) and 971 fail pooled HWE across continental
+  groups. 4 of 2,504 samples fail the within-superpopulation het screen.
 - PC1 alone carries 4.5% of ancestry variance across five
   superpopulations. Real structure needs multiple PCs.
-- lambda_GC 1.89 with 5 PC covariates, 11.66 without. A chr22-head
-  slice is one LD-dense region, so residual inflation reflects
-  correlated variants as much as stratification. Genome-wide lambda
-  needs genome-wide sampling.
-- 17 Bonferroni hits decompose as 2 recovered causals + 15 LD proxies
+- lambda_GC by covariate PCs: 11.0 / 5.1 / 7.6 / 2.0 / 2.5 / 1.9 for
+  0..5 PCs. Non-monotone because different PCs capture different
+  structure than the planted trait loads on. It stays above 1 because a
+  chr22-head slice is one LD-dense region and genome-wide lambda needs
+  genome-wide sampling.
+- 19 Bonferroni hits decompose as 2 recovered causals + 17 LD proxies
   within 250 kb + 0 unexplained. Two planted causals are perfectly
   collinear (identical statistics 619 bp apart). Their opposing true
   effects cancel marginally, which is the failure mode fine-mapping
@@ -88,6 +99,7 @@ at display tolerance. Unbound tokens fail the check and land in
 ## Layout
 
 - `config/config.yaml`: demo cohort, thresholds, association settings
+- `config/demo_logistic.yaml`: binary-trait score-test run
 - `config/kg_chr22.yaml`: real-data mode with fetch commands
 - `src/statgen/data.py`: cohort generation + VCF/panel loading
 - `src/statgen/qc.py`: missingness/MAF/HWE filters, reconciling waterfall
@@ -96,7 +108,8 @@ at display tolerance. Unbound tokens fail the check and land in
 - `src/statgen/report.py`: figures, summary, markdown, claim check
 - `src/statgen/claims.py`: vendored claim verifier (second consumer)
 - `workflow/Snakefile`: the DAG
-- `results/` holds committed demo artifacts; `results/kg_chr22/` holds the real-data set
+- `results/` holds committed demo artifacts, `results/demo_logistic/`
+  and `results/kg_chr22/` hold the binary-trait and real-data runs
 
 ## Limits
 

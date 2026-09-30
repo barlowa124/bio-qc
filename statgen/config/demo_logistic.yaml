@@ -1,0 +1,46 @@
+# Logistic-mode demo: same synthetic cohort as config.yaml but the
+# quantitative liability is thresholded at its median into a binary
+# trait and scanned with the Rao score test. Writes a separate results
+# tree so the committed artifacts never overwrite the linear run.
+
+paths:
+  data_dir: data
+  results_dir: results/demo_logistic
+
+dataset:
+  mode: demo
+  demo:
+    seed: 11
+    n_samples: 800
+    n_variants: 4000
+    ancestry_shares: [0.6, 0.4]
+    fst: 0.08
+    missing_rate: 0.02
+    n_causal: 8
+    beta_lo: 0.35
+    beta_hi: 0.60
+    ancestry_shift: 0.8
+    h2: 0.35
+    binary_trait: true
+  vcf:
+    path: data/kg_chr22_head.vcf.gz
+    max_variants: 20000
+    trait_seed: 5
+    n_causal: 6
+    beta_lo: 0.30
+    beta_hi: 0.55
+    h2: 0.25
+
+qc:
+  max_sample_missing: 0.10
+  het_sd: 3.0
+  max_variant_missing: 0.05
+  min_maf: 0.01
+  hwe_p_min: 1.0e-6
+
+strat:
+  n_pcs: 10
+
+assoc:
+  kind: logistic
+  n_pcs_as_cov: 2

@@ -48,9 +48,37 @@ def hwe_p(G: np.ndarray) -> np.ndarray:
     return out
 
 
-def apply_qc(G: np.ndarray, samples: np.ndarray, q: dict):
-    """Apply filters in order; returns filtered G, samples, kept variant
-    indices (into the input), and the waterfall dict."""
+def het_rate(G: np.ndarray) -> np.ndarray:
+    """Per-sample heterozygosity over called genotypes."""
+    called = (G >= 0).sum(axis=1)
+    return (G == 1).sum(axis=1) / np.maximum(called, 1)
+
+
+def _het_keep(G: np.ndarray, sd: float,
+              ancestry: np.ndarray | None) -> np.ndarray:
+    """Flag het-rate outliers as |z| > sd, computed within ancestry
+    group when labels exist — a pooled z would mistake a real
+    population's het level for contamination."""
+    rate = het_rate(G)
+    if ancestry is not None and len(ancestry) == len(rate) \
+            and len(np.unique(ancestry[ancestry >= 0])) > 0:
+        keep = np.ones(len(rate), bool)
+        for a in np.unique(ancestry):
+            if a < 0:
+                continue
+            m = ancestry == a
+            mu, s = rate[m].mean(), rate[m].std()
+            if s > 0:
+                keep[m] = np.abs(rate[m] - mu) / s <= sd
+        return keep
+    mu, s = rate.mean(), rate.std()
+    return np.abs(rate - mu) / max(s, 1e-12) <= sd
+
+
+def apply_qc(G: np.ndarray, samples: np.ndarray, q: dict,
+             ancestry: np.ndarray | None = None):
+    """Apply filters in order; returns filtered G, samples, kept sample
+    mask, kept variant indices (into the input), and the waterfall."""
     s_in, v_in = G.shape
     steps = []
 
@@ -60,6 +88,21 @@ def apply_qc(G: np.ndarray, samples: np.ndarray, q: dict):
                   "removed": int(s_in - keep_s.sum()),
                   "kept": int(keep_s.sum())})
     G, samples = G[keep_s], samples[keep_s]
+    if ancestry is not None:
+        ancestry = ancestry[keep_s]
+
+    if q.get("het_sd", 0) > 0:
+        keep_h = _het_keep(G, q["het_sd"], ancestry)
+        steps.append({"name": "heterozygosity", "axis": "sample",
+                      "removed": int((~keep_h).sum()),
+                      "kept": int(keep_h.sum())})
+        G, samples = G[keep_h], samples[keep_h]
+        if ancestry is not None:
+            ancestry = ancestry[keep_h]
+        # compose sample mask: keep_s gets het-rejects marked False
+        idx = np.where(keep_s)[0]
+        keep_s = keep_s.copy()
+        keep_s[idx[~keep_h]] = False
 
     idx_v = np.arange(v_in)
     for name, mask in (
@@ -91,6 +134,8 @@ def apply_qc(G: np.ndarray, samples: np.ndarray, q: dict):
                        ("max_sample_missing", "max_variant_missing",
                         "min_maf", "hwe_p_min") if k in q},
     }
+    if q.get("het_sd", 0) > 0:
+        wf["thresholds"]["het_sd"] = q["het_sd"]
     assert wf["samples_in"] == sum(
         s["removed"] for s in wf["steps"] if s["axis"] == "sample"
     ) + wf["samples_out"]
@@ -107,7 +152,8 @@ def main() -> None:
     z = np.load(data_dir / "raw" / "cohort.npz", allow_pickle=True)
 
     G, samples, keep_s, idx_v, wf = apply_qc(
-        z["G"], z["samples"], cfg["qc"])
+        z["G"], z["samples"], cfg["qc"],
+        ancestry=z["ancestry"] if "ancestry" in z else None)
 
     filt = dict(z)
     filt["G"] = G

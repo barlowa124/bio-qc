@@ -184,6 +184,13 @@ def main() -> None:
         f"{assoc['n_bonferroni_hits']} variants pass the Bonferroni "
         f"threshold {assoc['bonferroni_alpha']:.2e}.",
         "",
+        "$\\lambda$ by covariate PCs: "
+        + ", ".join(f"{k.split('_')[1]} PCs -> {v:.3f}"
+                    for k, v in sorted(
+                        assoc["lambda_by_pcs"].items(),
+                        key=lambda kv: int(kv[0].split("_")[1])))
+        + ". Effect sizes are per copy of the counted allele (a1).",
+        "",
         f"Lead hit {lead['vid']} (pos {lead['pos']}): "
         f"beta {lead['beta']:.3f} (se {lead['se']:.3f}), "
         f"p = {lead['p']:.2e}.",

@@ -1,36 +1,46 @@
 {
   "passed": true,
-  "n_claims": 38,
+  "n_claims": 51,
   "claims": [
     {
       "token": "2504",
       "bound_to": "qc_waterfall.samples_in",
-      "context": "c findings.  ## QC waterfall  2504 -> 2504 samples; 20000 -> 1866"
+      "context": "c findings.  ## QC waterfall  2504 -> 2500 samples; 20000 -> 1899"
     },
     {
-      "token": "2504",
-      "bound_to": "qc_waterfall.samples_in",
-      "context": "gs.  ## QC waterfall  2504 -> 2504 samples; 20000 -> 1866 varian"
+      "token": "2500",
+      "bound_to": "qc_waterfall.samples_out",
+      "context": "gs.  ## QC waterfall  2504 -> 2500 samples; 20000 -> 1899 varian"
     },
     {
       "token": "20000",
       "bound_to": "qc_waterfall.variants_in",
-      "context": "erfall  2504 -> 2504 samples; 20000 -> 1866 variants.  | filter |"
+      "context": "erfall  2504 -> 2500 samples; 20000 -> 1899 variants.  | filter |"
     },
     {
-      "token": "1866",
+      "token": "1899",
       "bound_to": "qc_waterfall.variants_out",
-      "context": "504 -> 2504 samples; 20000 -> 1866 variants.  | filter | axis |"
+      "context": "504 -> 2500 samples; 20000 -> 1899 variants.  | filter | axis |"
     },
     {
       "token": "0",
       "bound_to": "qc_waterfall.steps.0.removed",
-      "context": "sample_missingness | sample | 0 | 2504 | | variant_missingness"
+      "context": "sample_missingness | sample | 0 | 2504 | | heterozygosity | sa"
     },
     {
       "token": "2504",
       "bound_to": "qc_waterfall.samples_in",
-      "context": "le_missingness | sample | 0 | 2504 | | variant_missingness | vari"
+      "context": "le_missingness | sample | 0 | 2504 | | heterozygosity | sample |"
+    },
+    {
+      "token": "4",
+      "bound_to": "qc_waterfall.steps.1.removed",
+      "context": "| | heterozygosity | sample | 4 | 2500 | | variant_missingness"
+    },
+    {
+      "token": "2500",
+      "bound_to": "qc_waterfall.samples_out",
+      "context": "heterozygosity | sample | 4 | 2500 | | variant_missingness | vari"
     },
     {
       "token": "0",
@@ -40,117 +50,172 @@
     {
       "token": "20000",
       "bound_to": "qc_waterfall.variants_in",
-      "context": "t_missingness | variant | 0 | 20000 | | min_maf | variant | 17142"
+      "context": "t_missingness | variant | 0 | 20000 | | min_maf | variant | 17130"
     },
     {
-      "token": "17142",
-      "bound_to": "qc_waterfall.steps.2.removed",
-      "context": "20000 | | min_maf | variant | 17142 | 2858 | | hwe | variant | 992"
-    },
-    {
-      "token": "2858",
-      "bound_to": "qc_waterfall.steps.2.kept",
-      "context": "| min_maf | variant | 17142 | 2858 | | hwe | variant | 992 | 1866"
-    },
-    {
-      "token": "992",
+      "token": "17130",
       "bound_to": "qc_waterfall.steps.3.removed",
-      "context": "42 | 2858 | | hwe | variant | 992 | 1866 |  ## Stratification  1"
+      "context": "20000 | | min_maf | variant | 17130 | 2870 | | hwe | variant | 971"
     },
     {
-      "token": "1866",
+      "token": "2870",
+      "bound_to": "qc_waterfall.steps.3.kept",
+      "context": "| min_maf | variant | 17130 | 2870 | | hwe | variant | 971 | 1899"
+    },
+    {
+      "token": "971",
+      "bound_to": "qc_waterfall.steps.4.removed",
+      "context": "30 | 2870 | | hwe | variant | 971 | 1899 |  ## Stratification  1"
+    },
+    {
+      "token": "1899",
       "bound_to": "qc_waterfall.variants_out",
-      "context": "858 | | hwe | variant | 992 | 1866 |  ## Stratification  10 PCs c"
+      "context": "870 | | hwe | variant | 971 | 1899 |  ## Stratification  10 PCs c"
     },
     {
       "token": "10",
       "bound_to": "strat_summary.n_pcs",
-      "context": "| 1866 |  ## Stratification  10 PCs computed on 1866 variants"
+      "context": "| 1899 |  ## Stratification  10 PCs computed on 1899 variants"
     },
     {
-      "token": "1866",
+      "token": "1899",
       "bound_to": "qc_waterfall.variants_out",
-      "context": "ification  10 PCs computed on 1866 variants; PC1 explains 9.1% o"
+      "context": "ification  10 PCs computed on 1899 variants; PC1 explains 9.0% o"
     },
     {
-      "token": "9.1%",
+      "token": "9.0%",
       "bound_to": "strat_summary.var_explained.0",
-      "context": "n 1866 variants; PC1 explains 9.1% of genotype variance; 5 ances"
+      "context": "n 1899 variants; PC1 explains 9.0% of genotype variance; 5 ances"
     },
     {
       "token": "5",
       "bound_to": "strat_summary.n_ancestry_groups",
-      "context": "ns 9.1% of genotype variance; 5 ancestry groups capture 4.5%"
+      "context": "ns 9.0% of genotype variance; 5 ancestry groups capture 4.6%"
     },
     {
-      "token": "4.5%",
+      "token": "4.6%",
       "bound_to": "strat_summary.pc1_ancestry_eta2",
-      "context": "ce; 5 ancestry groups capture 4.5% of its variance (eta^2).  ##"
+      "context": "ce; 5 ancestry groups capture 4.6% of its variance (eta^2).  ##"
     },
     {
       "token": "2",
       "bound_to": "assoc_summary.lambda_gc",
-      "context": "ure 4.5% of its variance (eta^2).  ## Association  linear tes"
+      "context": "ure 4.6% of its variance (eta^2).  ## Association  linear tes"
     },
     {
-      "token": "1866",
+      "token": "1899",
       "bound_to": "qc_waterfall.variants_out",
-      "context": "## Association  linear test, 1866 variants on 2504 samples with"
+      "context": "## Association  linear test, 1899 variants on 2500 samples with"
     },
     {
-      "token": "2504",
-      "bound_to": "qc_waterfall.samples_in",
-      "context": "linear test, 1866 variants on 2504 samples with 6 covariates (5"
+      "token": "2500",
+      "bound_to": "qc_waterfall.samples_out",
+      "context": "linear test, 1899 variants on 2500 samples with 6 covariates (5"
     },
     {
       "token": "6",
       "bound_to": "assoc_summary.n_covariates",
-      "context": "variants on 2504 samples with 6 covariates (5 PCs).  Genomic"
+      "context": "variants on 2500 samples with 6 covariates (5 PCs).  Genomic"
     },
     {
       "token": "5",
       "bound_to": "strat_summary.n_ancestry_groups",
-      "context": "04 samples with 6 covariates (5 PCs).  Genomic control $\\lamb"
+      "context": "00 samples with 6 covariates (5 PCs).  Genomic control $\\lamb"
     },
     {
-      "token": "1.885",
+      "token": "1.856",
       "bound_to": "assoc_summary.lambda_gc",
-      "context": "Genomic control $\\lambda$ = 1.885 with covariates vs 11.656 wit"
+      "context": "Genomic control $\\lambda$ = 1.856 with covariates vs 11.019 wit"
     },
     {
-      "token": "11.656",
+      "token": "11.019",
       "bound_to": "assoc_summary.lambda_gc_no_cov",
-      "context": "a$ = 1.885 with covariates vs 11.656 without; 17 variants pass the"
+      "context": "a$ = 1.856 with covariates vs 11.019 without; 19 variants pass the"
     },
     {
-      "token": "17",
+      "token": "19",
       "bound_to": "assoc_summary.n_bonferroni_hits",
-      "context": "covariates vs 11.656 without; 17 variants pass the Bonferroni"
+      "context": "covariates vs 11.019 without; 19 variants pass the Bonferroni"
+    },
+    {
+      "token": "0",
+      "bound_to": "qc_waterfall.steps.0.removed",
+      "context": "$\\lambda$ by covariate PCs: 0 PCs -> 11.037, 1 PCs -> 5.050"
+    },
+    {
+      "token": "11.037",
+      "bound_to": "assoc_summary.lambda_by_pcs.pcs_0",
+      "context": "a$ by covariate PCs: 0 PCs -> 11.037, 1 PCs -> 5.050, 2 PCs -> 7.5"
+    },
+    {
+      "token": "1",
+      "bound_to": "summary.causal_beta_corr",
+      "context": "variate PCs: 0 PCs -> 11.037, 1 PCs -> 5.050, 2 PCs -> 7.583,"
+    },
+    {
+      "token": "5.050",
+      "bound_to": "assoc_summary.lambda_by_pcs.pcs_1",
+      "context": "Cs: 0 PCs -> 11.037, 1 PCs -> 5.050, 2 PCs -> 7.583, 3 PCs -> 2.0"
+    },
+    {
+      "token": "2",
+      "bound_to": "assoc_summary.lambda_gc",
+      "context": "Cs -> 11.037, 1 PCs -> 5.050, 2 PCs -> 7.583, 3 PCs -> 2.007,"
+    },
+    {
+      "token": "7.583",
+      "bound_to": "assoc_summary.lambda_by_pcs.pcs_2",
+      "context": "037, 1 PCs -> 5.050, 2 PCs -> 7.583, 3 PCs -> 2.007, 4 PCs -> 2.4"
+    },
+    {
+      "token": "3",
+      "bound_to": "qc_waterfall.thresholds.het_sd",
+      "context": "PCs -> 5.050, 2 PCs -> 7.583, 3 PCs -> 2.007, 4 PCs -> 2.451,"
+    },
+    {
+      "token": "2.007",
+      "bound_to": "assoc_summary.lambda_by_pcs.pcs_3",
+      "context": "050, 2 PCs -> 7.583, 3 PCs -> 2.007, 4 PCs -> 2.451, 5 PCs -> 1.8"
+    },
+    {
+      "token": "4",
+      "bound_to": "qc_waterfall.steps.1.removed",
+      "context": "PCs -> 7.583, 3 PCs -> 2.007, 4 PCs -> 2.451, 5 PCs -> 1.856."
+    },
+    {
+      "token": "2.451",
+      "bound_to": "assoc_summary.lambda_by_pcs.pcs_4",
+      "context": "583, 3 PCs -> 2.007, 4 PCs -> 2.451, 5 PCs -> 1.856. Effect sizes"
+    },
+    {
+      "token": "5",
+      "bound_to": "strat_summary.n_ancestry_groups",
+      "context": "PCs -> 2.007, 4 PCs -> 2.451, 5 PCs -> 1.856. Effect sizes ar"
     },
     {
       "token": "22",
       "bound_to": "assoc_summary.lead_hit.chrom",
-      "context": "threshold 2.68e-05.  Lead hit 22:17003990 (pos 17003990): beta"
+      "context": "ounted allele (a1).  Lead hit 22:17003990 (pos 17003990): beta"
     },
     {
       "token": "17003990",
       "bound_to": "assoc_summary.lead_hit.pos",
-      "context": "eshold 2.68e-05.  Lead hit 22:17003990 (pos 17003990): beta -0.466 (s"
+      "context": "ted allele (a1).  Lead hit 22:17003990 (pos 17003990): beta -0.466 (s"
     },
     {
       "token": "17003990",
       "bound_to": "assoc_summary.lead_hit.pos",
-      "context": "5.  Lead hit 22:17003990 (pos 17003990): beta -0.466 (se 0.058), p ="
+      "context": ").  Lead hit 22:17003990 (pos 17003990): beta -0.466 (se 0.057), p ="
     },
     {
       "token": "-0.466",
       "bound_to": "assoc_summary.lead_hit.beta",
-      "context": "17003990 (pos 17003990): beta -0.466 (se 0.058), p = 7.75e-16.  Pla"
+      "context": "17003990 (pos 17003990): beta -0.466 (se 0.057), p = 7.33e-16.  Pla"
     },
     {
-      "token": "0.058",
+      "token": "0.057",
       "bound_to": "assoc_summary.lead_hit.se",
-      "context": "os 17003990): beta -0.466 (se 0.058), p = 7.75e-16.  Planted caus"
+      "context": "os 17003990): beta -0.466 (se 0.057), p = 7.33e-16.  Planted caus"
     },
     {
       "token": "2",
@@ -173,19 +238,19 @@
       "context": "red at Bonferroni (6 planted; 1 failed pooled HWE \u2014 the Wahlu"
     },
     {
-      "token": "17",
+      "token": "19",
       "bound_to": "assoc_summary.n_bonferroni_hits",
-      "context": "eta correlation 0.64.  Of the 17 Bonferroni hits, 15 sit withi"
+      "context": "eta correlation 0.64.  Of the 19 Bonferroni hits, 17 sit withi"
     },
     {
-      "token": "15",
+      "token": "17",
       "bound_to": "summary.n_hits_ld_proxy",
-      "context": ".  Of the 17 Bonferroni hits, 15 sit within 250 kb of a plante"
+      "context": ".  Of the 19 Bonferroni hits, 17 sit within 250 kb of a plante"
     },
     {
       "token": "250",
       "bound_to": "summary.ld_window_kb",
-      "context": "onferroni hits, 15 sit within 250 kb of a planted causal (LD pr"
+      "context": "onferroni hits, 17 sit within 250 kb of a planted causal (LD pr"
     },
     {
       "token": "0",

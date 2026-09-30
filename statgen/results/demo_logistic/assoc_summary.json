@@ -1,0 +1,24 @@
+{
+  "kind": "logistic",
+  "n_variants": 3840,
+  "n_samples": 799,
+  "n_covariates": 4,
+  "n_pcs_as_cov": 2,
+  "lambda_gc": 0.9856804346112872,
+  "lambda_gc_no_cov": 1.7208406304228137,
+  "lambda_by_pcs": {
+    "pcs_0": 1.7311158406503548,
+    "pcs_1": 0.9883410606807945,
+    "pcs_2": 0.9856804346112872
+  },
+  "bonferroni_alpha": 1.3020833333333334e-05,
+  "n_bonferroni_hits": 3,
+  "lead_hit": {
+    "vid": "rs101142",
+    "pos": 1143,
+    "chrom": "synthetic",
+    "beta": -0.6336962058110136,
+    "se": 0.1100498760591484,
+    "p": 8.49835278207739e-09
+  }
+}
