@@ -1,7 +1,7 @@
 {
   "dataset_mode": "pbmc3k",
   "n_cells": 2643,
-  "n_clusters": 8,
+  "n_clusters": 7,
   "filter_waterfall": {
     "cells_in": 2700,
     "genes_in": 32738,
@@ -40,28 +40,28 @@
   "cluster_qc": [
     {
       "cluster": "0",
-      "n_cells": 1175,
-      "frac_of_total": 0.4446,
-      "median_total_counts": 2327.0,
-      "median_n_genes": 813.0,
+      "n_cells": 1172,
+      "frac_of_total": 0.4434,
+      "median_total_counts": 2329.0,
+      "median_n_genes": 813.5,
       "median_pct_mt": 1.75,
       "top_marker": "RPS12"
     },
     {
       "cluster": "1",
-      "n_cells": 481,
-      "frac_of_total": 0.182,
-      "median_total_counts": 2331.0,
-      "median_n_genes": 860.0,
-      "median_pct_mt": 2.23,
-      "top_marker": "LYZ"
+      "n_cells": 639,
+      "frac_of_total": 0.2418,
+      "median_total_counts": 2617.0,
+      "median_n_genes": 944.0,
+      "median_pct_mt": 2.29,
+      "top_marker": "FTL"
     },
     {
       "cluster": "2",
-      "n_cells": 430,
-      "frac_of_total": 0.1627,
-      "median_total_counts": 1964.0,
-      "median_n_genes": 831.0,
+      "n_cells": 433,
+      "frac_of_total": 0.1638,
+      "median_total_counts": 1963.0,
+      "median_n_genes": 830.0,
       "median_pct_mt": 2.19,
       "top_marker": "NKG7"
     },
@@ -76,15 +76,6 @@
     },
     {
       "cluster": "4",
-      "n_cells": 158,
-      "frac_of_total": 0.0598,
-      "median_total_counts": 3842.5,
-      "median_n_genes": 1268.5,
-      "median_pct_mt": 2.41,
-      "top_marker": "LST1"
-    },
-    {
-      "cluster": "5",
       "n_cells": 36,
       "frac_of_total": 0.0136,
       "median_total_counts": 5297.0,
@@ -93,7 +84,7 @@
       "top_marker": "HLA-DPA1"
     },
     {
-      "cluster": "6",
+      "cluster": "5",
       "n_cells": 13,
       "frac_of_total": 0.0049,
       "median_total_counts": 917.0,
@@ -102,7 +93,7 @@
       "top_marker": "PF4"
     },
     {
-      "cluster": "7",
+      "cluster": "6",
       "n_cells": 8,
       "frac_of_total": 0.003,
       "median_total_counts": 10320.5,
@@ -112,9 +103,12 @@
     }
   ],
   "provenance": {
-    "git_sha": "f600fa4",
+    "git_sha": "1dce091",
+    "python": "3.11.16",
     "scanpy": "1.11.5",
     "anndata": "0.12.19",
+    "leidenalg": "0.12.0",
+    "igraph": "1.0.0",
     "config": {
       "paths": {
         "data_dir": "data/pbmc3k",

@@ -105,11 +105,33 @@ def test_display_rounding_within_tolerance_binds():
     assert v["passed"], v
 
 
+def test_binding_provenance_recorded():
+    summary = _summary()
+    md = render_markdown(summary)
+    v = verify_markdown(md, _flat(summary), labels={"0", "1"})
+    by_token = {c["token"]: c["bound_to"] for c in v["claims"]}
+    # a waterfall number traces to the waterfall artifact...
+    assert by_token["900"] == "cells_in"
+    # ...and every bound claim points at a leaf that actually equals it
+    flat = _flat(summary)
+    for c in v["claims"]:
+        if c["bound_to"] == "identifier":
+            continue
+        assert c["bound_to"] in flat, c
+        val = float(c["token"].rstrip("%").replace(",", ""))
+        if c["token"].endswith("%"):
+            val /= 100.0
+        assert abs(flat[c["bound_to"]] - val) < 0.51, c
+    # a % cell binds the recorded fraction leaf
+    assert by_token["44.96%"] == "cluster_qc.0.frac_of_total"
+
+
 def test_cluster_labels_are_not_claims():
     flat = _flat(_summary())
     # '7' is a cluster label with no numeric leaf equal to 7
     v = verify_markdown("cluster 7 is the smallest", flat, labels={"7"})
     assert v["passed"], v
+    assert v["claims"][0]["bound_to"] == "identifier"
 
 
 def test_forbidden_phrase_flagged():

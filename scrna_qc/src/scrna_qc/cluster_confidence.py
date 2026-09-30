@@ -28,6 +28,18 @@ from .conformal import class_scores, covered_set, mondrian_qhat
 from .util import load_config
 
 
+def _wilson_ci(k: float, n: int, z: float = 1.96) -> list[float]:
+    """Wilson score interval — honest uncertainty on per-cluster coverage,
+    which binomial tails make non-trivial at n<50."""
+    if n == 0:
+        return [None, None]
+    p = k / n
+    denom = 1.0 + z * z / n
+    center = (p + z * z / (2 * n)) / denom
+    half = z * ((p * (1 - p) / n + z * z / (4 * n * n)) ** 0.5) / denom
+    return [round(center - half, 4), round(center + half, 4)]
+
+
 def conformal_cluster_confidence(X: np.ndarray, labels: np.ndarray,
                                  alpha: float, cal_frac: float,
                                  min_group: int, seed: int) -> dict:
@@ -62,17 +74,20 @@ def conformal_cluster_confidence(X: np.ndarray, labels: np.ndarray,
         sets[:, col] = probs_test[:, col] >= (1.0 - qs[c])
 
     covered = covered_set(y_test, sets)
+    set_sizes = sets.sum(1)
     per_cluster = {}
     for c in classes:
         sel = labels[test_idx] == c
         n = int(sel.sum())
+        k = int(covered[sel].sum())
         per_cluster[str(c)] = {
             "n_test": n,
             "coverage": (float(covered[sel].mean()) if n else None),
+            "coverage_ci95": _wilson_ci(k, n),
             "qhat": qs[c],
             "global_fallback": len(np.flatnonzero(labels[cal_idx] == c))
                                < min_group,
-            "mean_set_size": (float(sets[sel].sum(1).mean()) if n else None),
+            "mean_set_size": (float(set_sizes[sel].mean()) if n else None),
         }
 
     return {
@@ -85,11 +100,15 @@ def conformal_cluster_confidence(X: np.ndarray, labels: np.ndarray,
         "min_group": min_group,
         "per_cluster": per_cluster,
         "estimator": "LogisticRegression(max_iter=1000) on X_pca",
+        # test-cell assignment into adata order for the set-size figure
+        "_test_idx": test_idx.tolist(),
+        "_set_sizes": set_sizes.tolist(),
     }
 
 
 def main() -> None:
     emb_in, out_json = sys.argv[1:3]
+    setsize_png = sys.argv[3] if len(sys.argv) > 3 else None
     cfg = load_config()
     cc = cfg["conformal"]
     adata = ad.read_h5ad(emb_in)
@@ -102,6 +121,21 @@ def main() -> None:
         "classifier": "sklearn.LogisticRegression",
         "features": "X_pca (post-HVG PCA)",
     }
+
+    if setsize_png:
+        import scanpy as sc
+        import matplotlib.pyplot as plt
+        sizes = np.full(adata.n_obs, np.nan)
+        sizes[np.asarray(res["_test_idx"])] = np.asarray(res["_set_sizes"])
+        adata.obs["conformal_set_size"] = sizes
+        sc.pl.umap(adata, color="conformal_set_size", show=False,
+                   na_color="lightgrey", cmap="viridis")
+        plt.gcf().set_size_inches(6, 5)
+        plt.gcf().savefig(setsize_png, dpi=130, bbox_inches="tight")
+        plt.close()
+
+    res.pop("_test_idx")
+    res.pop("_set_sizes")
     Path(out_json).parent.mkdir(parents=True, exist_ok=True)
     with open(out_json, "w") as f:
         json.dump(res, f, indent=2)

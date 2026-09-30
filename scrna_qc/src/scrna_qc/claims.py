@@ -66,21 +66,34 @@ def verify_markdown(text: str, flat_values: dict[str, float],
 
     `labels` holds exempt identifiers (cluster names): a zero-decimal
     token equal to a label is an identifier, not a measurement.
-    """
-    values = list(flat_values.values())
-    labels = {str(x) for x in (labels or set())}
-    unbound, forbidden = [], []
 
-    for tok in extract_numbers(text):
+    Each extracted number lands in `claims` with the artifact key it
+    bound to (`bound_to`) — or "identifier" for label exemptions — so
+    the verdict is an inspectable binding map, not just a boolean.
+    """
+    labels = {str(x) for x in (labels or set())}
+    items = list(flat_values.items())
+    claims, unbound, forbidden = [], [], []
+
+    def _bind(tok) -> str | None:
         v = tok["value"]
         tol = 0.5 * 10 ** (-tok["decimals"])
-        # a % token also matches the fraction form of the same value
-        ok = any(abs(v - fv) <= tol for fv in values)
-        if not ok and tok["is_pct"]:
-            ok = any(abs(v / 100.0 - fv) <= tol / 100.0 for fv in values)
-        if not ok and tok["decimals"] == 0 and str(int(v)) in labels:
-            ok = True
-        if not ok:
+        for k, fv in items:
+            if abs(v - fv) <= tol:
+                return k
+        if tok["is_pct"]:
+            for k, fv in items:
+                if abs(v / 100.0 - fv) <= tol / 100.0:
+                    return k
+        if tok["decimals"] == 0 and str(int(v)) in labels:
+            return "identifier"
+        return None
+
+    for tok in extract_numbers(text):
+        bound = _bind(tok)
+        claims.append({"token": tok["token"], "bound_to": bound,
+                       "context": tok["context"]})
+        if bound is None:
             unbound.append({"token": tok["token"], "context": tok["context"]})
 
     low = text.lower()
@@ -89,6 +102,7 @@ def verify_markdown(text: str, flat_values: dict[str, float],
             forbidden.append(phrase)
 
     return {"passed": not unbound and not forbidden,
-            "n_claims": len(extract_numbers(text)),
+            "n_claims": len(claims),
+            "claims": claims,
             "unbound_claims": unbound,
             "forbidden": forbidden}

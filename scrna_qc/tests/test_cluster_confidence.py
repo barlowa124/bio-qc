@@ -74,6 +74,28 @@ def test_confident_clusters_have_small_sets():
     assert res["mean_set_size"] < 1.5
 
 
+def test_wilson_interval_brackets_coverage_and_widens_on_small_n():
+    pytest.importorskip("sklearn")
+    X, labels = _separable()
+    res = conformal_cluster_confidence(X, labels, alpha=0.1,
+                                       cal_frac=0.3, min_group=30,
+                                       seed=0)
+    for cl, row in res["per_cluster"].items():
+        lo, hi = row["coverage_ci95"]
+        assert 0.0 <= lo <= row["coverage"] <= hi <= 1.0
+    # a cluster with 25 held-out cells carries a visibly wider band
+    X_big, labels_big = _separable(n=600, k=2)
+    X_small = np.random.default_rng(2).normal(size=(10, 10)) + 30
+    X2 = np.vstack([X_big, X_small])
+    labels2 = np.concatenate([labels_big, np.array(["tiny"] * 10)])
+    r2 = conformal_cluster_confidence(X2, labels2, 0.1, 0.5, 30, 2)
+    w_tiny = (r2["per_cluster"]["tiny"]["coverage_ci95"][1]
+              - r2["per_cluster"]["tiny"]["coverage_ci95"][0])
+    w_big = (r2["per_cluster"]["0"]["coverage_ci95"][1]
+             - r2["per_cluster"]["0"]["coverage_ci95"][0])
+    assert w_tiny > w_big
+
+
 def test_deterministic_given_seed():
     pytest.importorskip("sklearn")
     X, labels = _separable(n=300, k=3)

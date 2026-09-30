@@ -21,6 +21,14 @@ from .claims import flatten_results, verify_markdown
 from .util import git_sha, load_config
 
 
+def _pkg_version(name: str) -> str:
+    try:
+        from importlib.metadata import version
+        return version(name)
+    except Exception:
+        return "not installed"
+
+
 def cluster_table(adata: ad.AnnData, markers: pd.DataFrame) -> pd.DataFrame:
     obs = adata.obs.copy()
     obs["cluster"] = obs["leiden"].astype(str)
@@ -54,14 +62,16 @@ def _conformal_lines(conf: dict) -> list[str]:
         f"- pooled prediction-set coverage: {conf['pooled_coverage']}",
         f"- mean set size: {conf['mean_set_size']}",
         "",
-        "| cluster | held-out cells | coverage | qhat | set size | "
-        "fallback |",
-        "|---|---|---|---|---|---|",
+        "| cluster | held-out cells | coverage | ci95 | qhat | "
+        "set size | fallback |",
+        "|---|---|---|---|---|---|---|",
     ]
     for cl, row in sorted(conf["per_cluster"].items()):
+        lo, hi = row.get("coverage_ci95") or [None, None]
+        ci = f"[{lo}, {hi}]" if lo is not None else "-"
         lines.append(
             f"| {cl} | {row['n_test']} | {row['coverage']} "
-            f"| {row['qhat']} | {row['mean_set_size']} "
+            f"| {ci} | {row['qhat']} | {row['mean_set_size']} "
             f"| {row['global_fallback']} |")
     return lines
 
@@ -125,8 +135,15 @@ def report(adata: ad.AnnData, markers: pd.DataFrame, waterfall: dict,
         "cluster_qc": table.to_dict(orient="records"),
         "provenance": {
             "git_sha": git_sha(),
+            "python": sys.version.split()[0],
             "scanpy": sc.__version__,
             "anndata": ad.__version__,
+            # The cluster partition depends on which Leiden backend ran
+            # (leidenalg vs igraph flavors partition differently at the
+            # same seed/resolution) — record both so a drift like an
+            # 8->7 cluster change has a visible cause in the record.
+            "leidenalg": _pkg_version("leidenalg"),
+            "igraph": _pkg_version("igraph"),
             "config": cfg,
         },
     }

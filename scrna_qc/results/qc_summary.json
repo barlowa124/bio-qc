@@ -76,9 +76,12 @@
     }
   ],
   "provenance": {
-    "git_sha": "f600fa4",
+    "git_sha": "1dce091",
+    "python": "3.11.16",
     "scanpy": "1.11.5",
     "anndata": "0.12.19",
+    "leidenalg": "0.12.0",
+    "igraph": "1.0.0",
     "config": {
       "paths": {
         "data_dir": "data",

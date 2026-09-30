@@ -25,6 +25,7 @@ WATERFALL = f"{RESULTS_DIR}/filter_waterfall.json"
 MARKERS = f"{RESULTS_DIR}/markers.csv"
 CLUSTER_CSV = f"{RESULTS_DIR}/cluster_qc.csv"
 CONFORMAL = f"{RESULTS_DIR}/cluster_conformal.json"
+SETSIZE_PNG = f"{RESULTS_DIR}/umap_set_size.png"
 SUMMARY = f"{RESULTS_DIR}/qc_summary.json"
 REPORT_MD = f"{RESULTS_DIR}/report.md"
 CLAIMS = f"{RESULTS_DIR}/claims_check.json"
@@ -70,9 +71,11 @@ rule conformal:
     input:
         EMBEDDED,
     output:
-        CONFORMAL,
+        json=CONFORMAL,
+        png=SETSIZE_PNG,
     shell:
-        "{PY} -m scrna_qc.cluster_confidence {input} {output}"
+        "{PY} -m scrna_qc.cluster_confidence {input} {output.json}"
+        " {output.png}"
 
 
 rule report:

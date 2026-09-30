@@ -1,6 +1,348 @@
 {
   "passed": true,
-  "n_claims": 60,
+  "n_claims": 68,
+  "claims": [
+    {
+      "token": "900",
+      "bound_to": "cells_in",
+      "context": "qc report \u2014 demo  - cells in: 900, genes in: 1200 - cells after"
+    },
+    {
+      "token": "1200",
+      "bound_to": "genes_in",
+      "context": "o  - cells in: 900, genes in: 1200 - cells after filtering: 783,"
+    },
+    {
+      "token": "783",
+      "bound_to": "steps.1.cells_after",
+      "context": "1200 - cells after filtering: 783, genes after filtering: 1199"
+    },
+    {
+      "token": "1199",
+      "bound_to": "steps.2.genes_after",
+      "context": ": 783, genes after filtering: 1199 - filter removals (cells / gen"
+    },
+    {
+      "token": "72",
+      "bound_to": "steps.0.cells_removed",
+      "context": "/ genes): min_genes_per_cell 72/0, max_pct_mt 45/0, min_cells"
+    },
+    {
+      "token": "0",
+      "bound_to": "steps.0.genes_removed",
+      "context": "genes): min_genes_per_cell 72/0, max_pct_mt 45/0, min_cells_p"
+    },
+    {
+      "token": "45",
+      "bound_to": "steps.1.cells_removed",
+      "context": "nes_per_cell 72/0, max_pct_mt 45/0, min_cells_per_gene 0/1 - L"
+    },
+    {
+      "token": "0",
+      "bound_to": "steps.0.genes_removed",
+      "context": "_per_cell 72/0, max_pct_mt 45/0, min_cells_per_gene 0/1 - Lei"
+    },
+    {
+      "token": "0",
+      "bound_to": "steps.0.genes_removed",
+      "context": "t_mt 45/0, min_cells_per_gene 0/1 - Leiden clusters: 4  ## Pe"
+    },
+    {
+      "token": "1",
+      "bound_to": "steps.2.genes_removed",
+      "context": "mt 45/0, min_cells_per_gene 0/1 - Leiden clusters: 4  ## Per-c"
+    },
+    {
+      "token": "4",
+      "bound_to": "n_clusters",
+      "context": "r_gene 0/1 - Leiden clusters: 4  ## Per-cluster QC  | cluster |"
+    },
+    {
+      "token": "0",
+      "bound_to": "steps.0.genes_removed",
+      "context": "--|---|---|---|---|---|---| | 0 | 359 | 45.85% | 3024.0 | 840."
+    },
+    {
+      "token": "359",
+      "bound_to": "cluster_qc.0.n_cells",
+      "context": "--|---|---|---|---|---| | 0 | 359 | 45.85% | 3024.0 | 840.0 | 1."
+    },
+    {
+      "token": "45.85%",
+      "bound_to": "cluster_qc.0.frac_of_total",
+      "context": "|---|---|---|---| | 0 | 359 | 45.85% | 3024.0 | 840.0 | 1.81 | G00"
+    },
+    {
+      "token": "3024.0",
+      "bound_to": "cluster_qc.0.median_total_counts",
+      "context": "---|---| | 0 | 359 | 45.85% | 3024.0 | 840.0 | 1.81 | G0020 | | 1 |"
+    },
+    {
+      "token": "840.0",
+      "bound_to": "cluster_qc.0.median_n_genes",
+      "context": "| 0 | 359 | 45.85% | 3024.0 | 840.0 | 1.81 | G0020 | | 1 | 191 | 2"
+    },
+    {
+      "token": "1.81",
+      "bound_to": "cluster_qc.0.median_pct_mt",
+      "context": "9 | 45.85% | 3024.0 | 840.0 | 1.81 | G0020 | | 1 | 191 | 24.39% |"
+    },
+    {
+      "token": "1",
+      "bound_to": "steps.2.genes_removed",
+      "context": ".0 | 840.0 | 1.81 | G0020 | | 1 | 191 | 24.39% | 2910.0 | 839."
+    },
+    {
+      "token": "191",
+      "bound_to": "cluster_qc.1.n_cells",
+      "context": "840.0 | 1.81 | G0020 | | 1 | 191 | 24.39% | 2910.0 | 839.0 | 1."
+    },
+    {
+      "token": "24.39%",
+      "bound_to": "cluster_qc.1.frac_of_total",
+      "context": "| 1.81 | G0020 | | 1 | 191 | 24.39% | 2910.0 | 839.0 | 1.84 | G00"
+    },
+    {
+      "token": "2910.0",
+      "bound_to": "cluster_qc.1.median_total_counts",
+      "context": "G0020 | | 1 | 191 | 24.39% | 2910.0 | 839.0 | 1.84 | G0076 | | 2 |"
+    },
+    {
+      "token": "839.0",
+      "bound_to": "cluster_qc.1.median_n_genes",
+      "context": "| 1 | 191 | 24.39% | 2910.0 | 839.0 | 1.84 | G0076 | | 2 | 155 | 1"
+    },
+    {
+      "token": "1.84",
+      "bound_to": "cluster_qc.1.median_pct_mt",
+      "context": "1 | 24.39% | 2910.0 | 839.0 | 1.84 | G0076 | | 2 | 155 | 19.8% |"
+    },
+    {
+      "token": "2",
+      "bound_to": "cluster_qc.0.median_pct_mt",
+      "context": ".0 | 839.0 | 1.84 | G0076 | | 2 | 155 | 19.8% | 2953.0 | 831.0"
+    },
+    {
+      "token": "155",
+      "bound_to": "cluster_qc.2.n_cells",
+      "context": "839.0 | 1.84 | G0076 | | 2 | 155 | 19.8% | 2953.0 | 831.0 | 1.8"
+    },
+    {
+      "token": "19.8%",
+      "bound_to": "cluster_qc.2.frac_of_total",
+      "context": "| 1.84 | G0076 | | 2 | 155 | 19.8% | 2953.0 | 831.0 | 1.82 | G00"
+    },
+    {
+      "token": "2953.0",
+      "bound_to": "cluster_qc.2.median_total_counts",
+      "context": "| G0076 | | 2 | 155 | 19.8% | 2953.0 | 831.0 | 1.82 | G0099 | | 3 |"
+    },
+    {
+      "token": "831.0",
+      "bound_to": "cluster_qc.2.median_n_genes",
+      "context": "| 2 | 155 | 19.8% | 2953.0 | 831.0 | 1.82 | G0099 | | 3 | 78 | 9."
+    },
+    {
+      "token": "1.82",
+      "bound_to": "cluster_qc.2.median_pct_mt",
+      "context": "55 | 19.8% | 2953.0 | 831.0 | 1.82 | G0099 | | 3 | 78 | 9.96% | 3"
+    },
+    {
+      "token": "3",
+      "bound_to": "identifier",
+      "context": ".0 | 831.0 | 1.82 | G0099 | | 3 | 78 | 9.96% | 3102.5 | 846.0"
+    },
+    {
+      "token": "78",
+      "bound_to": "cluster_qc.3.n_cells",
+      "context": "831.0 | 1.82 | G0099 | | 3 | 78 | 9.96% | 3102.5 | 846.0 | 1.8"
+    },
+    {
+      "token": "9.96%",
+      "bound_to": "cluster_qc.3.frac_of_total",
+      "context": "0 | 1.82 | G0099 | | 3 | 78 | 9.96% | 3102.5 | 846.0 | 1.82 | G01"
+    },
+    {
+      "token": "3102.5",
+      "bound_to": "cluster_qc.3.median_total_counts",
+      "context": "| G0099 | | 3 | 78 | 9.96% | 3102.5 | 846.0 | 1.82 | G0160 |  ## C"
+    },
+    {
+      "token": "846.0",
+      "bound_to": "cluster_qc.3.median_n_genes",
+      "context": "| | 3 | 78 | 9.96% | 3102.5 | 846.0 | 1.82 | G0160 |  ## Cluster-a"
+    },
+    {
+      "token": "1.82",
+      "bound_to": "cluster_qc.2.median_pct_mt",
+      "context": "78 | 9.96% | 3102.5 | 846.0 | 1.82 | G0160 |  ## Cluster-assignme"
+    },
+    {
+      "token": "0.1",
+      "bound_to": "cluster_qc.3.frac_of_total",
+      "context": "Mondrian conformal)  - alpha: 0.1, calibration cells: 234, held"
+    },
+    {
+      "token": "234",
+      "bound_to": "n_cal",
+      "context": "lpha: 0.1, calibration cells: 234, held-out cells: 549 - pooled"
+    },
+    {
+      "token": "549",
+      "bound_to": "n_test",
+      "context": "n cells: 234, held-out cells: 549 - pooled prediction-set covera"
+    },
+    {
+      "token": "0.7959927140255009",
+      "bound_to": "pooled_coverage",
+      "context": "oled prediction-set coverage: 0.7959927140255009 - mean set size: 0.79599271402"
+    },
+    {
+      "token": "0.7959927140255009",
+      "bound_to": "pooled_coverage",
+      "context": "927140255009 - mean set size: 0.7959927140255009  | cluster | held-out cells | c"
+    },
+    {
+      "token": "0",
+      "bound_to": "steps.0.genes_removed",
+      "context": "--|---|---|---|---|---|---| | 0 | 251 | 0.8565737051792829 | ["
+    },
+    {
+      "token": "251",
+      "bound_to": "per_cluster.0.n_test",
+      "context": "--|---|---|---|---|---| | 0 | 251 | 0.8565737051792829 | [0.8078"
+    },
+    {
+      "token": "0.8565737051792829",
+      "bound_to": "per_cluster.0.coverage",
+      "context": "|---|---|---|---| | 0 | 251 | 0.8565737051792829 | [0.8078, 0.8946] | 0.0008558"
+    },
+    {
+      "token": "0.8078",
+      "bound_to": "per_cluster.0.coverage_ci95.0",
+      "context": "| 251 | 0.8565737051792829 | [0.8078, 0.8946] | 0.0008558034896850"
+    },
+    {
+      "token": "0.8946",
+      "bound_to": "per_cluster.0.coverage_ci95.1",
+      "context": "0.8565737051792829 | [0.8078, 0.8946] | 0.0008558034896850586 | 0."
+    },
+    {
+      "token": "0.0008558034896850586",
+      "bound_to": "per_cluster.0.qhat",
+      "context": "51792829 | [0.8078, 0.8946] | 0.0008558034896850586 | 0.8565737051792829 | False |"
+    },
+    {
+      "token": "0.8565737051792829",
+      "bound_to": "per_cluster.0.coverage",
+      "context": "46] | 0.0008558034896850586 | 0.8565737051792829 | False | | 1 | 134 | 0.865671"
+    },
+    {
+      "token": "1",
+      "bound_to": "steps.2.genes_removed",
+      "context": ".8565737051792829 | False | | 1 | 134 | 0.8656716417910447 | ["
+    },
+    {
+      "token": "134",
+      "bound_to": "per_cluster.1.n_test",
+      "context": "5737051792829 | False | | 1 | 134 | 0.8656716417910447 | [0.7976"
+    },
+    {
+      "token": "0.8656716417910447",
+      "bound_to": "per_cluster.1.coverage",
+      "context": "1792829 | False | | 1 | 134 | 0.8656716417910447 | [0.7976, 0.9133] | 0.0014346"
+    },
+    {
+      "token": "0.7976",
+      "bound_to": "per_cluster.1.coverage_ci95.0",
+      "context": "| 134 | 0.8656716417910447 | [0.7976, 0.9133] | 0.0014346241950988"
+    },
+    {
+      "token": "0.9133",
+      "bound_to": "per_cluster.1.coverage_ci95.1",
+      "context": "0.8656716417910447 | [0.7976, 0.9133] | 0.001434624195098877 | 0.8"
+    },
+    {
+      "token": "0.001434624195098877",
+      "bound_to": "per_cluster.1.qhat",
+      "context": "17910447 | [0.7976, 0.9133] | 0.001434624195098877 | 0.8656716417910447 | False |"
+    },
+    {
+      "token": "0.8656716417910447",
+      "bound_to": "per_cluster.1.coverage",
+      "context": "133] | 0.001434624195098877 | 0.8656716417910447 | False | | 2 | 109 | 0.862385"
+    },
+    {
+      "token": "2",
+      "bound_to": "cluster_qc.0.median_pct_mt",
+      "context": ".8656716417910447 | False | | 2 | 109 | 0.8623853211009175 | ["
+    },
+    {
+      "token": "109",
+      "bound_to": "per_cluster.2.n_test",
+      "context": "6716417910447 | False | | 2 | 109 | 0.8623853211009175 | [0.7853"
+    },
+    {
+      "token": "0.8623853211009175",
+      "bound_to": "per_cluster.2.coverage",
+      "context": "7910447 | False | | 2 | 109 | 0.8623853211009175 | [0.7853, 0.9148] | 0.0019299"
+    },
+    {
+      "token": "0.7853",
+      "bound_to": "per_cluster.2.coverage_ci95.0",
+      "context": "| 109 | 0.8623853211009175 | [0.7853, 0.9148] | 0.0019299387931823"
+    },
+    {
+      "token": "0.9148",
+      "bound_to": "per_cluster.2.coverage_ci95.1",
+      "context": "0.8623853211009175 | [0.7853, 0.9148] | 0.001929938793182373 | 0.8"
+    },
+    {
+      "token": "0.001929938793182373",
+      "bound_to": "per_cluster.2.qhat",
+      "context": "11009175 | [0.7853, 0.9148] | 0.001929938793182373 | 0.8623853211009175 | False |"
+    },
+    {
+      "token": "0.8623853211009175",
+      "bound_to": "per_cluster.2.coverage",
+      "context": "148] | 0.001929938793182373 | 0.8623853211009175 | False | | 3 | 55 | 0.2181818"
+    },
+    {
+      "token": "3",
+      "bound_to": "identifier",
+      "context": ".8623853211009175 | False | | 3 | 55 | 0.21818181818181817 | ["
+    },
+    {
+      "token": "55",
+      "bound_to": "per_cluster.3.n_test",
+      "context": "3853211009175 | False | | 3 | 55 | 0.21818181818181817 | [0.129"
+    },
+    {
+      "token": "0.21818181818181817",
+      "bound_to": "per_cluster.3.coverage",
+      "context": "11009175 | False | | 3 | 55 | 0.21818181818181817 | [0.1295, 0.3437] | 0.0014587"
+    },
+    {
+      "token": "0.1295",
+      "bound_to": "per_cluster.3.coverage_ci95.0",
+      "context": "| 55 | 0.21818181818181817 | [0.1295, 0.3437] | 0.0014587640762329"
+    },
+    {
+      "token": "0.3437",
+      "bound_to": "per_cluster.3.coverage_ci95.1",
+      "context": ".21818181818181817 | [0.1295, 0.3437] | 0.0014587640762329102 | 0."
+    },
+    {
+      "token": "0.0014587640762329102",
+      "bound_to": "qhat_global",
+      "context": "18181817 | [0.1295, 0.3437] | 0.0014587640762329102 | 0.21818181818181817 | True |"
+    },
+    {
+      "token": "0.21818181818181817",
+      "bound_to": "per_cluster.3.coverage",
+      "context": "37] | 0.0014587640762329102 | 0.21818181818181817 | True |  ## Provenance  git 1"
+    }
+  ],
   "unbound_claims": [],
   "forbidden": []
 }

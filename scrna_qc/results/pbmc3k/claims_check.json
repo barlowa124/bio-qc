@@ -1,6 +1,543 @@
 {
   "passed": true,
-  "n_claims": 104,
+  "n_claims": 107,
+  "claims": [
+    {
+      "token": "2700",
+      "bound_to": "cells_in",
+      "context": "report \u2014 pbmc3k  - cells in: 2700, genes in: 32738 - cells afte"
+    },
+    {
+      "token": "32738",
+      "bound_to": "genes_in",
+      "context": "- cells in: 2700, genes in: 32738 - cells after filtering: 2643,"
+    },
+    {
+      "token": "2643",
+      "bound_to": "steps.1.cells_after",
+      "context": "2738 - cells after filtering: 2643, genes after filtering: 13697"
+    },
+    {
+      "token": "13697",
+      "bound_to": "steps.2.genes_after",
+      "context": "2643, genes after filtering: 13697 - filter removals (cells / gen"
+    },
+    {
+      "token": "0",
+      "bound_to": "steps.0.cells_removed",
+      "context": "/ genes): min_genes_per_cell 0/0, max_pct_mt 57/0, min_cells"
+    },
+    {
+      "token": "0",
+      "bound_to": "steps.0.cells_removed",
+      "context": "genes): min_genes_per_cell 0/0, max_pct_mt 57/0, min_cells_p"
+    },
+    {
+      "token": "57",
+      "bound_to": "steps.1.cells_removed",
+      "context": "enes_per_cell 0/0, max_pct_mt 57/0, min_cells_per_gene 0/19041"
+    },
+    {
+      "token": "0",
+      "bound_to": "steps.0.cells_removed",
+      "context": "s_per_cell 0/0, max_pct_mt 57/0, min_cells_per_gene 0/19041 -"
+    },
+    {
+      "token": "0",
+      "bound_to": "steps.0.cells_removed",
+      "context": "t_mt 57/0, min_cells_per_gene 0/19041 - Leiden clusters: 7  #"
+    },
+    {
+      "token": "19041",
+      "bound_to": "steps.2.genes_removed",
+      "context": "mt 57/0, min_cells_per_gene 0/19041 - Leiden clusters: 7  ## Per-c"
+    },
+    {
+      "token": "7",
+      "bound_to": "n_clusters",
+      "context": "ne 0/19041 - Leiden clusters: 7  ## Per-cluster QC  | cluster |"
+    },
+    {
+      "token": "0",
+      "bound_to": "steps.0.cells_removed",
+      "context": "--|---|---|---|---|---|---| | 0 | 1172 | 44.34% | 2329.0 | 813"
+    },
+    {
+      "token": "1172",
+      "bound_to": "cluster_qc.0.n_cells",
+      "context": "--|---|---|---|---|---| | 0 | 1172 | 44.34% | 2329.0 | 813.5 | 1."
+    },
+    {
+      "token": "44.34%",
+      "bound_to": "cluster_qc.0.frac_of_total",
+      "context": "---|---|---|---| | 0 | 1172 | 44.34% | 2329.0 | 813.5 | 1.75 | RPS"
+    },
+    {
+      "token": "2329.0",
+      "bound_to": "cluster_qc.0.median_total_counts",
+      "context": "--|---| | 0 | 1172 | 44.34% | 2329.0 | 813.5 | 1.75 | RPS12 | | 1 |"
+    },
+    {
+      "token": "813.5",
+      "bound_to": "cluster_qc.0.median_n_genes",
+      "context": "0 | 1172 | 44.34% | 2329.0 | 813.5 | 1.75 | RPS12 | | 1 | 639 | 2"
+    },
+    {
+      "token": "1.75",
+      "bound_to": "cluster_qc.0.median_pct_mt",
+      "context": "2 | 44.34% | 2329.0 | 813.5 | 1.75 | RPS12 | | 1 | 639 | 24.18% |"
+    },
+    {
+      "token": "1",
+      "bound_to": "provenance.config.embed.leiden_resolution",
+      "context": ".0 | 813.5 | 1.75 | RPS12 | | 1 | 639 | 24.18% | 2617.0 | 944."
+    },
+    {
+      "token": "639",
+      "bound_to": "cluster_qc.1.n_cells",
+      "context": "813.5 | 1.75 | RPS12 | | 1 | 639 | 24.18% | 2617.0 | 944.0 | 2."
+    },
+    {
+      "token": "24.18%",
+      "bound_to": "cluster_qc.1.frac_of_total",
+      "context": "| 1.75 | RPS12 | | 1 | 639 | 24.18% | 2617.0 | 944.0 | 2.29 | FTL"
+    },
+    {
+      "token": "2617.0",
+      "bound_to": "cluster_qc.1.median_total_counts",
+      "context": "RPS12 | | 1 | 639 | 24.18% | 2617.0 | 944.0 | 2.29 | FTL | | 2 | 4"
+    },
+    {
+      "token": "944.0",
+      "bound_to": "cluster_qc.1.median_n_genes",
+      "context": "| 1 | 639 | 24.18% | 2617.0 | 944.0 | 2.29 | FTL | | 2 | 433 | 16."
+    },
+    {
+      "token": "2.29",
+      "bound_to": "cluster_qc.1.median_pct_mt",
+      "context": "9 | 24.18% | 2617.0 | 944.0 | 2.29 | FTL | | 2 | 433 | 16.38% | 1"
+    },
+    {
+      "token": "2",
+      "bound_to": "cluster_qc.0.median_pct_mt",
+      "context": "17.0 | 944.0 | 2.29 | FTL | | 2 | 433 | 16.38% | 1963.0 | 830."
+    },
+    {
+      "token": "433",
+      "bound_to": "cluster_qc.2.n_cells",
+      "context": "| 944.0 | 2.29 | FTL | | 2 | 433 | 16.38% | 1963.0 | 830.0 | 2."
+    },
+    {
+      "token": "16.38%",
+      "bound_to": "cluster_qc.2.frac_of_total",
+      "context": ".0 | 2.29 | FTL | | 2 | 433 | 16.38% | 1963.0 | 830.0 | 2.19 | NKG"
+    },
+    {
+      "token": "1963.0",
+      "bound_to": "cluster_qc.2.median_total_counts",
+      "context": "| FTL | | 2 | 433 | 16.38% | 1963.0 | 830.0 | 2.19 | NKG7 | | 3 |"
+    },
+    {
+      "token": "830.0",
+      "bound_to": "cluster_qc.2.median_n_genes",
+      "context": "| 2 | 433 | 16.38% | 1963.0 | 830.0 | 2.19 | NKG7 | | 3 | 342 | 12"
+    },
+    {
+      "token": "2.19",
+      "bound_to": "cluster_qc.2.median_pct_mt",
+      "context": "3 | 16.38% | 1963.0 | 830.0 | 2.19 | NKG7 | | 3 | 342 | 12.94% |"
+    },
+    {
+      "token": "3",
+      "bound_to": "provenance.config.qc.min_cells_per_gene",
+      "context": "3.0 | 830.0 | 2.19 | NKG7 | | 3 | 342 | 12.94% | 1764.0 | 675."
+    },
+    {
+      "token": "342",
+      "bound_to": "cluster_qc.3.n_cells",
+      "context": "| 830.0 | 2.19 | NKG7 | | 3 | 342 | 12.94% | 1764.0 | 675.5 | 2."
+    },
+    {
+      "token": "12.94%",
+      "bound_to": "cluster_qc.3.frac_of_total",
+      "context": "0 | 2.19 | NKG7 | | 3 | 342 | 12.94% | 1764.0 | 675.5 | 2.06 | CD7"
+    },
+    {
+      "token": "1764.0",
+      "bound_to": "cluster_qc.3.median_total_counts",
+      "context": "| NKG7 | | 3 | 342 | 12.94% | 1764.0 | 675.5 | 2.06 | CD74 | | 4 |"
+    },
+    {
+      "token": "675.5",
+      "bound_to": "cluster_qc.3.median_n_genes",
+      "context": "| 3 | 342 | 12.94% | 1764.0 | 675.5 | 2.06 | CD74 | | 4 | 36 | 1.3"
+    },
+    {
+      "token": "2.06",
+      "bound_to": "cluster_qc.3.median_pct_mt",
+      "context": "2 | 12.94% | 1764.0 | 675.5 | 2.06 | CD74 | | 4 | 36 | 1.36% | 52"
+    },
+    {
+      "token": "4",
+      "bound_to": "identifier",
+      "context": "4.0 | 675.5 | 2.06 | CD74 | | 4 | 36 | 1.36% | 5297.0 | 1570.0"
+    },
+    {
+      "token": "36",
+      "bound_to": "cluster_qc.4.n_cells",
+      "context": "| 675.5 | 2.06 | CD74 | | 4 | 36 | 1.36% | 5297.0 | 1570.0 | 1."
+    },
+    {
+      "token": "1.36%",
+      "bound_to": "cluster_qc.4.frac_of_total",
+      "context": ".5 | 2.06 | CD74 | | 4 | 36 | 1.36% | 5297.0 | 1570.0 | 1.96 | HL"
+    },
+    {
+      "token": "5297.0",
+      "bound_to": "cluster_qc.4.median_total_counts",
+      "context": "6 | CD74 | | 4 | 36 | 1.36% | 5297.0 | 1570.0 | 1.96 | HLA-DPA1 | |"
+    },
+    {
+      "token": "1570.0",
+      "bound_to": "cluster_qc.4.median_n_genes",
+      "context": "| | 4 | 36 | 1.36% | 5297.0 | 1570.0 | 1.96 | HLA-DPA1 | | 5 | 13 |"
+    },
+    {
+      "token": "1.96",
+      "bound_to": "cluster_qc.4.median_pct_mt",
+      "context": "6 | 1.36% | 5297.0 | 1570.0 | 1.96 | HLA-DPA1 | | 5 | 13 | 0.49%"
+    },
+    {
+      "token": "5",
+      "bound_to": "provenance.config.qc.max_pct_mt",
+      "context": "1570.0 | 1.96 | HLA-DPA1 | | 5 | 13 | 0.49% | 917.0 | 350.0 |"
+    },
+    {
+      "token": "13",
+      "bound_to": "cluster_qc.5.n_cells",
+      "context": "0.0 | 1.96 | HLA-DPA1 | | 5 | 13 | 0.49% | 917.0 | 350.0 | 1.57"
+    },
+    {
+      "token": "0.49%",
+      "bound_to": "cluster_qc.5.frac_of_total",
+      "context": "1.96 | HLA-DPA1 | | 5 | 13 | 0.49% | 917.0 | 350.0 | 1.57 | PF4"
+    },
+    {
+      "token": "917.0",
+      "bound_to": "cluster_qc.5.median_total_counts",
+      "context": "HLA-DPA1 | | 5 | 13 | 0.49% | 917.0 | 350.0 | 1.57 | PF4 | | 6 | 8"
+    },
+    {
+      "token": "350.0",
+      "bound_to": "cluster_qc.5.median_n_genes",
+      "context": "| | 5 | 13 | 0.49% | 917.0 | 350.0 | 1.57 | PF4 | | 6 | 8 | 0.3%"
+    },
+    {
+      "token": "1.57",
+      "bound_to": "cluster_qc.5.median_pct_mt",
+      "context": "13 | 0.49% | 917.0 | 350.0 | 1.57 | PF4 | | 6 | 8 | 0.3% | 10320"
+    },
+    {
+      "token": "6",
+      "bound_to": "per_cluster.6.n_test",
+      "context": "17.0 | 350.0 | 1.57 | PF4 | | 6 | 8 | 0.3% | 10320.5 | 2702.0"
+    },
+    {
+      "token": "8",
+      "bound_to": "cluster_qc.6.n_cells",
+      "context": "| 350.0 | 1.57 | PF4 | | 6 | 8 | 0.3% | 10320.5 | 2702.0 | 1."
+    },
+    {
+      "token": "0.3%",
+      "bound_to": "provenance.config.conformal.cal_frac",
+      "context": "50.0 | 1.57 | PF4 | | 6 | 8 | 0.3% | 10320.5 | 2702.0 | 1.82 | T"
+    },
+    {
+      "token": "10320.5",
+      "bound_to": "cluster_qc.6.median_total_counts",
+      "context": "1.57 | PF4 | | 6 | 8 | 0.3% | 10320.5 | 2702.0 | 1.82 | TYMS |  ## C"
+    },
+    {
+      "token": "2702.0",
+      "bound_to": "cluster_qc.6.median_n_genes",
+      "context": "| | 6 | 8 | 0.3% | 10320.5 | 2702.0 | 1.82 | TYMS |  ## Cluster-as"
+    },
+    {
+      "token": "1.82",
+      "bound_to": "cluster_qc.6.median_pct_mt",
+      "context": "8 | 0.3% | 10320.5 | 2702.0 | 1.82 | TYMS |  ## Cluster-assignmen"
+    },
+    {
+      "token": "0.1",
+      "bound_to": "cluster_qc.3.frac_of_total",
+      "context": "Mondrian conformal)  - alpha: 0.1, calibration cells: 794, held"
+    },
+    {
+      "token": "794",
+      "bound_to": "n_cal",
+      "context": "lpha: 0.1, calibration cells: 794, held-out cells: 1849 - poole"
+    },
+    {
+      "token": "1849",
+      "bound_to": "n_test",
+      "context": "n cells: 794, held-out cells: 1849 - pooled prediction-set covera"
+    },
+    {
+      "token": "0.8831800973499189",
+      "bound_to": "pooled_coverage",
+      "context": "oled prediction-set coverage: 0.8831800973499189 - mean set size: 0.88534342888"
+    },
+    {
+      "token": "0.8853434288804759",
+      "bound_to": "mean_set_size",
+      "context": "800973499189 - mean set size: 0.8853434288804759  | cluster | held-out cells | c"
+    },
+    {
+      "token": "0",
+      "bound_to": "steps.0.cells_removed",
+      "context": "--|---|---|---|---|---|---| | 0 | 820 | 0.8853658536585366 | ["
+    },
+    {
+      "token": "820",
+      "bound_to": "per_cluster.0.n_test",
+      "context": "--|---|---|---|---|---| | 0 | 820 | 0.8853658536585366 | [0.8617"
+    },
+    {
+      "token": "0.8853658536585366",
+      "bound_to": "per_cluster.0.coverage",
+      "context": "|---|---|---|---| | 0 | 820 | 0.8853658536585366 | [0.8617, 0.9054] | 0.0061925"
+    },
+    {
+      "token": "0.8617",
+      "bound_to": "per_cluster.0.coverage_ci95.0",
+      "context": "| 820 | 0.8853658536585366 | [0.8617, 0.9054] | 0.0061925053596496"
+    },
+    {
+      "token": "0.9054",
+      "bound_to": "per_cluster.0.coverage_ci95.1",
+      "context": "0.8853658536585366 | [0.8617, 0.9054] | 0.006192505359649658 | 0.8"
+    },
+    {
+      "token": "0.006192505359649658",
+      "bound_to": "per_cluster.0.qhat",
+      "context": "36585366 | [0.8617, 0.9054] | 0.006192505359649658 | 0.8902439024390244 | False |"
+    },
+    {
+      "token": "0.8902439024390244",
+      "bound_to": "per_cluster.0.mean_set_size",
+      "context": "054] | 0.006192505359649658 | 0.8902439024390244 | False | | 1 | 447 | 0.879194"
+    },
+    {
+      "token": "1",
+      "bound_to": "provenance.config.embed.leiden_resolution",
+      "context": ".8902439024390244 | False | | 1 | 447 | 0.8791946308724832 | ["
+    },
+    {
+      "token": "447",
+      "bound_to": "per_cluster.1.n_test",
+      "context": "2439024390244 | False | | 1 | 447 | 0.8791946308724832 | [0.8457"
+    },
+    {
+      "token": "0.8791946308724832",
+      "bound_to": "per_cluster.1.coverage",
+      "context": "4390244 | False | | 1 | 447 | 0.8791946308724832 | [0.8457, 0.9062] | 0.0013002"
+    },
+    {
+      "token": "0.8457",
+      "bound_to": "per_cluster.1.coverage_ci95.0",
+      "context": "| 447 | 0.8791946308724832 | [0.8457, 0.9062] | 0.0013002157211303"
+    },
+    {
+      "token": "0.9062",
+      "bound_to": "per_cluster.1.coverage_ci95.1",
+      "context": "0.8791946308724832 | [0.8457, 0.9062] | 0.001300215721130371 | 0.8"
+    },
+    {
+      "token": "0.001300215721130371",
+      "bound_to": "per_cluster.1.qhat",
+      "context": "08724832 | [0.8457, 0.9062] | 0.001300215721130371 | 0.8791946308724832 | False |"
+    },
+    {
+      "token": "0.8791946308724832",
+      "bound_to": "per_cluster.1.coverage",
+      "context": "062] | 0.001300215721130371 | 0.8791946308724832 | False | | 2 | 303 | 0.900990"
+    },
+    {
+      "token": "2",
+      "bound_to": "cluster_qc.0.median_pct_mt",
+      "context": ".8791946308724832 | False | | 2 | 303 | 0.900990099009901 | [0"
+    },
+    {
+      "token": "303",
+      "bound_to": "per_cluster.2.n_test",
+      "context": "1946308724832 | False | | 2 | 303 | 0.900990099009901 | [0.8622,"
+    },
+    {
+      "token": "0.900990099009901",
+      "bound_to": "per_cluster.2.coverage",
+      "context": "8724832 | False | | 2 | 303 | 0.900990099009901 | [0.8622, 0.9298] | 0.0255358"
+    },
+    {
+      "token": "0.8622",
+      "bound_to": "per_cluster.2.coverage_ci95.0",
+      "context": "| 303 | 0.900990099009901 | [0.8622, 0.9298] | 0.0255358815193176"
+    },
+    {
+      "token": "0.9298",
+      "bound_to": "per_cluster.2.coverage_ci95.1",
+      "context": "0.900990099009901 | [0.8622, 0.9298] | 0.025535881519317627 | 0.9"
+    },
+    {
+      "token": "0.025535881519317627",
+      "bound_to": "per_cluster.2.qhat",
+      "context": "99009901 | [0.8622, 0.9298] | 0.025535881519317627 | 0.900990099009901 | False |"
+    },
+    {
+      "token": "0.900990099009901",
+      "bound_to": "per_cluster.2.coverage",
+      "context": "298] | 0.025535881519317627 | 0.900990099009901 | False | | 3 | 239 | 0.924686"
+    },
+    {
+      "token": "3",
+      "bound_to": "provenance.config.qc.min_cells_per_gene",
+      "context": "0.900990099009901 | False | | 3 | 239 | 0.9246861924686193 | ["
+    },
+    {
+      "token": "239",
+      "bound_to": "per_cluster.3.n_test",
+      "context": "0990099009901 | False | | 3 | 239 | 0.9246861924686193 | [0.8841"
+    },
+    {
+      "token": "0.9246861924686193",
+      "bound_to": "per_cluster.3.coverage",
+      "context": "9009901 | False | | 3 | 239 | 0.9246861924686193 | [0.8841, 0.9518] | 0.0054275"
+    },
+    {
+      "token": "0.8841",
+      "bound_to": "per_cluster.3.coverage_ci95.0",
+      "context": "| 239 | 0.9246861924686193 | [0.8841, 0.9518] | 0.0054275393486022"
+    },
+    {
+      "token": "0.9518",
+      "bound_to": "per_cluster.3.coverage_ci95.1",
+      "context": "0.9246861924686193 | [0.8841, 0.9518] | 0.005427539348602295 | 0.9"
+    },
+    {
+      "token": "0.005427539348602295",
+      "bound_to": "per_cluster.3.qhat",
+      "context": "24686193 | [0.8841, 0.9518] | 0.005427539348602295 | 0.9246861924686193 | False |"
+    },
+    {
+      "token": "0.9246861924686193",
+      "bound_to": "per_cluster.3.coverage",
+      "context": "518] | 0.005427539348602295 | 0.9246861924686193 | False | | 4 | 25 | 0.48 | [0"
+    },
+    {
+      "token": "4",
+      "bound_to": "identifier",
+      "context": ".9246861924686193 | False | | 4 | 25 | 0.48 | [0.3003, 0.665]"
+    },
+    {
+      "token": "25",
+      "bound_to": "per_cluster.4.n_test",
+      "context": "6861924686193 | False | | 4 | 25 | 0.48 | [0.3003, 0.665] | 0.0"
+    },
+    {
+      "token": "0.48",
+      "bound_to": "per_cluster.4.coverage",
+      "context": "24686193 | False | | 4 | 25 | 0.48 | [0.3003, 0.665] | 0.00585526"
+    },
+    {
+      "token": "0.3003",
+      "bound_to": "per_cluster.4.coverage_ci95.0",
+      "context": "| False | | 4 | 25 | 0.48 | [0.3003, 0.665] | 0.00585526227951049"
+    },
+    {
+      "token": "0.665",
+      "bound_to": "per_cluster.4.coverage_ci95.1",
+      "context": "| | 4 | 25 | 0.48 | [0.3003, 0.665] | 0.005855262279510498 | 0.4"
+    },
+    {
+      "token": "0.005855262279510498",
+      "bound_to": "qhat_global",
+      "context": "25 | 0.48 | [0.3003, 0.665] | 0.005855262279510498 | 0.48 | True | | 5 | 9 | 0.55"
+    },
+    {
+      "token": "0.48",
+      "bound_to": "per_cluster.4.coverage",
+      "context": "665] | 0.005855262279510498 | 0.48 | True | | 5 | 9 | 0.555555555"
+    },
+    {
+      "token": "5",
+      "bound_to": "provenance.config.qc.max_pct_mt",
+      "context": "62279510498 | 0.48 | True | | 5 | 9 | 0.5555555555555556 | [0."
+    },
+    {
+      "token": "9",
+      "bound_to": "per_cluster.5.n_test",
+      "context": "9510498 | 0.48 | True | | 5 | 9 | 0.5555555555555556 | [0.2666"
+    },
+    {
+      "token": "0.5555555555555556",
+      "bound_to": "per_cluster.5.coverage",
+      "context": "498 | 0.48 | True | | 5 | 9 | 0.5555555555555556 | [0.2666, 0.8112] | 0.0058552"
+    },
+    {
+      "token": "0.2666",
+      "bound_to": "per_cluster.5.coverage_ci95.0",
+      "context": "5 | 9 | 0.5555555555555556 | [0.2666, 0.8112] | 0.0058552622795104"
+    },
+    {
+      "token": "0.8112",
+      "bound_to": "per_cluster.5.coverage_ci95.1",
+      "context": "0.5555555555555556 | [0.2666, 0.8112] | 0.005855262279510498 | 0.5"
+    },
+    {
+      "token": "0.005855262279510498",
+      "bound_to": "qhat_global",
+      "context": "55555556 | [0.2666, 0.8112] | 0.005855262279510498 | 0.5555555555555556 | True |"
+    },
+    {
+      "token": "0.5555555555555556",
+      "bound_to": "per_cluster.5.coverage",
+      "context": "112] | 0.005855262279510498 | 0.5555555555555556 | True | | 6 | 6 | 0.5 | [0.18"
+    },
+    {
+      "token": "6",
+      "bound_to": "per_cluster.6.n_test",
+      "context": "0.5555555555555556 | True | | 6 | 6 | 0.5 | [0.1876, 0.8124] |"
+    },
+    {
+      "token": "6",
+      "bound_to": "per_cluster.6.n_test",
+      "context": "55555555555556 | True | | 6 | 6 | 0.5 | [0.1876, 0.8124] | 0.0"
+    },
+    {
+      "token": "0.5",
+      "bound_to": "provenance.config.embed.leiden_resolution",
+      "context": "5555555556 | True | | 6 | 6 | 0.5 | [0.1876, 0.8124] | 0.0058552"
+    },
+    {
+      "token": "0.1876",
+      "bound_to": "per_cluster.6.coverage_ci95.0",
+      "context": "556 | True | | 6 | 6 | 0.5 | [0.1876, 0.8124] | 0.0058552622795104"
+    },
+    {
+      "token": "0.8124",
+      "bound_to": "per_cluster.6.coverage_ci95.1",
+      "context": "ue | | 6 | 6 | 0.5 | [0.1876, 0.8124] | 0.005855262279510498 | 0.5"
+    },
+    {
+      "token": "0.005855262279510498",
+      "bound_to": "qhat_global",
+      "context": "6 | 0.5 | [0.1876, 0.8124] | 0.005855262279510498 | 0.5 | True |  ## Provenance"
+    },
+    {
+      "token": "0.5",
+      "bound_to": "provenance.config.embed.leiden_resolution",
+      "context": "124] | 0.005855262279510498 | 0.5 | True |  ## Provenance  git 1"
+    }
+  ],
   "unbound_claims": [],
   "forbidden": []
 }
