@@ -3,9 +3,9 @@
 [![ci](https://github.com/barlowa124/bio-qc/actions/workflows/ci.yml/badge.svg)](https://github.com/barlowa124/bio-qc/actions/workflows/ci.yml)
 
 
-Quality-control pipelines for single-cell, spatial, and cytometry data.
-Each subdirectory is a self-contained package with its own tests, config,
-and AGENTS.md.
+Quality-control pipelines for single-cell, spatial, cytometry, and
+multi-omic data. Each subdirectory is a self-contained package with its
+own tests, config, and AGENTS.md.
 
 
 ## Where this sits in the portfolio
@@ -31,6 +31,7 @@ ML).
 | `spatial_qc/` | Visium spot-level QC metrics plus a filtering-strategy benchmark (fixed cutoffs vs MAD-adaptive vs tissue-only), with a committed run on the public V1 Adult Mouse Brain export. |
 | `organoid_qc/` | Organoid fidelity scoring: scRNA-seq organoid clusters vs tissue-reference centroids, per-cluster and per-cell-type fidelity, fail-closed QC flags. |
 | `scrna_qc/` | scverse-based single-cell RNA QC: threshold filtering with an auditable waterfall, UMAP + Leiden, Wilcoxon markers, and a per-cluster QC table. Deterministic synthetic demo or public AnnData input (PBMC 3k / CELLxGENE-compatible), Snakemake DAG. |
+| `cultivated_meat_multiomic/` | Multi-omic (RNA + metabolic flux) methods demo on public data: clustering, biomarker-panel selection with calibration and conformal intervals, ablation, drift monitoring, and cross-species checks on bovine/porcine muscle. A methods demonstration, not a manufacturing claim. |
 
 ## Running tests
 
