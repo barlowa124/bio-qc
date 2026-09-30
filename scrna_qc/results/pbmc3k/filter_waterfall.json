@@ -1,0 +1,35 @@
+{
+  "cells_in": 2700,
+  "genes_in": 32738,
+  "steps": [
+    {
+      "stage": "min_genes_per_cell",
+      "cells_before": 2700,
+      "cells_after": 2700,
+      "cells_removed": 0,
+      "genes_before": 32738,
+      "genes_after": 32738,
+      "genes_removed": 0
+    },
+    {
+      "stage": "max_pct_mt",
+      "cells_before": 2700,
+      "cells_after": 2643,
+      "cells_removed": 57,
+      "genes_before": 32738,
+      "genes_after": 32738,
+      "genes_removed": 0
+    },
+    {
+      "stage": "min_cells_per_gene",
+      "cells_before": 2643,
+      "cells_after": 2643,
+      "cells_removed": 0,
+      "genes_before": 32738,
+      "genes_after": 13697,
+      "genes_removed": 19041
+    }
+  ],
+  "cells_out": 2643,
+  "genes_out": 13697
+}

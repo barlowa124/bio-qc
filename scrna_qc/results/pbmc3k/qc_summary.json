@@ -1,0 +1,144 @@
+{
+  "dataset_mode": "pbmc3k",
+  "n_cells": 2643,
+  "n_clusters": 8,
+  "filter_waterfall": {
+    "cells_in": 2700,
+    "genes_in": 32738,
+    "steps": [
+      {
+        "stage": "min_genes_per_cell",
+        "cells_before": 2700,
+        "cells_after": 2700,
+        "cells_removed": 0,
+        "genes_before": 32738,
+        "genes_after": 32738,
+        "genes_removed": 0
+      },
+      {
+        "stage": "max_pct_mt",
+        "cells_before": 2700,
+        "cells_after": 2643,
+        "cells_removed": 57,
+        "genes_before": 32738,
+        "genes_after": 32738,
+        "genes_removed": 0
+      },
+      {
+        "stage": "min_cells_per_gene",
+        "cells_before": 2643,
+        "cells_after": 2643,
+        "cells_removed": 0,
+        "genes_before": 32738,
+        "genes_after": 13697,
+        "genes_removed": 19041
+      }
+    ],
+    "cells_out": 2643,
+    "genes_out": 13697
+  },
+  "cluster_qc": [
+    {
+      "cluster": "0",
+      "n_cells": 1175,
+      "frac_of_total": 0.4446,
+      "median_total_counts": 2327.0,
+      "median_n_genes": 813.0,
+      "median_pct_mt": 1.75,
+      "top_marker": "RPS12"
+    },
+    {
+      "cluster": "1",
+      "n_cells": 481,
+      "frac_of_total": 0.182,
+      "median_total_counts": 2331.0,
+      "median_n_genes": 860.0,
+      "median_pct_mt": 2.23,
+      "top_marker": "LYZ"
+    },
+    {
+      "cluster": "2",
+      "n_cells": 430,
+      "frac_of_total": 0.1627,
+      "median_total_counts": 1964.0,
+      "median_n_genes": 831.0,
+      "median_pct_mt": 2.19,
+      "top_marker": "NKG7"
+    },
+    {
+      "cluster": "3",
+      "n_cells": 342,
+      "frac_of_total": 0.1294,
+      "median_total_counts": 1764.0,
+      "median_n_genes": 675.5,
+      "median_pct_mt": 2.06,
+      "top_marker": "CD74"
+    },
+    {
+      "cluster": "4",
+      "n_cells": 158,
+      "frac_of_total": 0.0598,
+      "median_total_counts": 3842.5,
+      "median_n_genes": 1268.5,
+      "median_pct_mt": 2.41,
+      "top_marker": "LST1"
+    },
+    {
+      "cluster": "5",
+      "n_cells": 36,
+      "frac_of_total": 0.0136,
+      "median_total_counts": 5297.0,
+      "median_n_genes": 1570.0,
+      "median_pct_mt": 1.96,
+      "top_marker": "HLA-DPA1"
+    },
+    {
+      "cluster": "6",
+      "n_cells": 13,
+      "frac_of_total": 0.0049,
+      "median_total_counts": 917.0,
+      "median_n_genes": 350.0,
+      "median_pct_mt": 1.57,
+      "top_marker": "PF4"
+    },
+    {
+      "cluster": "7",
+      "n_cells": 8,
+      "frac_of_total": 0.003,
+      "median_total_counts": 10320.5,
+      "median_n_genes": 2702.0,
+      "median_pct_mt": 1.82,
+      "top_marker": "TYMS"
+    }
+  ],
+  "provenance": {
+    "git_sha": "0976db2",
+    "scanpy": "1.9.8",
+    "anndata": "0.10.9",
+    "config": {
+      "paths": {
+        "data_dir": "data/pbmc3k",
+        "results_dir": "results/pbmc3k"
+      },
+      "dataset": {
+        "mode": "pbmc3k",
+        "h5ad_path": null
+      },
+      "qc": {
+        "min_genes_per_cell": 200,
+        "min_cells_per_gene": 3,
+        "max_pct_mt": 5.0,
+        "mt_prefix": "MT-"
+      },
+      "embed": {
+        "target_sum": 10000,
+        "n_hvg": 2000,
+        "n_pcs": 30,
+        "n_neighbors": 15,
+        "leiden_resolution": 0.5,
+        "n_markers": 5,
+        "seed": 7
+      }
+    }
+  }
+}

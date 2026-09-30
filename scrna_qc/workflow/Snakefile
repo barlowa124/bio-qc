@@ -6,30 +6,47 @@
 import os
 import sys
 
+# The stage modules read SCRNA_QC_CONFIG themselves; the Snakefile reads
+# the same file so paths. stay single-sourced in the yaml.
+import scrna_qc.util as _util  # noqa: E402  (src/ on PYTHONPATH)
+
+_CFG = _util.load_config()
+DATA_DIR = _CFG.get("paths", {}).get("data_dir", "data")
+RESULTS_DIR = _CFG.get("paths", {}).get("results_dir", "results")
+
 # Interpreter for the stage commands: PYTHON env var wins, else the
 # interpreter that launched snakemake.
 PY = os.environ.get("PYTHON", sys.executable)
 
+RAW_H5AD = f"{DATA_DIR}/raw/sample.h5ad"
+FILTERED = f"{DATA_DIR}/processed/filtered.h5ad"
+EMBEDDED = f"{DATA_DIR}/processed/embedded.h5ad"
+WATERFALL = f"{RESULTS_DIR}/filter_waterfall.json"
+MARKERS = f"{RESULTS_DIR}/markers.csv"
+CLUSTER_CSV = f"{RESULTS_DIR}/cluster_qc.csv"
+SUMMARY = f"{RESULTS_DIR}/qc_summary.json"
+UMAP = f"{RESULTS_DIR}/umap.png"
+
 
 rule all:
     input:
-        "results/qc_summary.json",
-        "results/umap.png",
+        SUMMARY,
+        UMAP,
 
 
 rule data:
     output:
-        "data/raw/sample.h5ad",
+        RAW_H5AD,
     shell:
         "{PY} -m scrna_qc.data {output}"
 
 
 rule qc_filter:
     input:
-        "data/raw/sample.h5ad",
+        RAW_H5AD,
     output:
-        filtered="data/processed/filtered.h5ad",
-        waterfall="results/filter_waterfall.json",
+        filtered=FILTERED,
+        waterfall=WATERFALL,
     shell:
         "{PY} -m scrna_qc.filter_cells {input} {output.filtered}"
         " {output.waterfall}"
@@ -37,23 +54,23 @@ rule qc_filter:
 
 rule embed:
     input:
-        "data/processed/filtered.h5ad",
+        FILTERED,
     output:
-        embedded="data/processed/embedded.h5ad",
-        markers="results/markers.csv",
+        embedded=EMBEDDED,
+        markers=MARKERS,
     shell:
         "{PY} -m scrna_qc.embed {input} {output.embedded} {output.markers}"
 
 
 rule report:
     input:
-        embedded="data/processed/embedded.h5ad",
-        markers="results/markers.csv",
-        waterfall="results/filter_waterfall.json",
+        embedded=EMBEDDED,
+        markers=MARKERS,
+        waterfall=WATERFALL,
     output:
-        cluster_csv="results/cluster_qc.csv",
-        summary="results/qc_summary.json",
-        umap="results/umap.png",
+        cluster_csv=CLUSTER_CSV,
+        summary=SUMMARY,
+        umap=UMAP,
     shell:
         "{PY} -m scrna_qc.report {input.embedded} {input.markers}"
         " {input.waterfall} {output.cluster_csv} {output.summary}"

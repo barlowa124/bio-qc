@@ -1,5 +1,12 @@
 # Single source of truth: dataset, QC thresholds, embedding parameters.
 
+# Where the DAG reads raw/intermediate h5ad (gitignored) and writes
+# committed artifacts. Alternate configs point results elsewhere so a
+# real-data run never overwrites the demo outputs.
+paths:
+  data_dir: data
+  results_dir: results
+
 dataset:
   # "demo" generates a deterministic synthetic AnnData with known
   # populations and injected low-quality cells.

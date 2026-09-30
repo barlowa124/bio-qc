@@ -1,0 +1,25 @@
+# Real-data run: public 10x PBMC 3k via sc.datasets.pbmc3k().
+# Downloaded once into scanpy's cache; never committed.
+
+paths:
+  data_dir: data/pbmc3k
+  results_dir: results/pbmc3k
+
+dataset:
+  mode: pbmc3k
+  h5ad_path: null
+
+qc:
+  min_genes_per_cell: 200
+  min_cells_per_gene: 3
+  max_pct_mt: 5.0
+  mt_prefix: "MT-"
+
+embed:
+  target_sum: 10000
+  n_hvg: 2000
+  n_pcs: 30
+  n_neighbors: 15
+  leiden_resolution: 0.5
+  n_markers: 5
+  seed: 7
