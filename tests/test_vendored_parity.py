@@ -27,8 +27,11 @@ CLAIMS_COPIES = [
     ROOT / "statgen" / "src" / "statgen" / "claims.py",
 ]
 
-# sha256 of the claims verifier as ported from oncology_coscientist —
-# bio-qc-internal pin; two consumers, drift fails here.
+# sha256 of the claims verifier as ported from oncology_coscientist.
+# Three consumers in the portfolio: scrna_qc + statgen (here) and
+# llm-posttraining/evals/claims.py, whose copy is pinned to this digest
+# by llm-posttraining's own test_eval_report suite — cross-repo drift
+# fails on whichever side is edited.
 CLAIMS_SHA256 = \
     "475eb4a6a338e363374c0810bf8f3861aec16cd41ae0c4ec2e0fbb54a6cc74a2"
 
