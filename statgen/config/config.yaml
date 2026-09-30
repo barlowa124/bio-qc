@@ -46,6 +46,8 @@ qc:
 
 strat:
   n_pcs: 10
+  kinship_flag: 0.125          # GRM off-diagonal above ~third-degree
+                               # relatives gets counted in the report
 
 assoc:
   kind: linear                 # linear | logistic

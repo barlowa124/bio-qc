@@ -28,8 +28,10 @@
   "n_hits_other": 0,
   "ld_window_kb": 0,
   "pc1_ancestry_r": 0.9979835434303432,
+  "kinship_offdiag_max": 0.07928432965980012,
+  "n_related_pairs": 0,
   "provenance": {
-    "git": "df4a8c1",
+    "git": "6228285",
     "python": "3.11.16",
     "numpy": "1.26.4",
     "scipy": "1.17.1",

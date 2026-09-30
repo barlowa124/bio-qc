@@ -16,7 +16,9 @@ Cohort mode `demo`; trait `synthetic`. Synthetic and simulated-trait numbers exe
 
 ## Stratification
 
-10 PCs computed on 3840 variants; PC1 explains 6.0% of genotype variance and correlates with the ancestry label at |r| = 1.00.
+10 PCs computed on 3840 variants; PC1 explains 6.0% of genotype variance
+
+Relatedness scan (GRM off-diagonal after projecting out the 10 PCs, so ancestry sharing does not count as relatedness): max 0.079, sd 0.015, 0 pairs above the 0.125 flag. and correlates with the ancestry label at |r| = 1.00.
 
 ## Association
 

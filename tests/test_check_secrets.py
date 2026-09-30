@@ -45,6 +45,22 @@ class ScanTextTests(unittest.TestCase):
         # CSS classes and short fragments are not keys.
         self.assertEqual(check_secrets.scan_text('class="sk-card"', "x.css"), [])
 
+    def test_scanner_source_does_not_self_trigger(self):
+        # the staged scanner + this test file must not flag themselves
+        for path in (SCANNER, Path(__file__)):
+            self.assertEqual(
+                check_secrets.scan_text(
+                    path.read_text(), str(path)), [],
+                f"{path.name} would block its own commit")
+
+    def test_new_token_families(self):
+        self.assertTrue(check_secrets.scan_text(
+            "pypi-" + "AgEIcHlwaS5vcmc" * 3, "c.toml"))
+        self.assertTrue(check_secrets.scan_text(
+            "glpat-" + "a1B2c3D4e5F6g7H8i9J0", "c.cfg"))
+        self.assertTrue(check_secrets.scan_text(
+            "npm_" + "aB" * 18, "c.ini"))
+
     def test_private_key_block_detected(self):
         # split literal so the scanner doesn't flag this test file
         hits = check_secrets.scan_text(

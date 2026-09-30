@@ -16,7 +16,9 @@ Cohort mode `vcf`; trait `real_genotypes_simulated_trait`. Synthetic and simulat
 
 ## Stratification
 
-10 PCs computed on 1899 variants; PC1 explains 9.0% of genotype variance; 5 ancestry groups capture 4.6% of its variance (eta^2).
+10 PCs computed on 1899 variants; PC1 explains 9.0% of genotype variance
+
+Relatedness scan (GRM off-diagonal after projecting out the 10 PCs, so ancestry sharing does not count as relatedness): max 1.150, sd 0.058, 79583 pairs above the 0.125 flag — with few regional variants the estimate is overdispersed; a high count reflects LD, not cryptic relatedness.; 5 ancestry groups capture 4.6% of its variance (eta^2).
 
 ## Association
 

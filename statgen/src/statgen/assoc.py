@@ -156,6 +156,10 @@ def main() -> None:
         "vid": z["vid"].astype(str), "chrom": z["chrom"].astype(str),
         "pos": z["pos"].astype(int),
         "a1": z["a1"].astype(str), "a2": z["a2"].astype(str),
+        # beta is per copy of a1, the counted allele
+        "a1_freq": np.nanmean(np.where(z["G"] < 0, np.nan,
+                                       z["G"].astype(float)), axis=0) / 2.0,
+        "n_called": (z["G"] >= 0).sum(axis=0),
         "beta": beta, "se": se, "chi2": stat, "p": p,
     })
     results_dir.mkdir(parents=True, exist_ok=True)

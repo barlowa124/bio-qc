@@ -38,6 +38,10 @@ What the committed demo artifacts show:
   contamination.
 - PC1 recovers the planted structure at |r| = 1.00 with the ancestry
   label on 6.0% of genotype variance.
+- The relatedness scan (GRM off-diagonal on PC-projected genotypes,
+  so ancestry sharing does not count as relatedness) flags 0 pairs
+  above the 0.125 third-degree mark; a planted-duplicates test shows
+  the same scan catching true replicates.
 - PC covariates control inflation, dose-resolved: lambda_GC 2.63 with
   no PCs, 0.97 already at 1 PC, 0.97 at 2 PCs. One component absorbs
   the entire two-group confound.
@@ -80,6 +84,11 @@ Committed artifacts show what real data does to a GWAS pipeline:
   structure than the planted trait loads on. It stays above 1 because a
   chr22-head slice is one LD-dense region and genome-wide lambda needs
   genome-wide sampling.
+- The GRM relatedness scan flags 79,583 pairs at kinship > 0.125 with
+  off-diagonal sd 0.058 (4x the demo's dispersion). 1,866 colocalized
+  variants cannot estimate kinship reliably; the report prints the
+  count with that caveat rather than letting it read as a cohort of
+  cryptic relatives.
 - 19 Bonferroni hits decompose as 2 recovered causals + 17 LD proxies
   within 250 kb + 0 unexplained. Two planted causals are perfectly
   collinear (identical statistics 619 bp apart). Their opposing true

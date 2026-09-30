@@ -26,6 +26,10 @@
   ],
   "n_variants_used": 3840,
   "n_samples": 799,
+  "kinship_flag": 0.125,
+  "kinship_offdiag_max": 0.07928432965980012,
+  "kinship_offdiag_sd": 0.01526019157011981,
+  "n_related_pairs": 0,
   "pc1_ancestry_r": 0.9979835434303432,
   "pc1_ancestry_eta2": 0.9959711529577823,
   "n_ancestry_groups": 2

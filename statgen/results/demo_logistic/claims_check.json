@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "n_claims": 38,
+  "n_claims": 43,
   "claims": [
     {
       "token": "800",
@@ -85,7 +85,32 @@
     {
       "token": "6.0%",
       "bound_to": "summary.n_causal_post_qc",
-      "context": "n 3840 variants; PC1 explains 6.0% of genotype variance and corr"
+      "context": "n 3840 variants; PC1 explains 6.0% of genotype variance  Related"
+    },
+    {
+      "token": "10",
+      "bound_to": "strat_summary.n_pcs",
+      "context": "onal after projecting out the 10 PCs, so ancestry sharing does"
+    },
+    {
+      "token": "0.079",
+      "bound_to": "strat_summary.kinship_offdiag_max",
+      "context": "ot count as relatedness): max 0.079, sd 0.015, 0 pairs above the"
+    },
+    {
+      "token": "0.015",
+      "bound_to": "strat_summary.kinship_offdiag_sd",
+      "context": "s relatedness): max 0.079, sd 0.015, 0 pairs above the 0.125 flag"
+    },
+    {
+      "token": "0",
+      "bound_to": "qc_waterfall.steps.0.removed",
+      "context": "edness): max 0.079, sd 0.015, 0 pairs above the 0.125 flag. a"
+    },
+    {
+      "token": "0.125",
+      "bound_to": "strat_summary.kinship_flag",
+      "context": ", sd 0.015, 0 pairs above the 0.125 flag. and correlates with the"
     },
     {
       "token": "3840",

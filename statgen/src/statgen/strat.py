@@ -35,17 +35,40 @@ def standardize(G: np.ndarray) -> np.ndarray:
     return Z
 
 
-def pca(Z: np.ndarray, k: int) -> tuple[np.ndarray, np.ndarray]:
-    """Top-k right-singular coords and eigenvalues of Z Z^T / (V-1)."""
+def pca(Z: np.ndarray, k: int) -> tuple[np.ndarray, np.ndarray,
+                                       np.ndarray]:
+    """Top-k sample coords, eigenvalues of Z Z^T / (V-1), and the
+    variant loadings (right singular vectors)."""
     v = Z.shape[1]
     _, s, vt = np.linalg.svd(Z, full_matrices=False)
     eig = (s ** 2) / max(v - 1, 1)
     pcs = Z @ vt[:k].T
-    return pcs, eig
+    return pcs, eig, vt
+
+
+def kinship_pairs(Z: np.ndarray, loadings: np.ndarray, k_proj: int,
+                  flag: float) -> tuple[float, int]:
+    """Genomic relatedness off-diagonal scan on PC-projected
+    genotypes (the PC-AiR idea, simplified): in a structured cohort the
+    raw Z Z^T / V off-diagonal captures ancestry sharing, not recent
+    relatedness, so the top variant-loadings are projected out first.
+    Pairs above `flag` (0.125 ~ third-degree) are cryptic relatives.
+    Returns (max off-diagonal, off-diagonal sd, flagged pair count).
+    The sd matters: with few or LD-dense variants the estimate is
+    overdispersed and a high flag count means the estimate is
+    unreliable, not that the cohort is full of relatives."""
+    n, v = Z.shape
+    vk = loadings[:k_proj]
+    Zr = Z - (Z @ vk.T) @ vk
+    grm = (Zr @ Zr.T) / v
+    iu = np.triu_indices(n, k=1)
+    off = grm[iu]
+    return float(off.max()), float(off.std()), int((off > flag).sum())
 
 
 def run(G: np.ndarray, n_pcs: int) -> tuple[np.ndarray, np.ndarray]:
-    return pca(standardize(G), n_pcs)
+    pcs, eig, _ = pca(standardize(G), n_pcs)
+    return pcs, eig
 
 
 def main() -> None:
@@ -56,8 +79,11 @@ def main() -> None:
                 allow_pickle=True)
     n_pcs = int(cfg["strat"]["n_pcs"])
 
-    pcs, eig = run(z["G"], n_pcs)
+    Z = standardize(z["G"])
+    pcs, eig, vt = pca(Z, n_pcs)
     var_expl = eig / eig.sum()
+    k_flag = float(cfg["strat"].get("kinship_flag", 0.125))
+    kin_max, kin_sd, n_related = kinship_pairs(Z, vt, n_pcs, k_flag)
 
     summary = {
         "n_pcs": n_pcs,
@@ -65,6 +91,10 @@ def main() -> None:
         "top_eigenvalues": [float(x) for x in eig[:n_pcs]],
         "n_variants_used": int(z["G"].shape[1]),
         "n_samples": int(z["G"].shape[0]),
+        "kinship_flag": k_flag,
+        "kinship_offdiag_max": kin_max,
+        "kinship_offdiag_sd": kin_sd,
+        "n_related_pairs": n_related,
     }
     if "ancestry" in z and z["ancestry"].size:
         anc = z["ancestry"].astype(float)

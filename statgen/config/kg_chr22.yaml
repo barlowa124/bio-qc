@@ -51,6 +51,7 @@ qc:
 
 strat:
   n_pcs: 10
+  kinship_flag: 0.125
 
 assoc:
   kind: linear

@@ -1,6 +1,6 @@
 {
   "passed": true,
-  "n_claims": 51,
+  "n_claims": 56,
   "claims": [
     {
       "token": "2504",
@@ -85,17 +85,42 @@
     {
       "token": "9.0%",
       "bound_to": "strat_summary.var_explained.0",
-      "context": "n 1899 variants; PC1 explains 9.0% of genotype variance; 5 ances"
+      "context": "n 1899 variants; PC1 explains 9.0% of genotype variance  Related"
+    },
+    {
+      "token": "10",
+      "bound_to": "strat_summary.n_pcs",
+      "context": "onal after projecting out the 10 PCs, so ancestry sharing does"
+    },
+    {
+      "token": "1.150",
+      "bound_to": "strat_summary.kinship_offdiag_max",
+      "context": "ot count as relatedness): max 1.150, sd 0.058, 79583 pairs above"
+    },
+    {
+      "token": "0.058",
+      "bound_to": "strat_summary.kinship_offdiag_sd",
+      "context": "s relatedness): max 1.150, sd 0.058, 79583 pairs above the 0.125"
+    },
+    {
+      "token": "79583",
+      "bound_to": "strat_summary.n_related_pairs",
+      "context": "edness): max 1.150, sd 0.058, 79583 pairs above the 0.125 flag \u2014"
+    },
+    {
+      "token": "0.125",
+      "bound_to": "strat_summary.kinship_flag",
+      "context": "0.058, 79583 pairs above the 0.125 flag \u2014 with few regional vari"
     },
     {
       "token": "5",
       "bound_to": "strat_summary.n_ancestry_groups",
-      "context": "ns 9.0% of genotype variance; 5 ancestry groups capture 4.6%"
+      "context": "LD, not cryptic relatedness.; 5 ancestry groups capture 4.6%"
     },
     {
       "token": "4.6%",
       "bound_to": "strat_summary.pc1_ancestry_eta2",
-      "context": "ce; 5 ancestry groups capture 4.6% of its variance (eta^2).  ##"
+      "context": "s.; 5 ancestry groups capture 4.6% of its variance (eta^2).  ##"
     },
     {
       "token": "2",
@@ -149,7 +174,7 @@
     },
     {
       "token": "1",
-      "bound_to": "summary.causal_beta_corr",
+      "bound_to": "strat_summary.kinship_offdiag_max",
       "context": "variate PCs: 0 PCs -> 11.037, 1 PCs -> 5.050, 2 PCs -> 7.583,"
     },
     {
@@ -234,7 +259,7 @@
     },
     {
       "token": "1",
-      "bound_to": "summary.causal_beta_corr",
+      "bound_to": "strat_summary.kinship_offdiag_max",
       "context": "red at Bonferroni (6 planted; 1 failed pooled HWE \u2014 the Wahlu"
     },
     {

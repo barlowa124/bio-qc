@@ -169,6 +169,22 @@ def test_het_filter_flags_outlier_not_population():
     assert not keep2[0] and keep2[1:].all()
 
 
+def test_kinship_scan_flags_duplicates_not_ancestry():
+    cohort, _ = _demo()
+    G, _, _, _, _ = _qc()
+    Z = strat.standardize(G)
+    _, _, vt = strat.pca(Z, 4)
+    # same-ancestry pairs are not cryptic relatives: PC projection
+    # removes the structure contribution to the GRM off-diagonal
+    mx, sd, n_pairs = strat.kinship_pairs(Z, vt, 4, 0.125)
+    assert n_pairs < 200, f"ancestry pairs should not flag: {n_pairs}"
+    G2 = np.vstack([G, G[:5]])  # five duplicated samples
+    Z2 = strat.standardize(G2)
+    _, _, vt2 = strat.pca(Z2, 4)
+    mx2, sd2, n_pairs2 = strat.kinship_pairs(Z2, vt2, 4, 0.125)
+    assert n_pairs2 >= 5 and mx2 > 0.5
+
+
 def test_binary_trait_is_generated():
     cfg = {"dataset": {"demo": {
         "seed": 11, "n_samples": 200, "n_variants": 300,

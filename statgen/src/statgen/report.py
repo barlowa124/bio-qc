@@ -117,6 +117,8 @@ def main() -> None:
         "n_hits_other": n_hits_other,
         "ld_window_kb": 250 if real_coords else 0,
         "pc1_ancestry_r": strat.get("pc1_ancestry_r"),
+        "kinship_offdiag_max": strat.get("kinship_offdiag_max"),
+        "n_related_pairs": strat.get("n_related_pairs"),
         "provenance": {
             "git": git_sha(),
             "python": sys.version.split()[0],
@@ -160,6 +162,20 @@ def main() -> None:
         f"{strat['n_variants_used']} variants; PC1 explains "
         f"{ve:.1f}% of genotype variance",
     ]
+    if strat.get("n_related_pairs") is not None:
+        lines += [
+            "",
+            "Relatedness scan (GRM off-diagonal after projecting out "
+            f"the {strat['n_pcs']} PCs, so ancestry sharing does not "
+            f"count as relatedness): max {strat['kinship_offdiag_max']:.3f}, "
+            f"sd {strat['kinship_offdiag_sd']:.3f}, "
+            f"{strat['n_related_pairs']} pairs above the "
+            f"{strat['kinship_flag']} flag"
+            + (" — with few regional variants the estimate is "
+               "overdispersed; a high count reflects LD, not cryptic "
+               "relatedness." if strat["n_variants_used"] < 50000
+               and strat["n_related_pairs"] > 0 else "."),
+        ]
     if strat.get("pc1_ancestry_r") is not None:
         lines[-1] += (
             f" and correlates with the ancestry label at "
