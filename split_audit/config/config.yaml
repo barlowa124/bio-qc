@@ -1,0 +1,11 @@
+# single source of truth for audit settings
+audit:
+  k: 3                    # k-mer length for the sequence-similarity proxy
+  jaccard_threshold: 0.6  # cross-split pairs at or above this are flagged
+  report_top: 10          # worst pairs shown in the report
+demo:
+  seed: 7
+  n_train: 40
+  n_test: 15
+  n_planted: 3            # planted near-duplicate test sequences
+  n_planted_scaffolds: 2  # planted shared scaffold ids

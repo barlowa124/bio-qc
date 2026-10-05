@@ -1,0 +1,17 @@
+{
+  "n_rows": 55,
+  "n_scaffolds": 53,
+  "n_shared_scaffolds": 2,
+  "n_leaked_items": 4,
+  "leaked_items": [
+    "mol-000",
+    "mol-001",
+    "mol-042",
+    "mol-045"
+  ],
+  "shared_scaffolds": [
+    "scaf-0",
+    "scaf-1"
+  ],
+  "scaffold_disjoint": false
+}

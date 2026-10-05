@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "split-audit"
+version = "0.1.0"
+description = "Train/test split-leakage auditor: scaffold-id collisions and k-mer sequence-similarity flags"
+requires-python = ">=3.9"
+
+[project.scripts]
+split-audit = "split_audit.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

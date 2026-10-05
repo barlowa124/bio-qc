@@ -1,0 +1,38 @@
+{
+  "n_rows": 55,
+  "splits": [
+    "test",
+    "train"
+  ],
+  "k": 3,
+  "jaccard_threshold": 0.6,
+  "n_cross_split_pairs": 600,
+  "n_flagged_pairs": 3,
+  "flagged_pairs": [
+    {
+      "a": "te-000",
+      "b": "tr-018",
+      "similarity": 0.7575757575757576
+    },
+    {
+      "a": "te-001",
+      "b": "tr-006",
+      "similarity": 0.7575757575757576
+    },
+    {
+      "a": "te-002",
+      "b": "tr-031",
+      "similarity": 0.7313432835820896
+    }
+  ],
+  "n_flagged_items": 6,
+  "flagged_items": [
+    "te-000",
+    "te-001",
+    "te-002",
+    "tr-006",
+    "tr-018",
+    "tr-031"
+  ],
+  "leakage_free": false
+}
