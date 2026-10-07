@@ -10,6 +10,16 @@ cytometry and multi-omic data. Each subdirectory is a self-contained
 package with its own tests plus config and an AGENTS.md.
 
 
+## 60-second demo
+
+```bash
+cd split_audit && pip install -e .
+split-audit demo    # plants 5 leaks in synthetic rows, recovers all 5
+```
+
+![organoid_qc fidelity map on the deterministic synthetic demo: coverage 0.67, unmapped 0.25](organoid_qc/results/umap.png)
+
+
 ## Where this sits in the portfolio
 
 `bio-qc` is the **lab-data QC pipelines** repo. It holds a
