@@ -2,6 +2,8 @@
 
 [![ci](https://github.com/barlowa124/bio-qc/actions/workflows/ci.yml/badge.svg)](https://github.com/barlowa124/bio-qc/actions/workflows/ci.yml)
 
+**Live app: [cytof-qc-production.up.railway.app](https://cytof-qc-production.up.railway.app)**. The cytof_qc pipeline behind a real upload UI with durable job state.
+
 
 Quality-control pipelines for single-cell and spatial omics plus
 cytometry and multi-omic data. Each subdirectory is a self-contained
